@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "start:dev": "nodemon ./bin/www",
+    "start:dev": "NODE_ENV=development nodemon ./bin/www",
     "migrate:latest": "knex migrate:latest --knexfile config/DBconfig.js",
-    "test": "mocha --timeout 10000 --recursive"
+    "migrate:test": "NODE_ENV=test knex migrate:latest --knexfile config/DBconfig.js",
+    "test": "NODE_ENV=test mocha --timeout 10000 --recursive"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
