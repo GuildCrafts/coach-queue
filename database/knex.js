@@ -1,5 +1,5 @@
-require('../config/environment')
-const config = require('../knexfile')[process.env.NODE_ENV]
+const {env} = require('../config/config')
+const config = require('../config/config_db')[env()]
 const knex = require('knex')(config)
 
 knex.truncateAllTables = () =>
