@@ -33,7 +33,7 @@ const deleteRecord = (table, column, data) =>
 
 module.exports = {
     createRecord,
-    deleteRecord
+    deleteRecord,
     findRecord,
     firstRecord,
     updateRecord,
