@@ -6,6 +6,7 @@
     "start": "node ./bin/www",
     "start:dev": "NODE_ENV=development nodemon ./bin/www",
     "migrate:latest": "knex migrate:latest --knexfile config/DBconfig.js",
+    "migrate:latest:rollback": "knex migrate:rollback --knexfile config/DBconfig.js",
     "migrate:test": "NODE_ENV=test knex migrate:latest --knexfile config/DBconfig.js",
     "test": "NODE_ENV=test mocha --timeout 10000 --recursive"
   },
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-datetime": "^1.4.1",
     "chai-http": "^3.0.0",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0"

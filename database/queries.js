@@ -9,45 +9,58 @@ const createRecord = (table, attributes) =>
     .returning('*')
     .then(firstRecord)
 
-const findRecordByLgId = (table, attributes) =>
+const findRecord = (table, column, data) =>
   knex
     .table(table)
-    .where('lg_id', attributes)
-    .first('*')
+    .where(column, data)
+    .returning('*')
 
-const updateRecordbyLgId = (table, lg_id, attributes) =>
+const updateRecord = (table, column, data, attributes) =>
   knex
     .table(table)
-    .where('lg_id', lg_id)
+    .where(column, data)
     .update(attributes)
     .returning('*')
     .then(firstRecord)
 
-const deleteRecordbyLgId = (table, lg_id) =>
+const deleteRecord = (table, column, data) =>
   knex
     .table(table)
-    .where('lg_id', lg_id)
+    .where(column, data)
     .del()
 
+//CRUD USERS
 const createUser = attributes =>
   createRecord('users', attributes).then( user => user )
 
-const findUser = lg_id => 
-  findRecordByLgId('users', lg_id).then(user => user)
+const findUserByLgId = lg_id => 
+  findRecord('users', 'lg_id', lg_id).then(user => user)
 
-const updateUser = (lg_id, attributes) => 
-  updateRecordbyLgId('users', lg_id, attributes).then(user => user)
+const updateUserByLgId = (lg_id, attributes) => 
+  updateRecord('users', 'lg_id', lg_id, attributes).then(user => user)
 
-const deleteUser = lg_id =>
-  deleteRecordbyLgId('users', lg_id)
+const deleteUserByLgId = lg_id =>
+  deleteRecord('users', 'lg_id', lg_id)
 
+
+//CRUD APPOINTMENTS
 const createAppointment = attributes =>
   createRecord('appointments', attributes).then( appointment => appointment )
+
+const findAllAppointmentByCoachId = coach_id => 
+  findRecord('appointments', 'coach_id', coach_id)
+    .then( appointment => appointment )
+
+const findAppointmentByAttendee = attendee_sn => {
+
+  findRecord('appointments', lg_id).then(appointment => appointment)
+}
 
 module.exports = {
   knex,
   createUser, 
-  findUser,
-  updateUser,
-  deleteUser
+  findUserByLgId,
+  updateUserByLgId,
+  deleteUserByLgId,
+  createAppointment
 }

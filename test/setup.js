@@ -3,6 +3,7 @@ const chai = require('chai')
 const {expect} = chai
 const should = chai.should()
 const chaiHttp = require('chai-http')
+const chaiDatetime = require('chai-datetime')
 const app = require('../app')
 
 const {testEnv} = require('../config/config')
@@ -16,7 +17,8 @@ knex.truncateAllTables = () =>
     TRUNCATE appointments RESTART IDENTITY CASCADE;
     COMMIT;
   `)
-
+  
+chai.use(chaiDatetime)
 chai.use(chaiHttp)
 
 beforeEach(() =>
