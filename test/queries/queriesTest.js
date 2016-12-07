@@ -5,7 +5,9 @@ const {
   findUserByLgId, 
   updateUserByLgId, 
   deleteUserByLgId,
-  createAppointment } = require('../../database/queries')
+  createAppointment,
+  findAllAppointmentByCoachId,
+  findAppointmentByAttendee } = require('../../database/queries')
 
 describe('QUERIES', () => {
   const user = {
@@ -40,7 +42,7 @@ describe('QUERIES', () => {
             .then(user => {
               console.log(user)
               //TODO SHOULD USER BE AN OBJECT OR AN ARRAY? IT"S SUDDENLY COMING BACK AS AN ARRAY...
-              expect(user).to.be.a('array')
+              expect(user).to.be.a('object')
               expect(user.lg_id).to.eql('1234ab')
               expect(user.can_coach).to.eql(true)
               expect(user.active_calender).to.eql(true)
@@ -114,4 +116,50 @@ describe('QUERIES', () => {
         })
     })
   })
+
+  describe('finds an appointment', () => {
+    it('should find an apt by coach_id', done => {
+      createAppointment(appointment)
+        .then(appointment => {
+          findAllAppointmentByCoachId(appointment.coach_id)
+            .then(appointment => {
+              expect(appointment).to.be.a('object')
+              expect(appointment.coach_id).to.eql('1234ab')
+              expect(appointment.date_time)
+                .to.equalDate(new Date(2017, 1, 27, 16, 5))
+              expect(appointment.appointment_length).to.eql(45)
+              expect(appointment.description)
+                .to.eql("We want a walkthrough for setting up express.")
+              expect(appointment.attendees).to.be.a('array')
+              expect(appointment.attendees)
+                .to.eql(['someone_123', 'aNameIsCool', 'peopleLikeLearning'])
+              done()
+            })
+        })
+    })
+  })
+
+  describe('finds an appointment', () => {
+    it('should find an apt by attendee name', done => {
+      createAppointment(appointment)
+        .then(appointment => {
+          findAppointmentByAttendee(appointment.attendees[0])
+            .then(appointment => {
+              console.log(appointment)
+              expect(appointment).to.be.a('object')
+              expect(appointment.coach_id).to.eql('1234ab')
+              expect(appointment.date_time)
+                .to.equalDate(new Date(2017, 1, 27, 16, 5))
+              expect(appointment.appointment_length).to.eql(45)
+              expect(appointment.description)
+                .to.eql("We want a walkthrough for setting up express.")
+              expect(appointment.attendees).to.be.a('array')
+              expect(appointment.attendees)
+                .to.eql(['someone_123', 'aNameIsCool', 'peopleLikeLearning'])
+              done()
+            })
+        })
+    })
+  })
+
 })
