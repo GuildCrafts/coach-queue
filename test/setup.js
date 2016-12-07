@@ -21,10 +21,6 @@ knex.truncateAllTables = () =>
 chai.use(chaiDatetime)
 chai.use(chaiHttp)
 
-beforeEach(() =>
-  knex.migrate.latest().then(() => knex.truncateAllTables() )
-)
-
 module.exports = {
   chai,
   expect,
