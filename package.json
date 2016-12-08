@@ -8,6 +8,7 @@
     "migrate:latest": "knex migrate:latest --knexfile config/DBconfig.js",
     "migrate:latest:rollback": "knex migrate:rollback --knexfile config/DBconfig.js",
     "migrate:test": "NODE_ENV=test knex migrate:latest --knexfile config/DBconfig.js",
+    "migrate:rollback:test": "NODE_ENV=test knex migrate:rollback --knexfile config/DBconfig.js",
     "test": "NODE_ENV=test mocha --timeout 10000 --recursive"
   },
   "dependencies": {

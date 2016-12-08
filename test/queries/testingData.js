@@ -1,6 +1,6 @@
 const datetime = new Date(2017, 1, 27, 16, 5)
 
-module.exports = [
+ const appointmentsData = [
   {
     coach_id:'4321cd',
     date_time: datetime,
@@ -23,3 +23,13 @@ module.exports = [
     attendees: ['somebody_hit', 'aNameIsCool', 'peopleLikeLearning']
   }
 ]
+
+const user = {
+  lg_id: '1234ab',
+  can_coach: true,
+  active_calender: true,
+  active_coach: false,
+  google_token: "A_TOKEN"
+}
+
+module.exports = {appointmentsData, user}
