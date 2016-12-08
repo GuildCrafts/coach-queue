@@ -4,7 +4,7 @@ const {
   findUserByLgId,
   updateUserByLgId,
   deleteUserByLgId
-} = require('../../database/queryUsers')
+} = require('../../io/database/queryUsers')
 const {user} = require('./testingData')
 
 describe('queryUsers', () => {

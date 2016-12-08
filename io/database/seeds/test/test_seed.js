@@ -1,4 +1,3 @@
-
 exports.seed = (knex, Promise) => {
   // Deletes ALL existing entries
   const datetime = new Date(2017, 1, 27, 16, 5)
@@ -28,6 +27,6 @@ exports.seed = (knex, Promise) => {
           description: "We want a walkthrough for setting up express.",
           attendees: ['somebody_hit', 'aNameIsCool', 'peopleLikeLearning']
         })
-      ]);
-    });
-};
+      ])
+    })
+}
