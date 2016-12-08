@@ -14,6 +14,9 @@ const defaultConfig = env => {
     migrations: {
       directory: __dirname + '/../database/migrations',
       tableName: 'migrations'
+    },
+    seeds: {
+      directory: __dirname + `/../database/seeds/${env}`
     }
   }
 }

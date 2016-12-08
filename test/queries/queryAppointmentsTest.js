@@ -1,5 +1,6 @@
 const {expect, app, chai, knex} = require('../setup')
 const appointmentsData = require('./appointmentData')
+
 const {
   createAppointment,
   findFirstAppointmentByAttendee,
@@ -11,15 +12,30 @@ const {
 describe('Appointment Query', () => {
   const datetime = new Date(2017, 1, 27, 16, 5)
 
-  beforeEach( before_done => {
-    let setApptData = () => appointmentsData.forEach(appointment => createAppointment(appointment))
-
-    return Promise.all([
-      knex.truncateAllTables(),
-      setApptData(),
-      before_done()
-    ])
+  beforeEach((done) => {
+    knex.migrate.rollback()
+      .then(() => knex.migrate.latest()
+        .then(() => knex.seed.run()
+          .then(() => done())
+        )
+      )
   })
+
+  // afterEach((done) => {
+  //   knex.migrate.rollback()
+  //   .then(() => done())
+  // })
+
+  // beforeEach( done => {
+  //   let setApptData = () => appointmentsData.forEach(appointment => createAppointment(appointment))
+
+  //   return Promise.all([
+  //     setApptData(),
+  //     done()
+  //   ])
+  // })
+
+  // afterEach( done => knex.migrate.latest())
   //is this the right way to do the date?? Was giving me problems, failing on type
   //attendees is reading as type array, but is displaying in postico as an object...
   
@@ -91,7 +107,7 @@ describe('Appointment Query', () => {
 
   describe('all apts by github name', () => {
     it('should find all apt by attendee name', done => {
-      findAllAppointmentByAttendee('someone_123')
+      new Promise(findAllAppointmentByAttendee('someone_123'))
         .then(appointment => {
           expect(appointment).to.be.a('array')
           expect(appointment[0].attendees).to.eql(['someone_123', 'reallycoolname' ])
