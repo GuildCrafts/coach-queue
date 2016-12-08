@@ -36,8 +36,6 @@ describe('Appointment Query', () => {
   // })
 
   // afterEach( done => knex.migrate.latest())
-  //is this the right way to do the date?? Was giving me problems, failing on type
-  //attendees is reading as type array, but is displaying in postico as an object...
   
   const appointment = {
     coach_id:'1234ab',
