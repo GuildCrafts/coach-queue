@@ -18,6 +18,9 @@ const updateUserByLgId = (lg_id, attributes) =>
 const deleteUserByLgId = lg_id =>
   deleteRecord('users', 'lg_id', lg_id)
 
+const getActiveCoaches = lg_id => 
+  findRecord('users', 'lg_id', lg_id).then(user => user)
+
 module.exports = {
   knex,
   createUser, 
