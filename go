@@ -12,10 +12,10 @@ function drop_db {
   dropdb coach-que-${env}
 }
 
-function migrate_db {  
+function migrate_db {
   env=${1:-test}
   echo "Going to migrate db in ${env}"
-  NODE_ENV=${env} knex migrate:latest --knexfile config/DBconfig.js
+  NODE_ENV=${env} ./node_modules/knex/bin/cli.js migrate:latest --knexfile config/DBconfig.js
 }
 
 function reset_db {
@@ -28,18 +28,25 @@ function reset_db {
 function test {
   echo "calling the test function"
   migrate_db
-  NODE_ENV=test mocha --timeout 10000 --recursive
+  NODE_ENV=test ./node_modules/mocha/bin/mocha --timeout 10000 --recursive
 }
 
 function full_tests {
   echo "calling the test function"
   reset_db
-  NODE_ENV=test mocha --timeout 10000 --recursive
+  NODE_ENV=test ./node_modules/mocha/bin/mocha --timeout 10000 --recursive
 }
 
 function init {
-  # add all initial commands to run here
-  echo "TODO"
+  create_db development > /dev/null 2>&1
+  migrate_db development
+  create_db test > /dev/null 2>&1
+  migrate_db test
+  brew install postgres
+  brew tap homebrew/services
+  brew services start postgresql
+  npm install
+  echo "Done setting up your project!"
 }
 
 function help {
@@ -48,14 +55,14 @@ function help {
   echo "   ./go test  Run all tests"
 }
 
-# TODO fix this 
+# TODO fix this
 # if ! [ -z "${1}" ] ; then
 #   echo "entered if"
 #   help
 #   exit 1
 # fi
 
-case $1 in 
+case $1 in
   test) test $@
   ;;
   init) init $@
@@ -66,8 +73,3 @@ case $1 in
   ;;
   *) help
 esac
-
-
-
-
-
