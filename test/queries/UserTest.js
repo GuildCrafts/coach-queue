@@ -3,7 +3,8 @@ const {
   createUser,
   findUserByLgId,
   updateUserByLgId,
-  deleteUserByLgId
+  deleteUserByLgId,
+  getActiveCoaches
 } = require('../../io/database/users')
 const {user} = require('./testingData')
 
@@ -38,6 +39,23 @@ describe('queryUsers', () => {
             })
         })
       })
+
+      describe('Get all active coaches', () => {
+        it('should get all available active coaches', done => {
+          getActiveCoaches()
+            .then(coaches => {
+              let coach = coaches[0]
+              expect(coach).to.be.a('object')
+              expect(coach.lg_id).to.eql('1234ab')
+              expect(coach.can_coach).to.eql(true)
+              expect(coach.active_calender).to.eql(true)
+              expect(coach.active_coach).to.eql(true)
+              expect(coach.google_token).to.eql("A_TOKEN")
+              done()
+            })
+        })
+      })
+
       describe('deleteUser', () => {
         it('should delete a user record', done => {
           deleteUserByLgId(user.lg_id)

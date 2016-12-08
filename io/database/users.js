@@ -3,7 +3,8 @@ const {
   createRecord,
   findRecord,
   updateRecord,
-  deleteRecord} = require('./utilities')
+  deleteRecord,
+  findAllRecords} = require('./utilities')
 
 
 const createUser = attributes =>
@@ -18,13 +19,14 @@ const updateUserByLgId = (lg_id, attributes) =>
 const deleteUserByLgId = lg_id =>
   deleteRecord('users', 'lg_id', lg_id)
 
-const getActiveCoaches = lg_id => 
-  findRecord('users', 'lg_id', lg_id).then(user => user)
+const getActiveCoaches = () => 
+  findAllRecords('users', 'active_coach', true).then(user => user)
 
 module.exports = {
   knex,
   createUser, 
   findUserByLgId,
   updateUserByLgId,
-  deleteUserByLgId
+  deleteUserByLgId,
+  getActiveCoaches
 }

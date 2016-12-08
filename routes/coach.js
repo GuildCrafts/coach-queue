@@ -1,16 +1,14 @@
-var express = require('express')
-var router = express.Router()
+const express = require('express')
+const router = express.Router()
+const {getActiveCoaches} = require('../io/database/users')
 
-router.get('/', (req, res, next)  => {
-  res.json({ title: 'Coach' })
-})
+router.get('/active', (request, response) => 
+  getActiveCoaches()
+    .then(coaches => response.json({coaches}))
+)
 
-router.get('/active', (req, res, next)  => {
-  res.json({ title: 'Active get, fetch active coaches' })
-})
-
-router.post('/active', (req, res, next)  => {
-  res.json({ title: 'Active post, activate coach' })
-})
+router.post('/active', (request, response) => 
+  response.json({ title: 'Active post, activate coach' })
+)
 
 module.exports = router
