@@ -24,12 +24,20 @@ const datetime = new Date(2017, 1, 27, 16, 5)
   }
 ]
 
-const user = {
-  lg_id: '1234ab',
-  can_coach: true,
-  active_calender: true,
-  active_coach: false,
-  google_token: "A_TOKEN"
-}
+const user = [{
+    lg_id: '1234ab',
+    can_coach: true,
+    active_calender: true,
+    active_coach: false,
+    google_token: "A_TOKEN"
+  },
+  {
+    lg_id: 'nope',
+    can_coach: false,
+    active_calender: false,
+    active_coach: false,
+    google_token: "nope"
+  }
+]
 
 module.exports = {appointmentsData, user}

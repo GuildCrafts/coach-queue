@@ -1,0 +1,32 @@
+const {expect, app, chai} = require('../setup')
+
+describe('Coach Route', () => {
+
+  describe('GET active coaches at /coach/active', () => {
+    it('should get list of active coaches', done => {
+      chai.request(app)
+        .get('/api/v1/coaches/active')
+        .end((error, response) => {
+          response.should.have.status(200)
+          response.body.should.be.a('object')
+          response.body.should.have.property('coaches')
+          done()
+        })
+    })
+  })
+
+  describe('GET activate coaching at /coaches/activate', () => {
+    it('should activate a specific coach', done => {
+      chai.request(app)
+        .get('/api/v1/coaches/activate')
+        .end((error, response) => {
+          console.log(response.body)
+          response.should.have.status(200)
+          response.body.should.be.a('object')
+          response.body.should.have.property('message')
+            .eql("You've been activated. Good Job Coach.")
+          done()
+        })
+    })
+  })
+})
