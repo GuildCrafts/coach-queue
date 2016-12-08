@@ -22,11 +22,15 @@ const deleteUserByLgId = lg_id =>
 const getActiveCoaches = () => 
   findAllRecords('users', 'active_coach', true).then(user => user)
 
+const activateCoach = (lg_id) => 
+  updateRecord('users', 'lg_id', lg_id, {active_coach: true})
+
 module.exports = {
   knex,
   createUser, 
   findUserByLgId,
   updateUserByLgId,
   deleteUserByLgId,
-  getActiveCoaches
+  getActiveCoaches,
+  activateCoach
 }
