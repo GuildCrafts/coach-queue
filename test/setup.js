@@ -17,13 +17,13 @@ knex.truncateAllTables = () =>
     TRUNCATE appointments RESTART IDENTITY CASCADE;
     COMMIT;
   `)
-  
+
 chai.use(chaiDatetime)
 chai.use(chaiHttp)
 
-// beforeEach(() =>
-//   knex.migrate.latest().then(() => knex.truncateAllTables() )
-// )
+after(() =>
+  knex.migrate.latest().then(() => knex.truncateAllTables() )
+)
 
 module.exports = {
   chai,

@@ -30,7 +30,6 @@ const deleteRecord = (table, column, data) =>
     .where(column, data)
     .del()
 
-
 module.exports = {
     createRecord,
     deleteRecord,
