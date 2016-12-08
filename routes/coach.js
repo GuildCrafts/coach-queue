@@ -1,16 +1,16 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express')
+var router = express.Router()
 
 router.get('/', (req, res, next)  => {
-  res.render('index', { title: 'Coach' });
-});
+  res.render('index', { title: 'Coach' })
+})
 
 router.get('/active', (req, res, next)  => {
-  res.render('index', { title: 'Active get, fetch active coaches' });
-});
+  res.render('index', { title: 'Active get, fetch active coaches' })
+})
 
 router.post('/active', (req, res, next)  => {
-  res.json({ title: 'Active post, activate coach' });
-});
+  res.json({ title: 'Active post, activate coach' })
+})
 
-module.exports = router;
+module.exports = router
