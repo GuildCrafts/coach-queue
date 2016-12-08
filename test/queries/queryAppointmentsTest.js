@@ -8,15 +8,17 @@ const {
   findAllAppointmentByCoachId,
   deleteAppointmentById} = require('../../database/queryAppointments')
   
-
 describe('Appointment Query', () => {
   const datetime = new Date(2017, 1, 27, 16, 5)
 
-  beforeEach(done => {
-    knex.migrate.latest().then(() => knex.truncateAllTables() )
-      .then(() => appointmentsData.forEach(appointment => createAppointment(appointment)))
-      .then(() => done())
-    
+  beforeEach( before_done => {
+    let setApptData = () => appointmentsData.forEach(appointment => createAppointment(appointment))
+
+    return Promise.all([
+      knex.truncateAllTables(),
+      setApptData(),
+      before_done()
+    ])
   })
   //is this the right way to do the date?? Was giving me problems, failing on type
   //attendees is reading as type array, but is displaying in postico as an object...
@@ -48,7 +50,7 @@ describe('Appointment Query', () => {
     })
   })
 
-  xdescribe('apt by coach_id', () => {
+  describe('one apt by coach_id', () => {
     it('should find an apt by coach_id', done => {
       findFirstAppointmentByCoachId('4321cd')
         .then(appointment => {
@@ -67,7 +69,7 @@ describe('Appointment Query', () => {
     })
   })
 
-  describe('apt by attendee github name', () => {
+  describe('one apt by github name', () => {
     it('should find an apt by attendee name', done => {
       findFirstAppointmentByAttendee('someone_123')
         .then(appointment => {
@@ -87,7 +89,7 @@ describe('Appointment Query', () => {
     })
   })
 
-  describe('all apts for a attendee by github name', () => {
+  describe('all apts by github name', () => {
     it('should find all apt by attendee name', done => {
       findAllAppointmentByAttendee('someone_123')
         .then(appointment => {
@@ -103,7 +105,7 @@ describe('Appointment Query', () => {
     })
   })
 
-  describe('all apts for a attendee by coach id', () => {
+  describe('all apts by coach id', () => {
     it('should find all apt by coach id', done => {
       findAllAppointmentByCoachId('4321cd')
         .then(appointment => {
@@ -128,3 +130,4 @@ describe('Appointment Query', () => {
     })
   })
 })
+
