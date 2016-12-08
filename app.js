@@ -28,7 +28,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//// add calendar init function here
 calendar.init(app, _config);
 
 app.use('/', indexRoutes);

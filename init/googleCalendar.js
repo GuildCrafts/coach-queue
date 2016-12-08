@@ -3,14 +3,14 @@ const init = function(expressApp, config) {
   var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
   var session = require('express-session');
 
-  expressApp.use(session({ secret: 'keyboard cat' }));
+  expressApp.use(session({ secret: 'learnersguildsecretkey-coach-que'}));
   expressApp.use(passport.initialize());
 
   passport.use(new GoogleStrategy({
       clientID: config.google.clientID,
       clientSecret: config.google.client_secret,
-      callbackURL: 'http://localhost:3000/google/auth/callback',
-      scope: ['openid', 'email', 'https://www.googleapis.com/auth/calendar']
+      callbackURL: config.host + config.google.callbackURLPath,
+      scope: config.google.scopes
     },
     function(accessToken, refreshToken, profile, done) {
       profile.accessToken = accessToken;
