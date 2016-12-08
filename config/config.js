@@ -1,7 +1,11 @@
 const path = require('path')
 
-const env => {
+const env = () => {
   return process.env.NODE_ENV || 'development'
 }
 
-module.exports = {env}
+const testEnv = () => {
+  return process.env.NODE_ENV || 'test'
+}
+
+module.exports = {env, testEnv}
