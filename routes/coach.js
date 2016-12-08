@@ -10,7 +10,7 @@ router.get('/active', (req, res, next)  => {
 });
 
 router.post('/active', (req, res, next)  => {
-  res.render('index', { title: 'Active post, activate coach' });
+  res.json({ title: 'Active post, activate coach' });
 });
 
 module.exports = router;
