@@ -3,7 +3,7 @@ const {
   createRecord,
   findRecord,
   updateRecord,
-  deleteRecord} = require('./queryUtilities')
+  deleteRecord} = require('./utilities')
 
 
 const createUser = attributes =>
