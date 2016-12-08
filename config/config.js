@@ -1,11 +1,15 @@
 const path = require('path')
 const fs = require('fs')
 
-const env = function() {
+const env = () => {
   return process.env.NODE_ENV || 'development'
 }
 
-const readConfig = function() {
+const testEnv = () => {
+  return process.env.NODE_ENV || 'test'
+}
+
+const readConfig = () => {
   const _env = env()
   const filepath = path.join(__dirname, `./${_env}.json`)
   try {
@@ -15,4 +19,4 @@ const readConfig = function() {
   }
 }
 
-module.exports = {env, readConfig}
+module.exports = {env, testEnv, readConfig}

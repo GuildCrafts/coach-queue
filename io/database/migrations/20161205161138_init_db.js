@@ -12,7 +12,7 @@ exports.up = (knex, Promise) =>
 
     knex.schema.createTable('appointments', table => {
       table.increments('id').primary()
-      table.integer('coach_id')
+      table.string('coach_id')
       table.dateTime('date_time')
       table.integer('appointment_length')
       table.string('description')
