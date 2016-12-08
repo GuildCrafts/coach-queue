@@ -50,14 +50,14 @@ function init {
 }
 
 function start {
-  npm start
+  npm run start:dev
 }
 
 function help {
   echo "Usage:"
   echo "   ./go init  ...........................  Will setup all dependencies\
 for the project"
-  echo "   ./go start ...........................  Starts server on port 3000"
+  echo "   ./go start ...........................  Starts dev server on port 3000"
   echo "   ./go test  ...........................  Run all tests"
   echo "   ./go migrate_db [development|test] ...  Runs migrations in the \
 specified environment"
