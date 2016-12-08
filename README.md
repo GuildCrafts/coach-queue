@@ -19,5 +19,11 @@ brew services start postgresql
 ```
 createdb coach-que-development
 createdb coach-que-test
-knex migrate:latest
+npm run migrate:latest
+```
+
+####Testing
+Make sure to write your tests as you write your code. Passing tests for new code required for PR acceptance.
+```
+npm test
 ```
