@@ -53,14 +53,16 @@ function help {
   echo "Usage:"
   echo "   ./go init  Will setup all dependencies for the project"
   echo "   ./go test  Run all tests"
+  echo "   ./go migrate_db [development|test]  Runs migrations in the specified environment"
+  echo "   ./go reset_db [development|test] Resets the db in the specified environment"
 }
 
-# TODO fix this
-# if ! [ -z "${1}" ] ; then
-#   echo "entered if"
-#   help
-#   exit 1
-# fi
+if [ -z "${1}" ] ; then
+  init
+  echo "Additional commands you can run -"
+  help
+  exit 0
+fi
 
 case $1 in
   test) test $@
@@ -69,7 +71,7 @@ case $1 in
   ;;
   reset_db|reset-db) shift; reset_db $@
   ;;
-  migrate_db|migrate-db) shift; migrate_db $@
+  migrate_db|migrate-db|migrate) shift; migrate_db $@
   ;;
   *) help
 esac
