@@ -7,7 +7,7 @@ const {
   findAllAppointmentByAttendee,
   findAllAppointmentByCoachId,
   deleteAppointmentById
-} = require('../../io/database/queryAppointments')
+} = require('../../io/database/appointments')
 
 describe('Appointment Query', () => {
   const datetime = new Date(2017, 1, 27, 16, 5)

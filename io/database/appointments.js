@@ -4,7 +4,7 @@ const {
   createRecord,
   findRecord,
   updateRecord,
-  deleteRecord} = require('./queryUtilities')
+  deleteRecord} = require('./utilities')
 
 const createAppointment = attributes =>
   createRecord('appointments', attributes).then( appointment => appointment )
