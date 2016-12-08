@@ -51,10 +51,10 @@ function init {
 
 function help {
   echo "Usage:"
-  echo "   ./go init  Will setup all dependencies for the project"
-  echo "   ./go test  Run all tests"
-  echo "   ./go migrate_db [development|test]  Runs migrations in the specified environment"
-  echo "   ./go reset_db [development|test] Resets the db in the specified environment"
+  echo "   ./go init  ...Will setup all dependencies for the project"
+  echo "   ./go test  ...Run all tests"
+  echo "   ./go migrate_db [development|test]  ...Runs migrations in the specified environment"
+  echo "   ./go reset_db [development|test] ...Resets the db in the specified environment"
 }
 
 if [ -z "${1}" ] ; then
