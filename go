@@ -38,8 +38,15 @@ function full_tests {
 }
 
 function init {
-  # add all initial commands to run here
-  echo "TODO"
+  create_db development > /dev/null 2>&1
+  migrate_db development
+  create_db test > /dev/null 2>&1
+  migrate_db test
+  brew install postgres
+  brew tap homebrew/services
+  brew services start postgresql
+  npm install
+  echo "Done setting up your project!"
 }
 
 function help {
