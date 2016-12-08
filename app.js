@@ -12,6 +12,10 @@ var googleRoutes = require('./routes/google');
 var calendar = require('./init/googleCalendar');
 
 var app = express();
+var config = require('./config/config');
+
+const _config = config.readConfig()
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,7 +29,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //// add calendar init function here
-calendar.init(app);
+calendar.init(app, _config);
 
 app.use('/', indexRoutes);
 app.use('/users', usersRoutes);
