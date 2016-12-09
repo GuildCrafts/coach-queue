@@ -1,55 +1,74 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express')
+const path = require('path')
+const favicon = require('serve-favicon')
+const logger = require('morgan')
+const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser')
 
-var indexRoutes = require('./routes/index');
-var usersRoutes = require('./routes/users');
-var googleRoutes = require('./routes/google');
+const webpack = require('webpack')
+const webpackMiddleware = require('webpack-dev-middleware')
+const webpackConfig = require('./webpack.config.js')
 
-var calendar = require('./init/googleCalendar');
+const usersRoutes = require('./routes/users')
+const googleRoutes = require('./routes/google')
 
-var app = express();
-var config = require('./config/config');
+const calendar = require('./init/googleCalendar')
 
+const app = express()
+
+const config = require('./config/config')
 const _config = config.readConfig()
 
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+app.use(logger('dev'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookieParser())
+app.use(express.static(path.join(__dirname, 'public')))
 
-calendar.init(app, _config);
+calendar.init(app, _config)
 
-app.use('/', indexRoutes);
-app.use('/users', usersRoutes);
+app.use('/users', usersRoutes)
 app.use('/google', googleRoutes)
 
+const compiler = webpack(webpackConfig)
+const middleware = webpackMiddleware(compiler, {
+  publicPath: webpackConfig.output.publicPath,
+  contentBase: 'src',
+  stats: {
+    colors: true,
+    hash: false,
+    timings: true,
+    chunks: false,
+    chunkModules: false,
+    modules: false
+  }
+})
+
+app.use(middleware)
+
+app.get('*', (request, response) => {
+  response.write(middleware.fileSystem.readFileSync(
+    path.join(__dirname, '/public/dist/index.html'))
+  )
+  response.end()
+})
+
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
-
+app.use((req, res, next) => {
+  const error = new Error('Not Found')
+  error.status = 404
+  next(error)
+})
 // error handler
-app.use(function(err, req, res, next) {
+app.use((error, req, res) => {
   // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+  res.locals.message = error.message
+  res.locals.error = req.app.get('env') === 'development' ? error : {}
   // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+  res.status(error.status || 500)
+  res.json({error})
+})
 
-module.exports = app;
+module.exports = app
