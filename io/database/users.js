@@ -9,14 +9,18 @@ const {
 const createUser = attributes =>
   createRecord('users', attributes).then( user => user )
 
-const findUserByLgId = lg_id => 
-  findRecord('users', 'lg_id', lg_id).then(user => user)
+const findUserByHandle = github_handle => 
+  findRecord('users', 'github_handle', github_handle).then(user => user)
 
-const updateUserByLgId = (lg_id, attributes) => 
-  updateRecord('users', 'lg_id', lg_id, attributes).then(user => user)
+const findActiveCoaches = coach_handle => 
+  findRecord('users', 'coach_handle', coach_handle)
+    .then(user => user)
 
-const deleteUserByLgId = lg_id =>
-  deleteRecord('users', 'lg_id', lg_id)
+const updateUserByHandle = (github_handle, attributes) => 
+  updateRecord('users', 'github_handle', github_handle, attributes).then(user => user)
+
+const deleteUserByHandle = github_handle =>
+  deleteRecord('users', 'github_handle', github_handle)
 
 const getActiveCoaches = () => 
   findAllRecords('users', 'active_coach', true).then(user => user)
@@ -30,9 +34,9 @@ const deactivateCoach = (github_handle) =>
 module.exports = {
   knex,
   createUser, 
-  findUserByLgId,
-  updateUserByLgId,
-  deleteUserByLgId,
+  findUserByHandle,
+  updateUserByHandle,
+  deleteUserByHandle,
   getActiveCoaches,
   activateCoach,
   deactivateCoach
