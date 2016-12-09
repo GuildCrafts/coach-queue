@@ -4,7 +4,7 @@ Service to help with scheduling/feedback for Coaches/Mentees
 #### Get started
 This installs all dependencies in the project, and sets up the db
 ```
-./go
+./go init
 ```
 
 #### Migrate the Database
