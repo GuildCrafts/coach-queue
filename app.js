@@ -5,21 +5,20 @@ const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 
-var index = require('./routes/index')
-var coach = require('./routes/coach')
-var appointment = require('./routes/appointment')
-var googleRoutes = require('./routes/google');
+const webpack = require('webpack')
+const webpackMiddleware = require('webpack-dev-middleware')
+const webpackConfig = require('./webpack.config.js')
 
-var calendar = require('./init/googleCalendar');
+const coach = require('./routes/coach')
+const appointment = require('./routes/appointment')
+const googleRoutes = require('./routes/google')
 
-var app = express();
-var config = require('./config/config');
+const calendar = require('./init/googleCalendar')
 
+const app = express()
+
+const config = require('./config/config')
 const _config = config.readConfig()
-
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'pug')
-
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
@@ -31,16 +30,38 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/api/v1/coaches', coach)
 app.use('/api/v1/appointments', appointment)
-
-calendar.init(app, _config);
-
 app.use('/google', googleRoutes)
+
+calendar.init(app, _config)
+
+const compiler = webpack(webpackConfig)
+const middleware = webpackMiddleware(compiler, {
+  publicPath: webpackConfig.output.publicPath,
+  contentBase: 'src',
+  stats: {
+    colors: true,
+    hash: false,
+    timings: true,
+    chunks: false,
+    chunkModules: false,
+    modules: false
+  }
+})
+
+app.use(middleware)
+
+app.get('*', (request, response) => {
+  response.write(middleware.fileSystem.readFileSync(
+    path.join(__dirname, '/public/dist/index.html'))
+  )
+  response.end()
+})
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  var err = new Error('Not Found')
-  err.status = 404
-  next(err)
+  const error = new Error('Not Found')
+  error.status = 404
+  next(error)
 })
 
 // error handler
