@@ -38,18 +38,21 @@ We're using `knex` to generate our SQL
 
 | action                           | CRUD   | verb | path                                     |
 | -------------------------------- | ------ | ---- | ---------------------------------------- |
-| createAppointment()              | create | post | /api/v1/boards                           |
-| findFirstAppointmentByCoachId()  | read   | get  | /api/boards/:boardId                     |
-| findFirstAppointmentByAttendee() | read   | get  | /api/boards/:boardId                     |
-| findAllAppointmentByCoachId()    | read   | get  | /api/boards/:boardId/delete              |
-| findAllAppointmentByAttendee()   | create | post | /api/boards/:boardId/lists               |
-| deleteAppointmentById()          | delete | post | /api/boards/:boardId/lists/:listId/cards |
+| createAppointment()              | create | post | /api/v1/appointments/                    |
+| findFirstAppointmentByCoachId()  | read   | get  | /api/v1/appointments/                    |
+| findFirstAppointmentByAttendee() | read   | get  | /api/v1/appointments/                    |
+| findAllAppointmentByCoachId()    | read   | get  | /api/v1/appointments/                    |
+| findAllAppointmentByAttendee()   | read   | get  | /api/v1/appointments/                    |
+| deleteAppointmentById()          | delete | post | /api/v1/appointments/                    |
 
 ##### Coaches/Mentees
 
 | action                           | CRUD   | verb | path                                     |
 | -------------------------------- | ------ | ---- | ---------------------------------------- |
-| createUser()                     | create | post | /api/lists/:listId                       |
-| findUserByLgId()                 | read   | get  | /api/lists/:listId/delete                |
-| updateUserByLgId()               | update | post | /api/cards/:cardId                       |
-| deleteUserByLgId()               | delete | post | /api/cards/:cardId/delete                |
+| createUser()                     | create | post | /api/v1/coaches/                         |
+| findUserByLgId()                 | read   | get  | /api/v1/coaches/                         |
+| getActiveCoaches()               | read   | get  | /api/v1/coaches/                         |
+| updateUserByLgId()               | update | post | /api/v1/coaches/                         |
+| activateCoach()                  | update | post | /api/v1/coaches/                         |
+| deactivateCoach()                | update | post | /api/v1/coaches/                         |
+| deleteUserByLgId()               | delete | post | /api/v1/coaches/                         |
