@@ -5,7 +5,8 @@ const {
   updateUserByLgId,
   deleteUserByLgId,
   getActiveCoaches,
-  activateCoach
+  activateCoach,
+  deactivateCoach
 } = require('../../io/database/users')
 const {user} = require('./testingData')
 
@@ -50,8 +51,8 @@ describe('queryUsers', () => {
       it('should get all available active coaches', done => {
         getActiveCoaches()
           .then(coaches => {
-            let coach = coaches[1]
-            console.log(coaches)
+            let coach = coaches[0]
+            console.log(coach)
             expect(coach).to.be.a('object')
             expect(coach.lg_id).to.eql('1234ab')
             expect(coach.can_coach).to.eql(true)
@@ -65,13 +66,28 @@ describe('queryUsers', () => {
 
     describe('Activate a coach', () => {
       it('should activate a coach', done => {
-        activateCoach('nope')
+        activateCoach('nope-not-ever')
           .then(coach => {
             expect(coach).to.be.a('object')
             expect(coach.lg_id).to.eql('nope')
             expect(coach.can_coach).to.eql(false)
             expect(coach.active_calender).to.eql(false)
             expect(coach.active_coach).to.eql(true)
+            expect(coach.google_token).to.eql("nope")
+            done()
+          })
+      })
+    })
+
+    describe('Deactivate a coach', () => {
+      it('should Deactivate a coach', done => {
+        deactivateCoach('nope-not-ever')
+          .then(coach => {
+            expect(coach).to.be.a('object')
+            expect(coach.lg_id).to.eql('nope')
+            expect(coach.can_coach).to.eql(false)
+            expect(coach.active_calender).to.eql(false)
+            expect(coach.active_coach).to.eql(false)
             expect(coach.google_token).to.eql("nope")
             done()
           })

@@ -15,16 +15,31 @@ describe('Coach Route', () => {
     })
   })
 
-  describe('GET activate coaching at /coaches/activate', () => {
+  describe('POST activate coaching at /coaches/activate', () => {
     it('should activate a specific coach', done => {
       chai.request(app)
-        .get('/api/v1/coaches/activate')
+        .post('/api/v1/coaches/active/nope-not-ever')
         .end((error, response) => {
           console.log(response.body)
           response.should.have.status(200)
           response.body.should.be.a('object')
           response.body.should.have.property('message')
-            .eql("You've been activated. Good Job Coach.")
+            .eql("You\'ve been activated. Good Job Coach.")
+          done()
+        })
+    })
+  })
+
+  describe('DELETE deactivate coaching at /coaches/activate', () => {
+    it('should deactivate a specific coach', done => {
+      chai.request(app)
+        .delete('/api/v1/coaches/active/nope-not-ever')
+        .end((error, response) => {
+          console.log(response.body)
+          response.should.have.status(200)
+          response.body.should.be.a('object')
+          response.body.should.have.property('message')
+            .eql("You\'re no longer coaching. Take a break champ.")
           done()
         })
     })

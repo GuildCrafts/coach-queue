@@ -2,7 +2,7 @@
 exports.up = function(knex, Promise) {
   return Promise.all([
     knex.schema.table('users', function(table){
-      table.string('github_name');
+      table.string('github_handle');
     })
   ])
 };
@@ -10,7 +10,7 @@ exports.up = function(knex, Promise) {
 exports.down = function(knex, Promise) {
   return Promise.all([
     knex.schema.table('users', function(table){
-      table.dropColumn('github_name');
+      table.dropColumn('github_handle');
     })
   ])
 };

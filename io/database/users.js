@@ -6,7 +6,6 @@ const {
   deleteRecord,
   findAllRecords} = require('./utilities')
 
-
 const createUser = attributes =>
   createRecord('users', attributes).then( user => user )
 
@@ -22,11 +21,11 @@ const deleteUserByLgId = lg_id =>
 const getActiveCoaches = () => 
   findAllRecords('users', 'active_coach', true).then(user => user)
 
-const activateCoach = (lg_id) => 
-  updateRecord('users', 'lg_id', lg_id, {active_coach: true})
+const activateCoach = (github_handle) => 
+  updateRecord('users', 'github_handle', github_handle, {active_coach: true})
 
-const deactivateCoach = (lg_id) => 
-  updateRecord('users', 'lg_id', lg_id, {active_coach: false})
+const deactivateCoach = (github_handle) => 
+  updateRecord('users', 'github_handle', github_handle, {active_coach: false})
 
 module.exports = {
   knex,

@@ -10,21 +10,19 @@ router.get('/active', (request, response) =>
     .then(coaches => response.json({coaches}))
 )
 
-router.post('/active/:githubhandle', (request, response) => 
-  const {githubhandle} = request.params
-  //UUID?
-  activateCoach('nope')
+router.post('/active/:githubHandle', (request, response) => {
+  let {githubHandle} = request.params
+  
+  activateCoach(githubHandle)
     .then(response.json({ message: "You've been activated. Good Job Coach." }))
-    .catch(error => response.json({error}))
-)
+})
 
-router.delete('/active/:githubhandle', (request, response) => 
-  const {githubhandle} = request.params
-  //UUID?? 
-  deactivateCoach('nope')
+router.delete('/active/:githubHandle', (request, response) => {
+  let {githubHandle} = request.params
+
+  deactivateCoach(githubHandle)
     .then(response.json(
-      { message: "You're no longer coaching. Take a break, you deserve it." }))
-    .catch(error => response.json({error}))
-)
+      { message: "You're no longer coaching. Take a break champ." }))
+})
 
 module.exports = router
