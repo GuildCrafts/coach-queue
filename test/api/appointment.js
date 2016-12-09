@@ -9,7 +9,7 @@ describe('Appointment Route', () => {
         .end((error, response) => {
           response.should.have.status(200)
           response.body.should.be.a('object')
-          response.body.should.have.property('title').eql('create appointment')
+          response.body.should.have.property('apptDetails')
           done()
         })
     })
