@@ -9,7 +9,8 @@ const webpack = require('webpack')
 const webpackMiddleware = require('webpack-dev-middleware')
 const webpackConfig = require('./webpack.config.js')
 
-const usersRoutes = require('./routes/users')
+const coach = require('./routes/coach')
+const appointment = require('./routes/appointment')
 const googleRoutes = require('./routes/google')
 
 const calendar = require('./init/googleCalendar')
@@ -27,10 +28,11 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-calendar.init(app, _config)
-
-app.use('/users', usersRoutes)
+app.use('/api/v1/coaches', coach)
+app.use('/api/v1/appointments', appointment)
 app.use('/google', googleRoutes)
+
+calendar.init(app, _config)
 
 const compiler = webpack(webpackConfig)
 const middleware = webpackMiddleware(compiler, {
@@ -61,14 +63,16 @@ app.use((req, res, next) => {
   error.status = 404
   next(error)
 })
+
 // error handler
-app.use((error, req, res) => {
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
-  res.locals.message = error.message
-  res.locals.error = req.app.get('env') === 'development' ? error : {}
+  res.locals.message = err.message
+  res.locals.error = req.app.get('env') === 'development' ? err : {}
+
   // render the error page
-  res.status(error.status || 500)
-  res.json({error})
+  res.status(err.status || 500)
+  res.json({error:'error'})
 })
 
 module.exports = app
