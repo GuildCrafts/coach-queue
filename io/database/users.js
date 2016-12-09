@@ -25,6 +25,9 @@ const getActiveCoaches = () =>
 const activateCoach = (lg_id) => 
   updateRecord('users', 'lg_id', lg_id, {active_coach: true})
 
+const deactivateCoach = (lg_id) => 
+  updateRecord('users', 'lg_id', lg_id, {active_coach: false})
+
 module.exports = {
   knex,
   createUser, 
@@ -32,5 +35,6 @@ module.exports = {
   updateUserByLgId,
   deleteUserByLgId,
   getActiveCoaches,
-  activateCoach
+  activateCoach,
+  deactivateCoach
 }
