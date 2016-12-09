@@ -18,7 +18,6 @@ router.get('/', (req, res, next)  => {
   
   let activeCoaches = findActiveCoaches(coach_handle)
 
-  //write firdFirstAppointment function, returns date/time
   let date = findFirstAppointment(activeCoaches, appointment_length)
 
   let appointmentData = {
