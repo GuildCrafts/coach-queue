@@ -20,7 +20,6 @@ describe('Coach Route', () => {
       chai.request(app)
         .post('/api/v1/coaches/active/nope-not-ever')
         .end((error, response) => {
-          console.log(response.body)
           response.should.have.status(200)
           response.body.should.be.a('object')
           response.body.should.have.property('message')
@@ -35,7 +34,6 @@ describe('Coach Route', () => {
       chai.request(app)
         .delete('/api/v1/coaches/active/nope-not-ever')
         .end((error, response) => {
-          console.log(response.body)
           response.should.have.status(200)
           response.body.should.be.a('object')
           response.body.should.have.property('message')
