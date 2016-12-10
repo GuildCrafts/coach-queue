@@ -1,4 +1,4 @@
-const list = require('./static_data')
+const list = require('../../io/database/seeds/static_data')
 const {
   expect,
   mount,
