@@ -16,7 +16,7 @@ export default class App extends Component {
   }
   render() {
     return <MuiThemeProvider>
-        <ListCoaches list={this.state.list} />
+          <ListCoaches list={this.state.list} />
       </MuiThemeProvider>
   }
 }

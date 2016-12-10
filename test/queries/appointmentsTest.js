@@ -1,5 +1,6 @@
 const {expect, app, chai} = require('../setup')
 const {appointmentsData} = require('./testingData')
+const moment = require('moment')
 const {
   createAppointment,
   findFirstAppointmentByAttendee,
@@ -9,30 +10,32 @@ const {
   deleteAppointmentById
 } = require('../../io/database/appointments')
 
-describe('Appointment Query', () => {
-  const datetime = new Date(2017, 1, 27, 16, 5)
+describe('Appointment DB Queries: ', () => {
   const appointment = {
-    date_time: datetime,
-    coach_id: '1234ab',
     appointment_length: 45,
     description: "We want a walkthrough for setting up express.",
-    attendees: ['someone_123', 'aNameIsCool', 'peopleLikeLearning']
+    coach_handle: 'ImALeafyPlant',
+    mentee_handles: ['someone_123', 'aNameIsCool', 'peopleLikeLearning'],
+    appointment_start: moment('2018-01-31 14:00:00').toDate(),
+    appointment_end: moment('2018-01-31 14:30:00').toDate(),
   }
 
   describe('Inserts new appointment', () => {
     it('should insert a appointment into the database', done => {
       createAppointment(appointment)
-        .then(createdAppointment => {
-          expect(createdAppointment).to.be.a('object')
-          expect(createdAppointment.coach_id).to.eql('1234ab')
-          expect(createdAppointment.date_time)
-            .to.equalDate(new Date(2017, 1, 27, 16, 5))
-          expect(createdAppointment.appointment_length).to.eql(45)
-          expect(createdAppointment.description)
+        .then(newAppointment => {
+          console.log(newAppointment)
+          expect(newAppointment).to.be.a('object')
+          expect(newAppointment.coach_handle).to.eql('ImALeafyPlant')
+          expect(newAppointment.appointmentStart)
+            .to.equalDate(moment('2018-01-31 14:00:00').toDate())
+          expect(newAppointment.appointment_length).to.eql(45)
+          expect(newAppointment.description)
             .to.eql("We want a walkthrough for setting up express.")
-          expect(createdAppointment.attendees).to.be.a('array')
-          expect(createdAppointment.attendees)
+          expect(newAppointment.mentee_handles).to.be.a('array')
+          expect(newAppointment.mentee_handles)
             .to.eql(['someone_123', 'aNameIsCool', 'peopleLikeLearning'])
+          expect(newAppointment.appointment_end).to.eql(moment('2018-01-31 14:30:00').toDate())
           done()
         })
     })
