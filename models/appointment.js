@@ -1,6 +1,12 @@
 const {findUserByHandle} = require('../io/database/users')
 
-const findAppointment = (activeCoaches, apptLength) => {
+const findAppointment = () => {
+  findActiveCoaches()
+    .then( coaches => {
+      if (coaches.length >1 )
+        coaches.map(item => 
+          findFirstApptByCalendarId(item.calendar_ids))
+    })
   //is active coaches 1 name long?
     //findFirstApptByHandle(activeCoaches)
     //get their next appointment that fits the appt length
@@ -11,15 +17,14 @@ const findAppointment = (activeCoaches, apptLength) => {
     //create soonestappointment in database
 }
 
-const findFirstAppointment = (calInfo, apptLength) => {
-  //use the google calendar info to find the first appointment that's long enough
+
+const findFirstApptByCalendarId = (calendar_ids) => {
+  calendar_ids.map( calendar_id => findFirstAppointment(calendar_id))
 }
 
-const findFirstApptByHandle = (handle, apptLength) => {
-  findUserByHandle(handle)
-    .then(calInfo => findFirstAppointment(calInfo))
+const findFirstAppointment = (calendar_id) => {
+  //use the google cafindActiveCoaches()lendar info to find the first appointment that's long enough
 }
-
 
 // module.exports = {
 //   makeFirstAppointment

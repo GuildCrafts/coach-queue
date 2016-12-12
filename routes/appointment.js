@@ -9,14 +9,12 @@ const {
 
 router.get('/', (req, res, next)  => {
   //getting these from chat
-  let {
-    coach_handle, 
+  let { 
     appointment_length, 
     description, 
-    attendees, 
+    attendees
   } = req.params
   
-  let activeCoaches = findActiveCoaches(coach_handle)
 
   let date = findFirstAppointment(activeCoaches, appointment_length)
 
