@@ -30,6 +30,8 @@ const user = [{
     active_calender: true,
     active_coach: false,
     google_token: "A_TOKEN",
+    email: "flowers@gmail.netorg",
+    calendar_ids: ['flowers@gmail.netorg', 'flowers@lguild.net']
   },
   {
     github_handle: "GoSammyGo",
@@ -37,6 +39,8 @@ const user = [{
     active_calender: false,
     active_coach: false,
     google_token: "ANOTHER_TOKEN",
+    email: "Samsamsam@someemail.org",
+    calendar_ids: ['Samsamsam@someemail.org']
   }
 ]
 

@@ -1,19 +1,5 @@
 const {findUserByHandle} = require('../io/database/users')
 
-const getCalendarData= (google_token) => {
-  //retrieve google calendar data
-}
-
-const findFirstAppointment = (calInfo, apptLength) => {
-  //use the google calendar info to find the first appointment that's long enough
-}
-
-const findFirstApptByHandle = (handle, apptLength) {
-  findUserByHandle(handle)
-    .then(user => getCalendarData(user.google_token, apptLength))
-    .then(calInfo => findFirstAppointment(calInfo))
-}
-
 const findAppointment = (activeCoaches, apptLength) => {
   //is active coaches 1 name long?
     //findFirstApptByHandle(activeCoaches)
@@ -25,6 +11,16 @@ const findAppointment = (activeCoaches, apptLength) => {
     //create soonestappointment in database
 }
 
-module.exports = {
-  makeFirstAppointment
+const findFirstAppointment = (calInfo, apptLength) => {
+  //use the google calendar info to find the first appointment that's long enough
 }
+
+const findFirstApptByHandle = (handle, apptLength) => {
+  findUserByHandle(handle)
+    .then(calInfo => findFirstAppointment(calInfo))
+}
+
+
+// module.exports = {
+//   makeFirstAppointment
+// }

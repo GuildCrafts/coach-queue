@@ -1,44 +1,58 @@
 const express = require('express')
 const router = express.Router()
 const gcal = require('google-calendar')
+const {getActiveCoaches} = require('../io/database/users')
 
-router.all('/', function(req, res){
- 
-  //Create an instance from accessToken
-  var accessToken = req.session.access_token;
-  console.log('accessToken', accessToken)
-  gcal(accessToken).calendarList.list(function(err, data) {
-    if(err) return res.send(500,err);
-    return res.send(data);
-  });
-});
+router.all('/', (req, res) => {
+  var accessToken = req.session.access_token
+
+  gcal(accessToken).calendarList.list((err, data) => 
+    err ? res.send(500,err) : res.json(data)
+  )
+})
+
+//the route people hit after appt submission form
+router.all('/makeAppointment', (req, res) => {
+  var accessToken = req.session.access_token
+
+  // who's in the appt in an array
+  // appt length
+  // desc
+  getActiveCoaches().then(coaches => {
+    // run the api for each coach and get their weekly schedule
+  })
+
+  gcal(accessToken).calendarList.list((err, data) => 
+    err ? res.send(500,err) : res.json(data)
+  )
+})
+
+
+// ??need to add emails to user schema???
+//add accessable cal's to user schema
+
+
+//hits a route that accesses all available coaches 
+
+  // for each coach find next available time
+  // create cal entry for coach w next available time
+  // Coach gets notified somehow
+//user gets confirmation page in UI
 
 router.all('/:calendarId', (req, res) => {
-  
-  //Create an instance from accessToken
-  const {access_token} = req.session;
-  const {calendarId} = req.params;
+  const {access_token} = req.session
+  const {calendarId} = req.params
 
-  console.log( {
-    maxResults:1, 
+  //TODO Date: find current week and set to time Max
+
+  gcal(access_token).freebusy.query({
+    items: [{id:`${calendarId}`}],
     timeMin: new Date(), 
-    timeMax: new Date("2016-12-11"), 
-    items: [{id:"rachelralston@gmail.com"}],
-    groupExpansionMax: 0
+    timeMax: new Date("2016-12-15")
+  }, 
+  (err, data) => err ? res.send(500,err) : data => {
+    res.json(data)
   })
-  
-  gcal(access_token).freebusy.query( 
-  { 
-    items: [{id:"rachelralston@gmail.com"}, {id:"lauranmontoya@gmail.com"}],
-    timeMin: new Date(), 
-    timeMax: new Date("2016-12-11")
-  }, (err, data) => {
-    if(err) return res.send(500,err);
-    
-    console.log(data)
-    return res.send(data);
-  });
-});
-
+})
 
 module.exports = router
