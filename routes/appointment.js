@@ -1,17 +1,34 @@
 const express = require('express')
 const router = express.Router()
-const {createAppointment} = require('../io/database/appointments')
+
+const {findFirstAppointment} = require('../models/appointment')
+const {
+  createAppointment, 
+  findActiveCoaches
+} = require('../io/database/appointments')
 
 router.get('/', (req, res, next)  => {
-  let fakeappt = {
-    coach_id:'4321cd',
-    date_time: new Date(2017, 1, 27, 16, 5),
-    appointment_length: 45,
-    description: "Something here now.",
-    attendees: ['someone_123', 'aNameIsCool', 'peopleLikeLearning']
+  //getting these from chat
+  let {
+    coach_handle, 
+    appointment_length, 
+    description, 
+    attendees, 
+  } = req.params
+  
+  let activeCoaches = findActiveCoaches(coach_handle)
+
+  let date = findFirstAppointment(activeCoaches, appointment_length)
+
+  let appointmentData = {
+    coach_handle: coach_handle,
+    date_time: date,
+    appointment_length: appointment_length,
+    description: description,
+    attendees: attendees
   }
 
-  createAppointment(fakeappt)
+  createAppointment(appointmentData)
     .then( apptDetails => res.json({apptDetails}))
 })
 

@@ -9,27 +9,27 @@ const {
 const createAppointment = attributes =>
   createRecord('appointments', attributes).then( appointment => appointment )
 
-const findFirstAppointmentByCoachId = coach_id => 
-  findRecord('appointments', 'coach_id', coach_id)
+const findFirstAppointmentByCoachId = coach_handle => 
+  findRecord('appointments', 'coach_handle', coach_handle)
     .then( appointment => appointment )
 
-const findFirstAppointmentByAttendee = attendee_sn => 
+const findFirstAppointmentByMenteeHandle = mentee_handle => 
   knex
     .table("appointments")
-    .where(knex.raw(`attendees @> '{${attendee_sn}}'::text[];`))
+    .where(knex.raw(`mentee_handles @> '{${mentee_handle}}'::text[];`))
     .returning('*')
     .then(firstRecord)
 
-const findAllAppointmentByCoachId = coach_id => 
+const findAllAppointmentByCoachId = coach_handle => 
   knex
     .table('appointments')
-    .where('coach_id', coach_id)
+    .where('coach_handle', coach_handle)
     .returning('*')
 
-const findAllAppointmentByAttendee = attendee_sn => 
+const findAllAppointmentByMenteeHandle = mentee_handle => 
   knex
     .table("appointments")
-    .where(knex.raw(`attendees @> '{${attendee_sn}}'::text[];`))
+    .where(knex.raw(`mentee_handles @> '{${mentee_handle}}'::text[];`))
     .returning('*')
 
 const deleteAppointmentById = apt_id => 
@@ -37,9 +37,9 @@ const deleteAppointmentById = apt_id =>
 
 module.exports = {
   createAppointment,
-  findFirstAppointmentByAttendee,
+  findFirstAppointmentByMenteeHandle,
   findFirstAppointmentByCoachId,
-  findAllAppointmentByAttendee,
+  findAllAppointmentByMenteeHandle,
   findAllAppointmentByCoachId,
   deleteAppointmentById
 }
