@@ -1,4 +1,5 @@
 const rootDir = __dirname
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
   template: rootDir + '/client/index.html',
@@ -17,6 +18,10 @@ const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
     minifyURLs: true
   }
 })
+const processDotEnvPlugin = new webpack.DefinePlugin({
+  'process.env.APP_URL':   JSON.stringify(process.env.APP_URL),
+  'process.env.NODE_ENV':  JSON.stringify(process.env.NODE_ENV),
+})
 module.exports = {
   entry: ['./client/main.js'],
   module: {
@@ -28,5 +33,5 @@ module.exports = {
     filename: 'bundle.js',
     path: `${rootDir}/public/dist`
   },
-  plugins: [HTMLWebpackPluginConfig]
+  plugins: [processDotEnvPlugin, HTMLWebpackPluginConfig]
 }

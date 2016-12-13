@@ -10,11 +10,12 @@ export default class App extends Component {
     }
   }
   componentWillMount(){
-    fetch(
-      `${process.env.APP_URL || 'http://localhost:3000/api/v1'}/coaches/active`
-    )
-    .then(response => response.json())
-    .then(results => this.setState({list: results.coaches}))
+    fetch(`${process.env.APP_URL}/api/v1/coaches/active`)
+      .then(response => response.json())
+      .then(results => {
+        console.log('results', results)
+        this.setState({list: results.coaches})
+      })
   }
   render() {
     return <MuiThemeProvider>
