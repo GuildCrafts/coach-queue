@@ -28,7 +28,7 @@ function reset_db {
 function test {
   echo "calling the test function"
   migrate_db
-  NODE_ENV=test ./node_modules/mocha/bin/mocha --timeout 10000 --recursive
+  NODE_ENV=test ./node_modules/mocha/bin/mocha --recursive ./test --compilers js:babel-core/register --timeout 10000
 }
 
 function full_tests {

@@ -12,7 +12,7 @@ const {user} = require('./testingData')
 
 describe('queryUsers', () => {
   Promise.all([
-    createUser(user[0]), 
+    createUser(user[0]),
     createUser(user[1])
   ])
   .then(user => {
@@ -35,7 +35,6 @@ describe('queryUsers', () => {
       it('should update a user record', done => {
         updateUserByLgId(user[0].lg_id, { active_coach: true })
           .then(user => {
-            console.log('======>',user)
             expect(user).to.be.a('object')
             expect(user.lg_id).to.eql('1234ab')
             expect(user.can_coach).to.eql(true)
@@ -52,7 +51,6 @@ describe('queryUsers', () => {
         getActiveCoaches()
           .then(coaches => {
             let coach = coaches[0]
-            console.log(coach)
             expect(coach).to.be.a('object')
             expect(coach.lg_id).to.eql('1234ab')
             expect(coach.can_coach).to.eql(true)
