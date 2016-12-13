@@ -11,48 +11,51 @@ router.all('/', (req, res) => {
   )
 })
 
-//the route people hit after appt submission form
-router.all('/makeAppointment', (req, res) => {
-  var accessToken = req.session.access_token
-
-  // who's in the appt in an array
-  // appt length
-  // desc
-  getActiveCoaches().then(coaches => {
-    // run the api for each coach and get their weekly schedule
-  })
-
-  gcal(accessToken).calendarList.list((err, data) => 
-    err ? res.send(500,err) : res.json(data)
-  )
-})
-
-
-// ??need to add emails to user schema???
-//add accessable cal's to user schema
-
-
-//hits a route that accesses all available coaches 
-
-  // for each coach find next available time
-  // create cal entry for coach w next available time
-  // Coach gets notified somehow
-//user gets confirmation page in UI
 
 router.all('/:calendarId', (req, res) => {
-  const {access_token} = req.session
-  const {calendarId} = req.params
+  const {access_token} = req.session;
+  const {calendarId} = req.params;
 
-  //TODO Date: find current week and set to time Max
-
-  gcal(access_token).freebusy.query({
+  gcal(access_token).freebusy.query( 
+  { 
     items: [{id:`${calendarId}`}],
     timeMin: new Date(), 
-    timeMax: new Date("2016-12-15")
-  }, 
-  (err, data) => err ? res.send(500,err) : data => {
-    res.json(data)
-  })
-})
+    timeMax: new Date("2016-12-20")
+  }, (err, data) => {
+    // if (err) return res.send(500,err)
+    // let calendarId = Object.keys(data.calendars).toString()
+    console.log(calendarId)
+    console.log('haiiiiiii', data.calendars[calendarId].busy)
+    const busyTimeMap = data.calendars[calendarId].busy.map( busyTime => {
+      const busyTimeSlice = {
+        start: busyTime.start,
+        end: busyTime.end
+      }
+      return busyTimeSlice
+    })
+    console.log('busytiem', busyTimeMap)
+
+    let dayStartTime = '9am'
+    let dayEndTime = '5:30pm'
+    let scheduleArray = []
+
+    //day starts at 9am
+    //find gcal first start time
+    //create an object where day time is start and end time is gcal start
+      //push that object to an scheduleArray
+    //find gcal first end time
+    //create an object where gcal end time is start and (either end of day 
+            //or start of next appt) is end tiem
+      //push that object to an scheduleArray
+
+    //return scheduleArray
+
+    // coachDay.reduce((current, accumulator) => {
+
+    // }, [])
+
+    return res.json(data);
+  });
+});
 
 module.exports = router
