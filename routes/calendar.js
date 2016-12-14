@@ -23,12 +23,13 @@ router.all('/:calendarId', (req, res) => {
     timeMax: new Date("2016-12-20")
   }, (err, data) => {
     // if (err) return res.send(500,err)
-    let calendarId = Object.keys(data.calendars).toString()
+
     const busyTimeMap = data.calendars[calendarId].busy
 
     let dayStartTime = '9am'
     let dayEndTime = '5:30pm'
-    let scheduleArray = []
+
+
 
     // [ { end: '2016-12-15T18:00:00Z', start: '2016-12-15T19:00:00Z' } ]
 
@@ -36,9 +37,10 @@ router.all('/:calendarId', (req, res) => {
     //   {start:busyTimeMap[0].start, end:dayEndTime}]
 
 
-    // coachDay.reduce((current, accumulator) => {
-
-    // }, [])
+    let thing = busyTimeMap.reduce((freetimes, current) => {
+      console.log('current!', current)
+      freetimes.push()
+    }, [])
 
     return res.json(data);
   });
