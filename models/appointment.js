@@ -1,6 +1,6 @@
-const {findUserByHandle} = require('../io/database/users')
 const gcal = require('google-calendar')
 const moment = require('moment')
+const { findUserByHandle } = require('../io/database/users')
 
 const findFreeSchedule = (busyTime) => {
   let dayStartTime = moment().startOf('day').add(9, 'h')
@@ -29,4 +29,4 @@ const findFreeSchedule = (busyTime) => {
   return freeApptTimes
 }
 
-module.exports = {findFreeSchedule}
+module.exports = { findFreeSchedule }

@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
+const { findFirstAppointment } = require('../models/appointment')
 
-const {findFirstAppointment} = require('../models/appointment')
 const {
   createAppointment, 
   findActiveCoaches

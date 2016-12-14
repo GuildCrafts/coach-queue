@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const gcal = require('google-calendar')
 const moment = require('moment')
-const {findFreeSchedule} = require('../models/appointment')
+const { findFreeSchedule } = require('../models/appointment')
 
 router.all('/', (req, res) => {
   const accessToken = req.session.access_token
@@ -13,8 +13,8 @@ router.all('/', (req, res) => {
 })
 
 router.all('/:calendarId', (req, res) => {
-  const {access_token} = req.session;
-  const {calendarId} = req.params;
+  const { access_token } = req.session;
+  const { calendarId } = req.params;
   const endOfToday = moment().startOf('day').add({h:17.5})
 
   let endOfDay = (moment() < endOfToday) 
