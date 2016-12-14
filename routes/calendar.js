@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const gcal = require('google-calendar')
+const moment = require('moment')
+
 
 const {
   getGCalSchedule, 
@@ -18,21 +20,25 @@ router.all('/', (req, res) => {
 router.all('/:calendarId', (req, res) => {
   const {access_token} = req.session;
   const {calendarId} = req.params;
+  const thisFriday = moment().startOf('week').add({days:5, hours: 17.5})
 
   gcal(access_token).freebusy.query( 
   { 
     items: [{id:`${calendarId}`}],
-    timeMin: new Date(), 
-    timeMax: new Date("2016-12-20"),
+    timeMin: moment(), 
+    timeMax: thisFriday,
     timezone: 'America/Los_Angeles'
   }, (err, data) => {
     if (err) { return res.send(500,err) }
 
     let busyTime = data.calendars[calendarId].busy
-    console.log(busyTime)
+    console.log('here\'s your busy time:: ',busyTime)
 
     Promise.resolve(findFreeSchedule(busyTime))
-      .then(freeApptTimes => res.json(freeApptTimes))
+      .then(freeApptTimes => {
+        //findFirstApt(freeApptTimes)
+        return res.json(freeApptTimes)
+      })
       .catch(err => res.json(err))
   });
 });

@@ -31,13 +31,38 @@ const findFreeSchedule = (busyTime) => {
   let dayStartTime = moment().startOf('day').add(9, 'h')
   let dayEndTime = moment().startOf('day').add(17.5, 'h')
   let currentTime = moment()
+  let morningStart = () => {
+    
+  }
 
+  console.log(moment().endOf('day').add({h:9, ms:1}))
+  
   let freeApptTimes = busyTime.reduce((freetimes, currentAppt) => {
     let startTime = moment(currentAppt.start)
     let endTime = moment(currentAppt.end)
 
-    if(startTime >= currentTime) {
-      freetimes.push({start:currentTime, end: startTime})
+    if((startTime && endTime).isBetween(dayEndTime, dayStartTime)) {
+      return
+    } else if (startTime >= currentTime) {
+      if (currentTime.isBetween(dayStartTime, dayEndTime)) {
+        console.log('during business hours, returning now')
+        freetimes.push({start:currentTime, end: startTime})
+        currentTime = endTime
+        return freetimes
+      } else if (currentTime.isBetween(dayEndTime, currentTime.endOf('day'))){
+        currentTime = currentTime.endOf('day').add({h:9, ms:1})
+        console.log('after hours evening, you\'ll be starting at:', currentTime)
+        freetimes.push({start:currentTime, end: startTime})
+        currentTime = endTime
+        return freetimes
+
+      } else {
+        currentTime = currentTime.beginingOf('day').add({h:9})
+        console.log('after hours morning, you\'ll be starting at:', currentTime)
+        return currentTime
+      }
+
+      
       currentTime = endTime
       console.log('==>freetimes ', freetimes)
       return freetimes
