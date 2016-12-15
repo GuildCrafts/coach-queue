@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const gcal = require('google-calendar')
 const moment = require('moment')
-const { findFreeSchedule } = require('../models/appointment')
+const { findFreeSchedule, findNextAppointment } = require('../models/appointment')
 
 router.all('/', (req, res) => {
   const accessToken = req.session.access_token
@@ -32,7 +32,8 @@ router.all('/:calendarId', (req, res) => {
     let busyTime = data.calendars[calendarId].busy
 
     Promise.resolve(findFreeSchedule(busyTime))
-      .then(freeApptTimes => res.json(freeApptTimes))
+      .then(freeApptTimes => findNextAppointment(freeApptTimes))
+      .then(apptData => res.json(apptData))
       .catch(err => res.json(err))
   })
 })

@@ -3,28 +3,52 @@ const moment = require('moment')
 const { findUserByHandle } = require('../io/database/users')
 
 const findFreeSchedule = (busyTime) => {
-  let dayStartTime = moment().startOf('day').add(9, 'h')
-  let dayEndTime = moment().startOf('day').add(17.5, 'h')
+  let dayStartTime = moment().utcOffset("-08:00").startOf('day').add(9, 'h')
+  let dayEndTime = moment().utcOffset("-08:00").startOf('day').add(17.5, 'h')
   let currentTime = (process.env.NODE_ENV == 'test') 
-    ? moment("2016-12-14T09:00:00.000") 
+    ? moment("2016-12-14T09:00:00.000").utcOffset("-08:00")
     : moment()
+  let counter = 0
 
-
-  // { start: '2016-12-14T10:30:00Z', end: '2016-12-14T11:30:00Z' },
-  // { start: '2016-12-14T15:00:00Z', end: '2016-12-14T16:00:00Z' },
-
-  
-  let freeApptTimes = busyTime.reduce((freetimes, currentAppt) => {
+  return busyTime.reduce((freetimes, currentAppt) => {
     let startTime = moment(currentAppt.start).utcOffset("-08:00")
     let endTime = moment(currentAppt.end).utcOffset("-08:00")
-    console.log('START', startTime)
-    console.log('END', endTime)
-    console.log('currentAppt', currentAppt)
 
     if(startTime >= currentTime) {
-      console.log('start time is greater than current time')
+      freetimes.push({start:currentTime, end: startTime})
+      currentTime = endTime
     }
+
+    counter ++
+    if(busyTime.length === counter){
+      freetimes.push({start:currentTime, end:dayEndTime})
+    }
+
+    return freetimes
+  }, [])
+}
+
+//find next available 30 m appointment slot
+const findNextAppointment = (freetimes) => {
+  
+}
+
+//TODO: insert timeslot into gcal
+//TODO: instert timeslot into DB
+
+
+module.exports = { 
+  findFreeSchedule,
+  findNextAppointment
+  }
     
+
+
+
+
+
+
+
     // if ((startTime && endTime).isBetween(dayEndTime, dayStartTime)) {
     //   return freetimes
     // } 
@@ -41,12 +65,5 @@ const findFreeSchedule = (busyTime) => {
 
     // else {
     //   current = endTime
-    //   return freetimes
+      // return freetimes
     // }
-  }, [])
- 
-  // freeApptTimes.push({start:currentTime, end:dayEndTime})
-  return freeApptTimes
-}
-
-module.exports = { findFreeSchedule }
