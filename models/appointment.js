@@ -5,11 +5,21 @@ const { findUserByHandle } = require('../io/database/users')
 const findFreeSchedule = (busyTime) => {
   let dayStartTime = moment().startOf('day').add(9, 'h')
   let dayEndTime = moment().startOf('day').add(17.5, 'h')
-  let currentTime = moment()
+  let currentTime = (process.env.NODE_ENV == 'test') 
+    ? moment("2016-12-14T09:00:00.000") 
+    : moment()
+
+  // console.log(moment(currentTime, "YYYY-MM-DD HH:mm"))
+  // console.log(moment().utcOffset("-08:00"))
   
   let freeApptTimes = busyTime.reduce((freetimes, currentAppt) => {
-    let startTime = moment(currentAppt.start)
-    let endTime = moment(currentAppt.end)
+    let startTime = moment(currentAppt.start).utcOffset("-08:00")
+    let endTime = moment(currentAppt.end).utcOffset("-08:00")
+    console.log('START', startTime)
+    console.log('END', endTime)
+    console.log('moment NOW', moment())
+
+
     
     if ((startTime && endTime).isBetween(dayEndTime, dayStartTime)) {
       return freetimes
