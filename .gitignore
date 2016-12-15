@@ -29,5 +29,8 @@ node_modules
 # Debug log from npm
 npm-debug.log
 
+# ignore the dist folder that webpack creates for are react app.
+public/dist/
+
 .env
 .DS_Store

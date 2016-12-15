@@ -1,0 +1,6 @@
+{"host": "http://localhost:3000",
+ "google":
+  {"clientID": "259173355137-rcgi9a201b12oj2r6fq3kvepbd58n288.apps.googleusercontent.com",
+   "client_secret": "Tl2ZvO_G8e_py4309tQUQWGR",
+   "callbackURLPath": "/google/auth/callback",
+   "scopes": ["openid", "email", "https://www.googleapis.com/auth/calendar"]}}
