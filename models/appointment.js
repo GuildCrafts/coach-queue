@@ -30,20 +30,38 @@ const findFreeSchedule = (busyTime) => {
 
 //find next available 30 m appointment slot
 const findNextAppointment = (freetimes) => {
-  let firstFreeTime = []
-  let now = moment()
-  let aptStart = now.add({m:10})
-  let aptEnd = now.add({m:40})
-  
-  for (let i = 0; i < fretimes.length; i++) {
-    let freeStartTime = freetimes[i].start
-    let freeEndTime = freetimes[i].end
+  let now = (process.env.NODE_ENV == 'test') 
+    ? moment("2016-12-14T09:00:00.000").utcOffset("-08:00")
+    : moment()
+  let aptStart = now.clone().add({m:10})
+  let aptEnd = now.clone().add({m:40})
+  let counter = 0
+
+  return freetimes.reduce((firstApt, currentFreeBlock) => {
+    let freeStartTime = currentFreeBlock.start
+    let freeEndTime = currentFreeBlock.end
+
+    console.log('----BEFORE THE IF', aptStart, aptEnd)
+    if ( aptStart.isBetween(freeStartTime, freeEndTime) 
+      && aptEnd.isBetween(freeStartTime, freeEndTime)) {
+      console.log('----inside the iffff ', {start:aptStart, end: aptEnd})
+      return firstApt.push({start:aptStart, end: aptEnd})
+    } 
+
+    console.log(freeApt)
+
+    counter ++
+    if (counter > 0 && freeApt.length === 0){
+      aptStart = freetimes[counter].start.clone().add({m:10})
+      aptEnd = freetimes[counter].start.clone().add({m:40})
+      console.log('----inside the else', aptStart, aptEnd)
+    }
+
+    console.log('====your answer is: ',firstApt)
     
-    (aptStart && aptEnd).isBetween(freeStartTime, freeEndTime) 
-      ? firstFreeTime.push({start:aptStart, end: aptEnd}) 
-      : null
-  }
-  return firstFreeTime
+    return firstApt
+    
+  }, [])
 }
 
 //TODO: insert timeslot into gcal
@@ -54,29 +72,3 @@ module.exports = {
   findFreeSchedule,
   findNextAppointment
   }
-    
-
-
-
-
-
-
-
-    // if ((startTime && endTime).isBetween(dayEndTime, dayStartTime)) {
-    //   return freetimes
-    // } 
-
-    // if (startTime >= currentTime) {
-    //   if (currentTime.isBetween(dayStartTime, dayEndTime)) {
-    //     freetimes.push({start:currentTime, end: startTime})
-    //     currentTime = endTime
-    //     return freetimes
-    //   }
-    //   currentTime = endTime
-    //   return freetimes 
-    // } 
-
-    // else {
-    //   current = endTime
-      // return freetimes
-    // }
