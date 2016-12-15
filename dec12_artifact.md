@@ -22,3 +22,8 @@ Ability to request coaching assistance
     - automatically assigns mentee to appointmnt slot
     - makes event in Google calendar
     - notifies all parties (?)
+
+get: list of active coaches when /coach is run, who are active coaches
+/coach appointment = confirm
+/coach available = confirm
+/coach unavailable = confirm

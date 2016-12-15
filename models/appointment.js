@@ -8,10 +8,14 @@ const findFreeSchedule = (busyTime) => {
   let currentTime = moment()
   
   let freeApptTimes = busyTime.reduce((freetimes, currentAppt) => {
-    let startTime = moment(currentAppt.start).utcOffset(120)
-    let endTime = moment(currentAppt.end).utcOffset(120)
+    let startTime = moment(currentAppt.start)
+    let endTime = moment(currentAppt.end)
+    
+    if ((startTime && endTime).isBetween(dayEndTime, dayStartTime)) {
+      return freetimes
+    } 
 
-    if (startTime >= currentTime) {
+    else if (startTime >= currentTime) {
       if (currentTime.isBetween(dayStartTime, dayEndTime)) {
         freetimes.push({start:currentTime, end: startTime})
         currentTime = endTime
@@ -19,7 +23,9 @@ const findFreeSchedule = (busyTime) => {
       }
       currentTime = endTime
       return freetimes 
-    } else {
+    } 
+
+    else {
       current = endTime
       return freetimes
     }
