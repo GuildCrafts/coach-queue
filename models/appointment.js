@@ -30,7 +30,20 @@ const findFreeSchedule = (busyTime) => {
 
 //find next available 30 m appointment slot
 const findNextAppointment = (freetimes) => {
+  let firstFreeTime = []
+  let now = moment()
+  let aptStart = now.add({m:10})
+  let aptEnd = now.add({m:40})
   
+  for (let i = 0; i < fretimes.length; i++) {
+    let freeStartTime = freetimes[i].start
+    let freeEndTime = freetimes[i].end
+    
+    (aptStart && aptEnd).isBetween(freeStartTime, freeEndTime) 
+      ? firstFreeTime.push({start:aptStart, end: aptEnd}) 
+      : null
+  }
+  return firstFreeTime
 }
 
 //TODO: insert timeslot into gcal
