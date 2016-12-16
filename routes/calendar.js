@@ -30,7 +30,7 @@ router.all('/:calendarId', (req, res) => {
     if (err) { return res.send(500, err) }
 
     let busyTime = data.calendars[calendarId].busy
-
+    const freeTimeSlots = findFreeSchedule(busyTime)
     Promise.resolve(findFreeSchedule(busyTime))
       .then(freeApptTimes => findNextAppointment(freeApptTimes))
       .then(apptData => res.json(apptData))
