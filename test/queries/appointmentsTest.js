@@ -17,6 +17,13 @@ describe('Appointment Query', () => {
     description: "We want a walkthrough for setting up express.",
     mentee_handles: ['someone_123', 'aNameIsCool', 'peopleLikeLearning']
   }
+  createAppointment({
+    date_time: apptData.start, 
+    coach_handle: "imaleafyplant",
+    appointment_length: 30,
+    description: "Please help.",
+    mentee_handles: [ luvlearning, cupofjoe, codeandstuff ]
+  })
 
   describe('Inserts new appointment', () => {
     it('should insert a appointment into the database', done => {

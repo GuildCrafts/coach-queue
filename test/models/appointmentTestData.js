@@ -18,11 +18,13 @@ const freeTimeData2 = [
   { start: moment.parseZone("2016-12-14T09:00:00.000-08:00"),
     end: moment.parseZone("2016-12-14T09:15:00.000-08:00") },
   { start: moment.parseZone("2016-12-14T11:30:00.000-08:00"),
-    end: moment.parseZone("2016-12-14T11:50:00.000-08:00") },
+    end: moment.parseZone("2016-12-14T13:00.000-08:00") },
   { start: moment.parseZone("2016-12-14T16:00:00.000-08:00"),
     end: moment.parseZone("2016-12-14T17:30:00.000-08:00") }
 ]
 
-
-
-module.exports = { busyTimeData, freeTimeData, freeTimeData2 }
+module.exports = { 
+  busyTimeData, 
+  freeTimeData, 
+  freeTimeData2
+}

@@ -14,7 +14,6 @@ describe('Appointment Models: ', () => {
   describe('findFreeSchedule', () => {
     it('converts Gcal busytimes to Freetime during LG business hours', () => {
       const freeTime = findFreeSchedule(busyTimeData)
-
       expect(freeTime).to.be.an('array')
       expect(freeTime.length).to.eql(3)
       expect(freeTime[0]).to.be.an('object')
@@ -35,7 +34,7 @@ describe('Appointment Models: ', () => {
         moment.parseZone("2016-12-14T16:00:00.000-08:00").toDate()
       )
       expect(freeTime[2].end.toDate()).to.equalDate(
-        moment.parseZone("2016-12-15T17:30:00.000-08:00").toDate()
+        moment.parseZone("2016-12-14T17:30:00.000-08:00").toDate()
       )
     })
   })
@@ -46,8 +45,8 @@ describe('Appointment Models: ', () => {
 
       expect(timeSlot).to.be.an('object')
       expect(timeSlot).to.eql({
-        start: moment("2016-12-14T09:10:00.000-08:00").toDate(),
-        end: moment("2016-12-14T09:40:00.000-08:00").toDate()
+        start: moment.parseZone("2016-12-14T09:10:00.000-08:00").toDate(),
+        end: moment.parseZone("2016-12-14T09:40:00.000-08:00").toDate()
       })
     })
 
@@ -60,5 +59,4 @@ describe('Appointment Models: ', () => {
       })
     })
   })
-
 })
