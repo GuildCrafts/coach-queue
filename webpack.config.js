@@ -1,4 +1,5 @@
 const rootDir = __dirname
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
   template: rootDir + '/client/index.html',
@@ -27,6 +28,13 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: `${rootDir}/public/dist`
+  },
+  externals: {
+    'Config': JSON.stringify(process.env.NODE_ENV === 'production' ? {
+      APP_URL: "https://NOT-REALLY-SURE.com"
+     } : {
+      APP_URL: "http://localhost:3000"
+    })
   },
   plugins: [HTMLWebpackPluginConfig]
 }

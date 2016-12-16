@@ -12,7 +12,7 @@ const {
 
 describe('queryUsers', () => {
   Promise.all([
-    createUser(user[0]), 
+    createUser(user[0]),
     createUser(user[1])
   ])
   .then(user => {
