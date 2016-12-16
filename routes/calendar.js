@@ -15,6 +15,7 @@ router.all('/', (req, res) => {
 
 router.all('/:calendarId', (req, res) => {
   const { access_token } = req.session;
+  const google_calendar = gcal(access_token)
   const { calendarId } = req.params;
   const endOfToday = moment().startOf('day').add({h:17.5})
   const startOfToday = moment().startOf('day').add({h:9})
@@ -27,7 +28,7 @@ router.all('/:calendarId', (req, res) => {
     ? moment().endOf('day').add({h:9, ms:1})
     : startOfToday
 
-  gcal(access_token).freebusy.query( 
+  google_calendar.freebusy.query( 
   { 
     items: [{id:`${calendarId}`}],
     timeMin: startOfDay, 
@@ -43,10 +44,35 @@ router.all('/:calendarId', (req, res) => {
         console.log('freeApptTimes', freeApptTimes)
         return findNextAppointment(freeApptTimes)
       })
-      // .then( aptData => {
-      //   //insert into google cal
-      // })
+      .then( aptData => {
+        var event = {
+          'summary': 'Coaching session with Somebody',
+          'description': 'Go get \'em champ',
+          'start': {
+            'dateTime': aptData.start.toDate(),
+            'timeZone': 'America/Los_Angeles'
+          },
+          'end': {
+            'dateTime': aptData.end.toDate(),
+            'timeZone': 'America/Los_Angeles'
+          }
+        };
+        console.log('event', event)
+        console.log('hi')
+
+        google_calendar.freebusy.query( 
+        { 
+          calendarId: calendarId,
+          resource: event
+        }, (err, data) => {
+          if (err) { return res.send(500, err) }
+
+          console.log('data after gcal inser', data)
+          return data
+        })
+      })
       .then(apptData => {
+        console.log('apptData', apptData)
         //insert into database
         return createAppointment({
           date_time: apptData.start, 
