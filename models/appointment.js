@@ -35,34 +35,25 @@ const findNextAppointment = (freetimes) => {
     : moment()
   let aptStart = now.clone().add({m:10})
   let aptEnd = now.clone().add({m:40})
-  let counter = 0
+  let firstApppointment = {}
 
-  return freetimes.reduce((firstApt, currentFreeBlock) => {
-    let freeStartTime = currentFreeBlock.start
-    let freeEndTime = currentFreeBlock.end
-
-    console.log('----BEFORE THE IF', aptStart, aptEnd)
-    if ( aptStart.isBetween(freeStartTime, freeEndTime) 
-      && aptEnd.isBetween(freeStartTime, freeEndTime)) {
-      console.log('----inside the iffff ', {start:aptStart, end: aptEnd})
-      return firstApt.push({start:aptStart, end: aptEnd})
-    } 
-
-    console.log(freeApt)
-
-    counter ++
-    if (counter > 0 && freeApt.length === 0){
-      aptStart = freetimes[counter].start.clone().add({m:10})
-      aptEnd = freetimes[counter].start.clone().add({m:40})
-      console.log('----inside the else', aptStart, aptEnd)
+  for (i = 0; i < freetimes.length; i++) {
+    let startFreeTime = freetimes[i].start
+    let endFreeTime = freetimes[i].end
+    
+    if (aptStart.isBetween(startFreeTime, endFreeTime)
+      && aptEnd.isBetween(startFreeTime, endFreeTime)
+    ) {
+      firstApppointment.start = aptStart.clone().toDate()
+      firstApppointment.end = aptEnd.clone().toDate()
+      return firstApppointment
+    } else {
+      aptStart = freetimes[i + 1].start.clone().add({m: 10})
+      aptEnd = freetimes[i + 1].start.clone().add({m: 40})
     }
-
-    console.log('====your answer is: ',firstApt)
-    
-    return firstApt
-    
-  }, [])
+  }
 }
+
 
 //TODO: insert timeslot into gcal
 //TODO: instert timeslot into DB
@@ -71,4 +62,4 @@ const findNextAppointment = (freetimes) => {
 module.exports = { 
   findFreeSchedule,
   findNextAppointment
-  }
+}
