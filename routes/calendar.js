@@ -44,38 +44,40 @@ router.all('/:calendarId', (req, res) => {
         console.log('freeApptTimes', freeApptTimes)
         return findNextAppointment(freeApptTimes)
       })
-      // .then( aptData => {
-      //   var event = {
-      //     'summary': 'Coaching session with Somebody',
-      //     'description': 'Go get \'em champ',
-      //     'start': {
-      //       'dateTime': aptData.start.toDate(),
-      //       'timeZone': 'America/Los_Angeles'
-      //     },
-      //     'end': {
-      //       'dateTime': aptData.end.toDate(),
-      //       'timeZone': 'America/Los_Angeles'
-      //     }
-      //   };
-      //   console.log('event', event)
-      //   console.log('hi')
+      .then( aptData => {
+        console.log('hi')
+        var event = {
+          'summary': 'Coaching session with Somebody',
+          'description': 'Go get \'em champ',
+          'start': {
+            'dateTime': aptData.start.toDate(),
+            'timeZone': 'America/Los_Angeles'
+          },
+          'end': {
+            'dateTime': aptData.end.toDate(),
+            'timeZone': 'America/Los_Angeles'
+          }
+        };
+        console.log('event', event)
 
-      //   google_calendar.freebusy.query( 
-      //   { 
-      //     calendarId: calendarId,
-      //     resource: event
-      //   }, (err, data) => {
-      //     if (err) { return res.send(500, err) }
+        google_calendar.events.insert( 
+        { 
+          calendarId: calendarId,
+          resource: event
+        }, (err, data) => {
+          if (err) { return res.send(500, err) }
 
-      //     console.log('data after gcal inser', data)
-      //     return data
-      //   })
-      // })
+          console.log('data after gcal inser', data)
+          return data
+        })
+        // return aptData
+      })
       .then(apptData => {
         console.log('apptData', apptData)
         //insert into database
         return createAppointment({
-          date_time: apptData.start, 
+          appointment_start: apptData.start,
+          appointment_end: apptData.end,
           coach_handle: 'imaleafyplant',
           appointment_length: 30,
           description: 'Please help.',
