@@ -43,9 +43,9 @@ router.all('/:calendarId', (req, res) => {
         console.log('freeApptTimes', freeApptTimes)
         return findNextAppointment(freeApptTimes)
       })
-      .then( aptData => {
-        //insert into google cal
-      })
+      // .then( aptData => {
+      //   //insert into google cal
+      // })
       .then(apptData => {
         //insert into database
         return createAppointment({
