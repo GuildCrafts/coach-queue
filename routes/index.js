@@ -1,4 +1,3 @@
-import http from 'http'
 import Express from 'express'
 import {HTTPS as https} from 'express-sslify'
 import cookieParser from 'cookie-parser'
