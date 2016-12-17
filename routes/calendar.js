@@ -45,50 +45,44 @@ router.all('/:calendarId', (req, res) => {
         return findNextAppointment(freeApptTimes)
       })
       .then( aptData => {
-        console.log('hi')
-        var event = {
+        console.log('hi',aptData)
+
+        let aptStart = aptData.start//.toDate()
+        let aptEnd = aptData.end//.toDate()
+        let event = {
           'summary': 'Coaching session with Somebody',
           'description': 'Go get \'em champ',
           'start': {
-            'dateTime': aptData.start.toDate(),
+            'dateTime': aptStart,
             'timeZone': 'America/Los_Angeles'
           },
           'end': {
-            'dateTime': aptData.end.toDate(),
+            'dateTime': aptEnd,
             'timeZone': 'America/Los_Angeles'
           }
-        };
+        }
         console.log('event', event)
 
-        google_calendar.events.insert( 
-        { 
-          calendarId: calendarId,
-          resource: event
-        }, (err, data) => {
+        google_calendar.events.insert(calendarId, event, (err, data) => {
           if (err) { return res.send(500, err) }
 
           console.log('data after gcal inser', data)
-          return data
-        })
-        // return aptData
-      })
-      .then(apptData => {
-        console.log('apptData', apptData)
-        //insert into database
-        return createAppointment({
-          appointment_start: apptData.start,
-          appointment_end: apptData.end,
-          coach_handle: 'imaleafyplant',
-          appointment_length: 30,
-          description: 'Please help.',
-          mentee_handles: [ 'luvlearning', 'cupofjoe', 'codeandstuff' ]
-        })
-      })
-      .then(databaseData => {
-        console.log('databaseData', databaseData)
-        return res.json(databaseData)
+          createAppointment({
+            appointment_start: data.start.dateTime,
+            appointment_end: data.end.dateTime,
+            coach_handle: 'imaleafyplant',
+            appointment_length: 30,
+            description: 'Please help.',
+            mentee_handles: [ 'luvlearning', 'cupofjoe', 'codeandstuff' ]
+          }).then(databaseData => {
+              console.log('databaseData', databaseData)
+              return res.json(databaseData)
+            })
       })
       .catch(err => res.json(err))
+
+      })
+      
   })
 })
 
