@@ -28,8 +28,7 @@ router.all('/:calendarId', (req, res) => {
     ? moment().endOf('day').add({h:9, ms:1})
     : startOfToday
 
-  google_calendar.freebusy.query( 
-  { 
+  google_calendar.freebusy.query({ 
     items: [{id:`${calendarId}`}],
     timeMin: startOfDay, 
     timeMax: endOfDay
@@ -37,18 +36,11 @@ router.all('/:calendarId', (req, res) => {
     if (err) { return res.send(500, err) }
 
     let busyTime = data.calendars[calendarId].busy
-    const freeTimeSlots = findFreeSchedule(busyTime)
-    // console.log('freeTimeSlots', freeTimeSlots)
     Promise.resolve(findFreeSchedule(busyTime))
-      .then(freeApptTimes => {
-        console.log('freeApptTimes', freeApptTimes)
-        return findNextAppointment(freeApptTimes)
-      })
+      .then(freeApptTimes => findNextAppointment(freeApptTimes))
       .then( aptData => {
-        console.log('hi',aptData)
-
-        let aptStart = aptData.start//.toDate()
-        let aptEnd = aptData.end//.toDate()
+        let aptStart = aptData.start
+        let aptEnd = aptData.end
         let event = {
           'summary': 'Coaching session with Somebody',
           'description': 'Go get \'em champ',
@@ -61,12 +53,8 @@ router.all('/:calendarId', (req, res) => {
             'timeZone': 'America/Los_Angeles'
           }
         }
-        console.log('event', event)
-
         google_calendar.events.insert(calendarId, event, (err, data) => {
           if (err) { return res.send(500, err) }
-
-          console.log('data after gcal inser', data)
           createAppointment({
             appointment_start: data.start.dateTime,
             appointment_end: data.end.dateTime,
@@ -74,15 +62,9 @@ router.all('/:calendarId', (req, res) => {
             appointment_length: 30,
             description: 'Please help.',
             mentee_handles: [ 'luvlearning', 'cupofjoe', 'codeandstuff' ]
-          }).then(databaseData => {
-              console.log('databaseData', databaseData)
-              return res.json(databaseData)
-            })
-      })
-      .catch(err => res.json(err))
-
-      })
-      
+          }).then(databaseData => res.json(databaseData))
+      }).catch(err => res.json(err))
+    })
   })
 })
 
