@@ -7,6 +7,7 @@ const {
   App,
   ListCoaches
 } = require('../setup')
+require('isomorphic-fetch')
 
 describe('Testing components', () => {
   describe('<App /> render', () => {
