@@ -33,7 +33,7 @@ module.exports = {
     'Config': JSON.stringify(process.env.NODE_ENV === 'production' ? {
       APP_URL: "https://NOT-REALLY-SURE.com"
      } : {
-      APP_URL: "http://localhost:3000"
+      APP_URL: "http://localhost:9001"
     })
   },
   plugins: [HTMLWebpackPluginConfig]

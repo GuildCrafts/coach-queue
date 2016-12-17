@@ -4,10 +4,16 @@ const favicon = require('serve-favicon')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+require('babel-polyfill')
 
 const webpack = require('webpack')
 const webpackMiddleware = require('webpack-dev-middleware')
 const webpackConfig = require('./webpack.config.js')
+const {
+  addUserToRequestFromJWT,
+  extendJWTExpiration,
+  refreshUserFromIDMService
+} = require('@learnersguild/idm-jwt-auth/lib/middlewares')
 
 const coach = require('./routes/coach')
 const appointment = require('./routes/appointment')
@@ -27,6 +33,27 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+
+process.env.JWT_PUBLIC_KEY  = _config.auth.JWT_PUBLIC_KEY
+
+app.use(addUserToRequestFromJWT)
+const ensureUserLoggedIn = (req, res, next) => {
+  const redirectTo = encodeURIComponent(_config.host_fully_qualified)
+  console.log({user: req.user})
+  if (!req.user) {
+    console.log('redirect to:', `${_config.auth.IDM_BASE_URL}/sign-in?redirect=${redirectTo}`)
+    //res.redirect(`${process.env.IDM_BASE_URL}/sign-in?redirect=${redirectTo}`)
+    res.redirect('http://idm.learnersguild.dev/sign-in?redirect=http%3A%2F%2Fcoach-que.learnersguild.dev')
+    return next()
+    // todo: send back a response here???
+  }
+  //res.send('we are sending something')
+  next()
+}
+
+app.use(ensureUserLoggedIn)
+
+
 
 app.use('/api/v1/coaches', coach)
 app.use('/api/v1/appointments', appointment)
@@ -50,12 +77,15 @@ const middleware = webpackMiddleware(compiler, {
 
 app.use(middleware)
 
-app.get('*', (request, response) => {
-  response.write(middleware.fileSystem.readFileSync(
-    path.join(__dirname, '/public/dist/index.html'))
-  )
-  response.end()
-})
+
+
+// app.get('*', (request, response) => {
+// response.write(middleware.fileSystem.readFileSync(
+//   path.join(__dirname, '/public/dist/index.html'))
+// )
+// response.end()
+// })
+
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
