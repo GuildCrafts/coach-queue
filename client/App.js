@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import ListCoaches from './ListCoaches'
-import {APP_URL} from 'Config'
 
 export default class App extends Component {
   constructor() {
