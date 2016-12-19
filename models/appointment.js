@@ -47,7 +47,7 @@ const findNextAppointment = (freetimes) => {
     return {start: aptStart, end: aptEnd}
   }
 
-  for (i = 0; i < freetimes.length; i++) {
+  for (let i = 0; i < freetimes.length; i++) {
     let startFreeTime = freetimes[i].start
     let endFreeTime = freetimes[i].end
     
@@ -63,11 +63,6 @@ const findNextAppointment = (freetimes) => {
     }
   }
 }
-
-
-//TODO: instert timeslot into DB
-//TODO: insert timeslot into gcal
-
 
 module.exports = { 
   findFreeSchedule,
