@@ -9,6 +9,7 @@
    {"clientID": "1df19ad265da4105c523",
     "client_secret": "1516ab0d6b3aad18f9652fcc478ee3fca8f50c5b",
     "JWT_PUBLIC_KEY": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvjQP9ktgn9Y5e1DQ2Gpj\nJaYv+0br6kvmRESfDT9sMtOpl7JGbUxdseEW7a0pg+5htyjsTzoYC0qni72Giw+Q\newQ1geW75qRmWTa4fVCDvPgOtux+UvrxIsDmWm3YpSbmvbYKyjps4d+gRaRFGkTZ\nTPAHGlc7O55OAmqJeTebugVppB3qZmn5mKJY/fwUqGV5LRPapDtqKKDbiQqP+kY3\nT7bO5lKW82vF6t6Es3DoynokIRrTlyASkdDhRDBgpOSuu5QOZKcH0HpMM8blWHlb\nDjlNNxNgSvBbI23biZ0XtyhDmfLSamf/6xlPYql/8CVDxRxeMRqGvcPMGgEt3OIB\nlQIDAQAB\n-----END PUBLIC KEY-----",
-    "IDM_BASE_URL": "http://idm.learnersguild.dev"
+    "IDM_BASE_URL": "http://idm.learnersguild.dev",
+    "isEnabled": false,
    }
 }

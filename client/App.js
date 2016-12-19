@@ -16,7 +16,6 @@ export default class App extends Component {
   }
   render() {
     return <MuiThemeProvider>
-      <div>What do you want???</div>
       </MuiThemeProvider>
   }
 }
