@@ -7,10 +7,9 @@ const init = function(expressApp, config) {
 
   expressApp.use(addUserToRequestFromJWT)
   const ensureUserLoggedIn = (req, res, next) => {
-    const redirectTo = encodeURIComponent(_config.host_fully_qualified)
-    console.log({user: req.user})
+    const redirectTo = encodeURIComponent(config.host_fully_qualified)
     if (!req.user) {
-      res.redirect('http://idm.learnersguild.dev/sign-in?redirect=http%3A%2F%2Fcoach-que.learnersguild.dev')
+      res.redirect(`${config.auth.IDM_BASE_URL}/sign-in?redirect=${redirectTo}`)
       return next()
     }
     next()

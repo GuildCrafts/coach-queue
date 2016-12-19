@@ -20,6 +20,7 @@ const appointment = require('./routes/appointment')
 const googleRoutes = require('./routes/google')
 
 const calendar = require('./init/googleCalendar')
+const auth = require('./init/auth')
 
 const app = express()
 
@@ -34,22 +35,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
+//need to do this as idm-jwt-auth token needs this
 process.env.JWT_PUBLIC_KEY  = _config.auth.JWT_PUBLIC_KEY
-
-app.use(addUserToRequestFromJWT)
-const ensureUserLoggedIn = (req, res, next) => {
-  const redirectTo = encodeURIComponent(_config.host_fully_qualified)
-  console.log({user: req.user})
-  if (!req.user) {
-    res.redirect(`${_config.auth.IDM_BASE_URL}/sign-in?redirect=${redirectTo}`)
-    res.redirect('http://idm.learnersguild.dev/sign-in?redirect=http%3A%2F%2Fcoach-que.learnersguild.dev')
-    return next()
-  }
-  next()
-}
-
-app.use(ensureUserLoggedIn)
-
 
 
 app.use('/api/v1/coaches', coach)
@@ -58,9 +45,10 @@ app.use('/google', googleRoutes)
 
 calendar.init(app, _config)
 
-//if the conditions make sense: _config.auth enabled, can b a ternary operator
-//
-auth.init(app, _config)
+//we dont have a dev IDM, so
+if (!_config.auth.isDisabled) {
+  auth.init(app, _config)
+};
 
 const compiler = webpack(webpackConfig)
 const middleware = webpackMiddleware(compiler, {
