@@ -22,8 +22,6 @@ describe('queryUsers', () => {
           .then(user => {
             expect(user).to.be.a('object')
             expect(user.github_handle).to.eql('ImALeafyPlant')
-            expect(user.can_coach).to.eql(true)
-            expect(user.active_calender).to.eql(true)
             expect(user.active_coach).to.eql(false)
             expect(user.google_token).to.eql("A_TOKEN")
             expect(user.email).to.eql("flowers@gmail.netorg")
@@ -40,8 +38,6 @@ describe('queryUsers', () => {
           .then(user => {
             expect(user).to.be.a('object')
             expect(user.github_handle).to.eql('ImALeafyPlant')
-            expect(user.can_coach).to.eql(true)
-            expect(user.active_calender).to.eql(true)
             expect(user.active_coach).to.eql(true)
             expect(user.google_token).to.eql("A_TOKEN")
             done()
@@ -56,8 +52,6 @@ describe('queryUsers', () => {
             let coach = coaches[0]
             expect(coach).to.be.a('object')
             expect(coach.github_handle).to.eql('ImALeafyPlant')
-            expect(coach.can_coach).to.eql(true)
-            expect(coach.active_calender).to.eql(true)
             expect(coach.active_coach).to.eql(true)
             expect(coach.google_token).to.eql("A_TOKEN")
             expect(coach.email).to.eql("flowers@gmail.netorg")
@@ -74,8 +68,6 @@ describe('queryUsers', () => {
           .then(coach => {
             expect(coach).to.be.a('object')
             expect(coach.github_handle).to.eql('GoSammyGo')
-            expect(coach.can_coach).to.eql(false)
-            expect(coach.active_calender).to.eql(false)
             expect(coach.active_coach).to.eql(true)
             expect(coach.google_token).to.eql("ANOTHER_TOKEN")
             expect(coach.email).to.eql("Samsamsam@someemail.org")
@@ -92,8 +84,6 @@ describe('queryUsers', () => {
           .then(coach => {
             expect(coach).to.be.a('object')
             expect(coach.github_handle).to.eql('GoSammyGo')
-            expect(coach.can_coach).to.eql(false)
-            expect(coach.active_calender).to.eql(false)
             expect(coach.active_coach).to.eql(false)
             expect(coach.google_token).to.eql("ANOTHER_TOKEN")
             expect(coach.email).to.eql("Samsamsam@someemail.org")
