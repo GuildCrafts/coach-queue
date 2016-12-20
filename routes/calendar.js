@@ -24,11 +24,11 @@ router.all('/find_next', (request, response) => {
         const startOfToday = moment().startOf('day').add({h:9})
         const endOfToday = moment().startOf('day').add({h:17.5})
 
-        let endOfDay = moment() > endOfToday
+        const endOfDay = moment() > endOfToday
           ? moment().endOf('day').add({h:17.5, ms:1})
           : endOfToday
 
-        let startOfDay = moment().isBetween(endOfToday, moment().endOf('day'))
+        const startOfDay = moment().isBetween(endOfToday, moment().endOf('day'))
           ? moment().endOf('day').add({h:9, ms:1})
           : startOfToday
 

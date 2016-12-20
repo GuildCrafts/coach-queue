@@ -4,6 +4,7 @@ const favicon = require('serve-favicon')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const session = require('express-session')
 
 const webpack = require('webpack')
 const webpackMiddleware = require('webpack-dev-middleware')
@@ -20,6 +21,8 @@ const app = express()
 
 const config = require('./config/config')
 const _config = config.readConfig()
+
+app.use(session({secret: 'learnersguildsecretkey-coach-que'}))
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
