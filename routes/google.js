@@ -7,8 +7,10 @@ router.get('/auth',
 
 router.get('/auth/callback',
   passport.authenticate('google', { session: false, failureRedirect: '/login' }),
-  function(req, res) {
+  (req, res) => {
     req.session.access_token = req.user.accessToken;
+    // checks for that created user
+    // update with token
     res.redirect('/');
   });
 

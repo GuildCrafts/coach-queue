@@ -4,10 +4,10 @@ const { findUserByHandle } = require('../io/database/users')
 
 const findFreeSchedule = (busyTime) => {
   let dayStartTime = moment().utcOffset("-08:00").startOf('day').add(9, 'h')
-  let dayEndTime = (process.env.NODE_ENV == 'test') 
+  let dayEndTime = (process.env.NODE_ENV == 'test')
     ? moment("2016-12-14T17:30:00.000").utcOffset("-08:00")
     : moment().utcOffset("-08:00").startOf('day').add(17.5, 'h')
-  let currentTime = (process.env.NODE_ENV == 'test') 
+  let currentTime = (process.env.NODE_ENV == 'test')
     ? moment("2016-12-14T09:00:00.000").utcOffset("-08:00")
     : moment()
   let counter = 0
@@ -35,7 +35,7 @@ const findFreeSchedule = (busyTime) => {
 }
 
 const findNextAppointment = (freetimes) => {
-  let now = (process.env.NODE_ENV == 'test') 
+  let now = (process.env.NODE_ENV == 'test')
     ? moment("2016-12-14T09:00:00.000").utcOffset("-08:00")
     : moment()
   let aptStart = now.clone().add({m:10})
@@ -47,10 +47,10 @@ const findNextAppointment = (freetimes) => {
     return {start: aptStart, end: aptEnd}
   }
 
-  for (i = 0; i < freetimes.length; i++) {
+  for (let i = 0; i < freetimes.length; i++) {
     let startFreeTime = freetimes[i].start
     let endFreeTime = freetimes[i].end
-    
+
     if (aptStart.isBetween(startFreeTime, endFreeTime)
       && aptEnd.isBetween(startFreeTime, endFreeTime)
     ) {
@@ -65,11 +65,7 @@ const findNextAppointment = (freetimes) => {
 }
 
 
-//TODO: instert timeslot into DB
-//TODO: insert timeslot into gcal
-
-
-module.exports = { 
+module.exports = {
   findFreeSchedule,
   findNextAppointment
 }
