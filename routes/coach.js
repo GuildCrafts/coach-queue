@@ -4,31 +4,27 @@ const {
   createUser,
   getActiveCoaches,
   activateCoach,
-  deactivateCoach} = require('../io/database/users')
+  deactivateCoach,
+  findUserByHandle} = require('../io/database/users')
 
 router.get('/active', (request, response) =>
-  getActiveCoaches().then(coaches => response.json(coaches))
-)
+  getActiveCoaches().then(coaches => response.json(coaches)))
 
-router.get('/init/:githubHandle', (request, response) => {
-  console.log(request.session)
-  const user = {
-    github_handle: request.params.githubHandle,
-    can_coach: true,
-    active_calender: true,
-    active_coach: false,
-    google_token: null,
-    created_at: null,
-    updated_at: null,
-    email: "someone@someone.com",
-    calendar_ids: ["someone@someone.com"]
-  }
-  createUser(user).then(newUser => response.redirect('/auth'))
-})
+router.get('/active/:githubHandle', (request, response) => {
+  const github_handle = request.params.githubHandle
 
-router.post('/active/:githubHandle', (request, response) => {
-  activateCoach(request.params.githubHandle)
-    .then(response.json({ message: "You've been activated. Good Job Coach." }))
+  findUserByHandle(github_handle).then(user => {
+    if(user) {
+      activateCoach(github_handle)
+        .then(response.json({ message: "You've been activated. Good Job Coach." }))
+    } else {
+      createUser({github_handle, active_coach: true})
+        .then(() => {
+          request.session.github_handle = github_handle
+          response.redirect('/google/auth')
+        })
+    }
+  })
 })
 
 router.delete('/active/:githubHandle', (request, response) => {

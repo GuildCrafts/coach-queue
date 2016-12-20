@@ -34,15 +34,11 @@ calendar.init(app, _config)
 const ensureGoogleAuth = (req, res, next) =>
   req.session.access_token ? next() : res.redirect('/google/auth')
 
-
-
 app.use('/api/v1/coaches', coach)
 app.use('/api/v1/appointments', appointment)
 app.use('/google', googleRoutes)
 app.use(ensureGoogleAuth)
 app.use('/calendar', calendarRoutes)
-
-
 
 const compiler = webpack(webpackConfig)
 const middleware = webpackMiddleware(compiler, {
@@ -67,20 +63,16 @@ app.get('*', (request, response) => {
   response.end()
 })
 
-// catch 404 and forward to error handler
 app.use((req, res, next) => {
   const error = new Error('Not Found')
   error.status = 404
   next(error)
 })
 
-// error handler
 app.use((err, req, res, next) => {
-  // set locals, only providing error in development
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}
 
-  // render the error page
   res.status(err.status || 500)
   res.json({error:err})
 })

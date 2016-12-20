@@ -14,16 +14,15 @@ router.all('/', (req, res) => {
   )
 })
 
-router.all('/findNext', (req, res) => {
-  // let coachesNextAvailable = []
+router.all('/find_next', (request, response) => {
   getActiveCoaches()
-    .then( coachesArray => {
-      const blah2 = coachesArray.map( coach => {
+    .then(coachesArray => {
+      return coachesArray.map(coach => {
         const access_token = coach.google_token
         const google_calendar = gcal(access_token)
         const calendarId = coach.calendar_ids[0]
-        const endOfToday = moment().startOf('day').add({h:17.5})
         const startOfToday = moment().startOf('day').add({h:9})
+        const endOfToday = moment().startOf('day').add({h:17.5})
 
         let endOfDay = moment() > endOfToday
           ? moment().endOf('day').add({h:17.5, ms:1})
@@ -37,30 +36,18 @@ router.all('/findNext', (req, res) => {
           items: [{id:`${calendarId}`}],
           timeMin: startOfDay,
           timeMax: endOfDay
-        }, (err, data) => {
-          if (err) { return res.send(500, err) }
-
-          let busyTime = data.calendars[calendarId].busy
-          Promise.resolve(findFreeSchedule(busyTime))
+        }, (error, data) => {
+          if (error) response.status(500).json(error)
+          const busyTime = data.calendars[calendarId].busy
+          return Promise.resolve(findFreeSchedule(busyTime))
             .then(freeApptTimes => {
-              let blah = {freeApptTimes, user:calendarId}
-              console.log(blah)
-              // coachesNextAvailable.push(blah)
-              return blah
+              console.log('times from promise', freeApptTimes)
+              return {freeApptTimes, user: calendarId}
             })
-            // .then(availableTimes => {
-            //   console.log('availability', availableTimes)
-            //   return res.json({availableTimes, coachesNextAvailable})
-            // })
-            // .catch(error => console.log('This is times error', error))
         })
       })
-      return blah2
     })
-    .then(blah2 => {
-      console.log('=============>', blah2)
-      res.json(blah2)
-    })
+    .then(times => console.log('RESPONSE Times', times))
 })
 
 
