@@ -15,22 +15,25 @@ router.all('/', (req, res) => {
 })
 
 router.all('/find_next', (request, response) => {
+  //TODO: make sure email and calendar id's fields in DB are filled in on 'onboarding'
+  const startOfToday = moment().startOf('day').add({h:9})
+  const endOfToday = moment().startOf('day').add({h:17.5})
+
+  let endOfDay = moment() > endOfToday
+    ? moment().endOf('day').add({h:17.5, ms:1})
+    : endOfToday
+
+  let startOfDay = moment().isBetween(endOfToday, moment().endOf('day'))
+    ? moment().endOf('day').add({h:9, ms:1})
+    : startOfToday
+    
   getActiveCoaches()
     .then(coachesArray => {
       return coachesArray.map(coach => {
+        console.log(coach)
         const access_token = coach.google_token
         const google_calendar = gcal(access_token)
         const calendarId = coach.calendar_ids[0]
-        const startOfToday = moment().startOf('day').add({h:9})
-        const endOfToday = moment().startOf('day').add({h:17.5})
-
-        let endOfDay = moment() > endOfToday
-          ? moment().endOf('day').add({h:17.5, ms:1})
-          : endOfToday
-
-        let startOfDay = moment().isBetween(endOfToday, moment().endOf('day'))
-          ? moment().endOf('day').add({h:9, ms:1})
-          : startOfToday
 
         google_calendar.freebusy.query({
           items: [{id:`${calendarId}`}],
