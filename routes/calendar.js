@@ -4,9 +4,14 @@ const gcal = require('google-calendar')
 const P = require('bluebird')
 const gcalP = P.promisifyAll(gcal)
 const moment = require('moment')
+const rp = require('request-promise')
 const {findFreeSchedule, findNextAppointment} = require('../models/appointment')
 const {createAppointment} = require('../io/database/appointments')
-const {getActiveCoaches} = require('../io/database/users')
+const {getActiveCoaches, 
+  findUserByHandle, 
+  createUser,
+  updateUserByHandle} = require('../io/database/users')
+
 
 router.all('/', (request, response) => {
   const {accessToken} = request.session
@@ -16,21 +21,29 @@ router.all('/', (request, response) => {
   )
 })
 
-router.all('/init', (request, response) => {
-  var options = {
-    uri: 'https://www.googleapis.com/oauth2/v3/tokeninfo',
-    qs: {
-      id_token: '89cf37a725f924ce42131e0aa7523822ca885d30' // -> uri + '?access_token=xxxxx%20xxxxx' 
-    },
-    headers: {'User-Agent': 'Request-Promise'},
-    json: true 
-  };
- 
-  rp(options)
-    .then(responses => {
-      console.log('Did I get anything?', responses.responses[0].answers);
-    })
-    .catch(error => console.log(error))
+router.all('/init/:githubHandle', (request, response) => {
+  const github_handle = request.params.githubHandle
+  request.session.github_handle = github_handle
+  const {access_token} = request.session
+
+  findUserByHandle(github_handle).then(user => {
+    if (user) {
+      updateUserByHandle(github_handle, {google_token: access_token})
+      .then(response.json({message: `You're already in the system. run '/coach activate' to get started coaching.`}))
+      .catch(error => console.error(error))
+    } else {
+      createUser({
+        github_handle, 
+        active_coach: false, 
+        google_token: access_token, 
+      })
+      .then(() => {
+        request.session.github_handle = github_handle
+        response.redirect('/google/auth')
+      })
+      .catch(error => console.error(error))
+    }
+  })
 })
 
 router.all('/find_next', (request, response) => {
