@@ -60,6 +60,7 @@ We're using `knex` to generate our SQL
 
 ##### Attendees
 | Command                      | V  | Description                                                                  |
+| ---------------------------- | -- | ---------------------------------------------------------------------------- |
 | /coach                       | V1 | Gets a list of all available coaches.                                        |
 | /coach @partnersGithub       | V1 | Searches all coaches and finds and schedules the next available appointment. |
 | /coach nextAppointment       | V2 | Finds and displays a Mentee's next appointment.                              |
@@ -67,6 +68,7 @@ We're using `knex` to generate our SQL
 
 ##### Coaches
 | Command                      | V  | Description                                                                    |
+| ---------------------------- | -- | ------------------------------------------------------------------------------ |
 | /coach                       | V1 | Gets a list of all available coaches.                                          |
 | /coach init                  | V1 | Creates a user in the DB & validates their google account.                     |
 | /coach activate              | V1 | Makes them available to coach, turns active_coach in users table to true.      |
