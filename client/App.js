@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {APP_URL} from 'Config'
+import ListCoaches from './ListCoaches'
 
 export default class App extends Component {
   constructor() {
@@ -16,6 +17,7 @@ export default class App extends Component {
   }
   render() {
     return <MuiThemeProvider>
-      </MuiThemeProvider>
+             <ListCoaches list={this.state.list} />
+           </MuiThemeProvider>
   }
 }

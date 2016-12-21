@@ -18,6 +18,12 @@ const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
     minifyURLs: true
   }
 })
+const APP_URL = process.env.NODE_ENV === 'production'
+                ? 'PRODUCTION_URL'
+                : 'http://localhost:3000'
+const processDotEnvPlugin = new webpack.DefinePlugin({
+  'APP_URL': JSON.stringify(APP_URL)
+})
 module.exports = {
   entry: ['./client/main.js'],
   module: {
@@ -29,12 +35,5 @@ module.exports = {
     filename: 'bundle.js',
     path: `${rootDir}/public/dist`
   },
-  externals: {
-    'Config': JSON.stringify(process.env.NODE_ENV === 'production' ? {
-      APP_URL: "https://NOT-REALLY-SURE.com"
-     } : {
-      APP_URL: "http://localhost:3000"
-    })
-  },
-  plugins: [HTMLWebpackPluginConfig]
+  plugins: [HTMLWebpackPluginConfig, processDotEnvPlugin]
 }
