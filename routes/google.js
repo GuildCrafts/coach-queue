@@ -11,7 +11,7 @@ router.get('/auth/callback',
   (request, response) => {
     request.session.access_token = request.user.accessToken;
     const {access_token, github_handle} = request.session
-
+ // TODO access token not being updated when you relogin into google
     github_handle
       ? updateUserByHandle(github_handle, {google_token: access_token})
       : response.redirect('/');

@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const gcal = require('google-calendar')
+const P = require('bluebird')
+const gcalP = P.promisifyAll(gcal)
 const moment = require('moment')
 const {findFreeSchedule, findNextAppointment} = require('../models/appointment')
 const {createAppointment} = require('../io/database/appointments')
@@ -26,31 +28,28 @@ router.all('/find_next', (request, response) => {
   let startOfDay = moment().isBetween(endOfToday, moment().endOf('day'))
     ? moment().endOf('day').add({h:9, ms:1})
     : startOfToday
-    
+  const busytimes = []
+
   getActiveCoaches()
     .then(coachesArray => {
-      return coachesArray.map(coach => {
-        console.log(coach)
-        const access_token = coach.google_token
+      console.log('coachesArray', coachesArray)
+      P.all(coachesArray.map(coach => {
+        // use google access token from db
+        const access_token = request.session.access_token
         const google_calendar = gcal(access_token)
-        const calendarId = coach.calendar_ids[0]
-
-        google_calendar.freebusy.query({
+        const freeBusyP = P.promisifyAll(google_calendar.freebusy)
+        const calendarId = coach.calendar_ids[0]        
+        return freeBusyP.queryAsync({
           items: [{id:`${calendarId}`}],
           timeMin: startOfDay,
           timeMax: endOfDay
-        }, (error, data) => {
-          if (error) response.status(500).json(error)
-          const busyTime = data.calendars[calendarId].busy
-          return Promise.resolve(findFreeSchedule(busyTime))
-            .then(freeApptTimes => {
-              console.log('times from promise', freeApptTimes)
-              return {freeApptTimes, user: calendarId}
-            })
         })
+      }))
+      .then(freeBusyTimes => {
+        console.log('got values::', freeBusyTimes)
+        response.json({a:1})
       })
     })
-    .then(times => console.log('RESPONSE Times', times))
 })
 
 
