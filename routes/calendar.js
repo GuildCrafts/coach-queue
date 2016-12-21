@@ -8,12 +8,29 @@ const {findFreeSchedule, findNextAppointment} = require('../models/appointment')
 const {createAppointment} = require('../io/database/appointments')
 const {getActiveCoaches} = require('../io/database/users')
 
-router.all('/', (req, res) => {
-  const {accessToken} = req.session
+router.all('/', (request, response) => {
+  const {accessToken} = request.session
 
   gcal(accessToken).calendarList.list((err, data) =>
-    err ? res.send(500,err) : res.json(data)
+    err ? response.send(500, err) : response.json(data)
   )
+})
+
+router.all('/init', (request, response) => {
+  var options = {
+    uri: 'https://www.googleapis.com/oauth2/v3/tokeninfo',
+    qs: {
+      id_token: '89cf37a725f924ce42131e0aa7523822ca885d30' // -> uri + '?access_token=xxxxx%20xxxxx' 
+    },
+    headers: {'User-Agent': 'Request-Promise'},
+    json: true 
+  };
+ 
+  rp(options)
+    .then(responses => {
+      console.log('Did I get anything?', responses.responses[0].answers);
+    })
+    .catch(error => console.log(error))
 })
 
 router.all('/find_next', (request, response) => {
@@ -34,6 +51,8 @@ router.all('/find_next', (request, response) => {
     .then(coachesArray => {
       console.log('coachesArray', coachesArray)
       P.all(coachesArray.map(coach => {
+        console.log('coach info', coach)
+        console.log('session', request.session)
         // use google access token from db
         const access_token = request.session.access_token
         const google_calendar = gcal(access_token)
@@ -109,5 +128,6 @@ router.all('/:calendarId', (req, res) => {
     })
   })
 })
+
 
 module.exports = router

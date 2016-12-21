@@ -12,10 +12,6 @@ const createUser = attributes =>
 const findUserByHandle = github_handle => 
   findRecord('users', 'github_handle', github_handle).then(user => user)
 
-const findActiveCoaches = coach_handle => 
-  findRecord('users', 'coach_handle', coach_handle)
-    .then(user => user)
-
 const updateUserByHandle = (github_handle, attributes) => 
   updateRecord('users', 'github_handle', github_handle, attributes).then(user => user)
 

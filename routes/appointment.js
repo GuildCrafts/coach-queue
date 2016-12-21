@@ -42,7 +42,7 @@ router.get('/feedback', (request, response, next) =>{
     json: true 
   };
  
-rp(options)
+  rp(options)
     .then(responses => {
         console.log('Did I get anything?', responses.responses[0].answers);
     })
