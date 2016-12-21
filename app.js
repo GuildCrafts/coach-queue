@@ -39,6 +39,7 @@ app.use('/api/v1/appointments', appointment)
 app.use('/google', googleRoutes)
 app.use(ensureGoogleAuth)
 app.use('/calendar', calendarRoutes)
+// app.use('/init', initRoutes)
 
 const compiler = webpack(webpackConfig)
 const middleware = webpackMiddleware(compiler, {
