@@ -4,16 +4,23 @@ const favicon = require('serve-favicon')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+require('babel-polyfill')
 
 const webpack = require('webpack')
 const webpackMiddleware = require('webpack-dev-middleware')
 const webpackConfig = require('./webpack.config.js')
+const {
+  addUserToRequestFromJWT,
+  extendJWTExpiration,
+  refreshUserFromIDMService
+} = require('@learnersguild/idm-jwt-auth/lib/middlewares')
 
 const coach = require('./routes/coach')
 const appointment = require('./routes/appointment')
 const googleRoutes = require('./routes/google')
 
 const calendar = require('./init/googleCalendar')
+const auth = require('./init/auth')
 
 const app = express()
 
@@ -28,11 +35,20 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
+//need to do this as idm-jwt-auth token needs this
+process.env.JWT_PUBLIC_KEY  = _config.auth.JWT_PUBLIC_KEY
+
+
 app.use('/api/v1/coaches', coach)
 app.use('/api/v1/appointments', appointment)
 app.use('/google', googleRoutes)
 
 calendar.init(app, _config)
+
+//we dont have a dev IDM, so
+if (!_config.auth.isDisabled) {
+  auth.init(app, _config)
+};
 
 const compiler = webpack(webpackConfig)
 const middleware = webpackMiddleware(compiler, {
@@ -49,13 +65,6 @@ const middleware = webpackMiddleware(compiler, {
 })
 
 app.use(middleware)
-
-app.get('*', (request, response) => {
-  response.write(middleware.fileSystem.readFileSync(
-    path.join(__dirname, '/public/dist/index.html'))
-  )
-  response.end()
-})
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
