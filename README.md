@@ -59,17 +59,17 @@ We're using `knex` to generate our SQL
 #### Commands by User Type
 
 ##### Attendees
-| Command                      | V  | Description                                                                  |
-| ---------------------------- | -- | ---------------------------------------------------------------------------- |
-| /coach                       | V1 | Gets a list of all available coaches.                                        |
-| /coach @partnersGithub       | V1 | Searches all coaches and finds and schedules the next available appointment. |
-| /coach nextAppointment       | V2 | Finds and displays a Mentee's next appointment.                              |
-| /coach mySchedule            | V2 | Shows all scheduled appointments                                             |
+| Command                      |  V  | Description                                                                  |
+| ---------------------------- | --- | ---------------------------------------------------------------------------- |
+| /coach                       |  V1 | Gets a list of all available coaches.                                        |
+| /coach @partnersGithub       |  V1 | Searches all coaches and finds and schedules the next available appointment. |
+| /coach nextAppointment       |  V2 | Finds and displays a Mentee's next appointment.                              |
+| /coach mySchedule            |  V2 | Shows all scheduled appointments                                             |
 
 ##### Coaches
-| Command                      | V  | Description                                                                    |
-| ---------------------------- | -- | ------------------------------------------------------------------------------ |
-| /coach                       | V1 | Gets a list of all available coaches.                                          |
-| /coach init                  | V1 | Creates a user in the DB & validates their google account.                     |
-| /coach activate              | V1 | Makes them available to coach, turns active_coach in users table to true.      |
-| /coach deactivate            | V1 | Makes them unavailable to coach, turns active_coach in users table to false.   |
+| Command                      |  V  | Description                                                                  |
+| ---------------------------- | --- | ---------------------------------------------------------------------------- |
+| /coach                       |  V1 | Gets a list of all available coaches.                                        |
+| /coach init                  |  V1 | Creates a user in the DB & validates their google account.                   |
+| /coach activate              |  V1 | Makes them available to coach, turns active_coach in Users to true.          |
+| /coach deactivate            |  V1 | Makes them unavailable to coach, turns active_coach in Users to false.       |
