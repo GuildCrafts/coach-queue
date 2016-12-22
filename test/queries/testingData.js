@@ -2,43 +2,44 @@ const datetime = new Date(2017, 1, 27, 16, 5)
 
  const appointmentsData = [
   {
-    coach_id:"4321cd",
-    date_time: datetime,
+    coach_handle:"ImALeafyPlant",
+    appointment_start: datetime,
+    appointment_end: datetime,
     appointment_length: 45,
     description: "Something here now.",
-    attendees: ["someone_123", "aNameIsCool", "peopleLikeLearning"]
+    mentee_handles: ["someone_123", "aNameIsCool", "peopleLikeLearning"]
   },
   {
-    coach_id:"1234ab",
-    date_time: datetime,
+    coach_handle:"GoSammyGo",
+    appointment_start: datetime,
+    appointment_end: datetime,
     appointment_length: 45,
     description: "Solve my bug coach.",
-    attendees: ["someone_123", "reallycoolname"]
+    mentee_handles: ["someone_123", "reallycoolname"]
   },
   {
-    coach_id:"4321cd",
-    date_time: datetime,
+    coach_handle:"ImALeafyPlant",
+    appointment_start: datetime,
+    appointment_end: datetime,
     appointment_length: 45,
     description: "We want a walkthrough for setting up express.",
-    attendees: ["somebody_hit", "aNameIsCool", "peopleLikeLearning"]
+    mentee_handles: ["somebody_hit", "aNameIsCool", "peopleLikeLearning"]
   }
 ]
 
 const user = [{
-    lg_id: "1234ab",
-    can_coach: true,
-    active_calender: true,
+    github_handle: "ImALeafyPlant",
     active_coach: false,
     google_token: "A_TOKEN",
-    github_handle: "probably_a_human"
+    email: "flowers@gmail.netorg",
+    calendar_ids: ['flowers@gmail.netorg', 'flowers@lguild.net']
   },
   {
-    lg_id: "nope",
-    can_coach: false,
-    active_calender: false,
+    github_handle: "GoSammyGo",
     active_coach: false,
-    google_token: "nope",
-    github_handle: "nope-not-ever"
+    google_token: "ANOTHER_TOKEN",
+    email: "Samsamsam@someemail.org",
+    calendar_ids: ['Samsamsam@someemail.org']
   }
 ]
 

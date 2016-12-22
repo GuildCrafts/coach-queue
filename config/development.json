@@ -10,6 +10,6 @@
     "client_secret": "1516ab0d6b3aad18f9652fcc478ee3fca8f50c5b",
     "JWT_PUBLIC_KEY": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnk0u5Aag3eJk3FaiG9H+\nv/NLRjiZxFXGJBoOO5Zhal1j8tk1D1vkWRMk+KdCjN998s//62kwYMLkAjOuEoCc\n4Lb6hCeHVIgL+nX9JOxEny0Zi6Koli1KnyQNUZ7vVYHf5NZ7k1h6MShYIzhUPdks\ntiE9nQMtP18JBupccES986iMZw8hra3AGjTBXR6siRePnBa84rYlPhzETjZX4jf6\nM+aDI7+KY3ztrkcBSQL7sbPdILBepBzxHCN1uqUBoYbVTYPZYMmaGsK553KcVds2\nB83LAy626KRAD7Sp1/NwgRIcL55bB1xef/Q+qjSnIOGd4r2JkmjmNLEM4A0p1rEo\nFQIDAQAB\n-----END PUBLIC KEY-----",
     "IDM_BASE_URL": "http://idm.learnersguild.dev",
-    "isDisbled": true
+    "isDisabled": true
    }
 }

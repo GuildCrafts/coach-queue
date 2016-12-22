@@ -1,14 +1,14 @@
 const {expect, app, chai} = require('../setup')
+const {user} = require('./testingData')
 const {
   createUser,
-  findUserByLgId,
-  updateUserByLgId,
-  deleteUserByLgId,
+  findUserByHandle,
+  updateUserByHandle,
+  deleteUserByHandle,
   getActiveCoaches,
   activateCoach,
   deactivateCoach
 } = require('../../io/database/users')
-const {user} = require('./testingData')
 
 describe('queryUsers', () => {
   Promise.all([
@@ -18,14 +18,15 @@ describe('queryUsers', () => {
   .then(user => {
     describe('findUser', () => {
       it('should find a user', done => {
-        findUserByLgId(user[0].lg_id)
+        findUserByHandle(user[0].github_handle)
           .then(user => {
             expect(user).to.be.a('object')
-            expect(user.lg_id).to.eql('1234ab')
-            expect(user.can_coach).to.eql(true)
-            expect(user.active_calender).to.eql(true)
+            expect(user.github_handle).to.eql('ImALeafyPlant')
             expect(user.active_coach).to.eql(false)
             expect(user.google_token).to.eql("A_TOKEN")
+            expect(user.email).to.eql("flowers@gmail.netorg")
+            expect(user.calendar_ids).to.be.a('array')
+            expect(user.calendar_ids).to.eql(['flowers@gmail.netorg', 'flowers@lguild.net'])
             done()
           })
       })
@@ -33,12 +34,10 @@ describe('queryUsers', () => {
 
     describe('updateUser', () => {
       it('should update a user record', done => {
-        updateUserByLgId(user[0].lg_id, { active_coach: true })
+        updateUserByHandle(user[0].github_handle, { active_coach: true })
           .then(user => {
             expect(user).to.be.a('object')
-            expect(user.lg_id).to.eql('1234ab')
-            expect(user.can_coach).to.eql(true)
-            expect(user.active_calender).to.eql(true)
+            expect(user.github_handle).to.eql('ImALeafyPlant')
             expect(user.active_coach).to.eql(true)
             expect(user.google_token).to.eql("A_TOKEN")
             done()
@@ -52,11 +51,12 @@ describe('queryUsers', () => {
           .then(coaches => {
             let coach = coaches[0]
             expect(coach).to.be.a('object')
-            expect(coach.lg_id).to.eql('1234ab')
-            expect(coach.can_coach).to.eql(true)
-            expect(coach.active_calender).to.eql(true)
+            expect(coach.github_handle).to.eql('kitty_mitty')
             expect(coach.active_coach).to.eql(true)
-            expect(coach.google_token).to.eql("A_TOKEN")
+            expect(coach.google_token).to.eql("API_TOKEN")
+            expect(coach.email).to.eql("email@email.com")
+            expect(coach.calendar_ids).to.be.a('array')
+            expect(coach.calendar_ids).to.eql(['email@email.com'])
             done()
           })
       })
@@ -64,14 +64,15 @@ describe('queryUsers', () => {
 
     describe('Activate a coach', () => {
       it('should activate a coach', done => {
-        activateCoach('nope-not-ever')
+        activateCoach('GoSammyGo')
           .then(coach => {
             expect(coach).to.be.a('object')
-            expect(coach.lg_id).to.eql('nope')
-            expect(coach.can_coach).to.eql(false)
-            expect(coach.active_calender).to.eql(false)
+            expect(coach.github_handle).to.eql('GoSammyGo')
             expect(coach.active_coach).to.eql(true)
-            expect(coach.google_token).to.eql("nope")
+            expect(coach.google_token).to.eql("ANOTHER_TOKEN")
+            expect(coach.email).to.eql("Samsamsam@someemail.org")
+            expect(coach.calendar_ids).to.be.a('array')
+            expect(coach.calendar_ids).to.eql(['Samsamsam@someemail.org'])
             done()
           })
       })
@@ -79,14 +80,15 @@ describe('queryUsers', () => {
 
     describe('Deactivate a coach', () => {
       it('should Deactivate a coach', done => {
-        deactivateCoach('nope-not-ever')
+        deactivateCoach('GoSammyGo')
           .then(coach => {
             expect(coach).to.be.a('object')
-            expect(coach.lg_id).to.eql('nope')
-            expect(coach.can_coach).to.eql(false)
-            expect(coach.active_calender).to.eql(false)
+            expect(coach.github_handle).to.eql('GoSammyGo')
             expect(coach.active_coach).to.eql(false)
-            expect(coach.google_token).to.eql("nope")
+            expect(coach.google_token).to.eql("ANOTHER_TOKEN")
+            expect(coach.email).to.eql("Samsamsam@someemail.org")
+            expect(coach.calendar_ids).to.be.a('array')
+            expect(coach.calendar_ids).to.eql(['Samsamsam@someemail.org'])
             done()
           })
       })
@@ -94,7 +96,7 @@ describe('queryUsers', () => {
 
     describe('deleteUser', () => {
       it('should delete a user record', done => {
-        deleteUserByLgId(user[0].lg_id)
+        deleteUserByHandle(user[0].github_handle)
           .then(user => {
             //knex sets no user in db equal to 1
             expect(user).to.eql(1)

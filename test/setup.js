@@ -14,8 +14,8 @@ const knex = require('knex')(config)
 const app = require('../app')
 const React = require('react')
 
-const App = require('../client/App').default
-const ListCoaches = require('../client/ListCoaches').default
+// const App = require('../client/App').default
+// const ListCoaches = require('../client/ListCoaches').default
 
 knex.truncateAllTables = () =>
   knex.schema.raw(`
@@ -48,6 +48,4 @@ module.exports = {
   knex,
   React,
   app,
-  App,
-  ListCoaches
 }
