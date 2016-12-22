@@ -14,12 +14,11 @@ router.get('/auth/callback',
     response.redirect('/')
   })
 
-// TODO 
+// TODO
 // ERROR HANDLING
-// an error I got back from google that needs to be sorted out: 
+// an error I got back from google that needs to be sorted out:
 // {"error":{"name":"InternalOAuthError",
   // "message":"failed to obtain access token",
   // "oauthError":{"statusCode":400,"data":"{\n  \"error\" : \"invalid_grant\",\n  \"error_description\" : \"Code was already redeemed.\"\n}"}}}
 
 module.exports = router
-

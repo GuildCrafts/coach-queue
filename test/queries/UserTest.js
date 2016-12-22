@@ -1,7 +1,7 @@
 const {expect, app, chai} = require('../setup')
 const {user} = require('./testingData')
 const {
-  createUser, 
+  createUser,
   findUserByHandle,
   updateUserByHandle,
   deleteUserByHandle,
@@ -51,12 +51,12 @@ describe('queryUsers', () => {
           .then(coaches => {
             let coach = coaches[0]
             expect(coach).to.be.a('object')
-            expect(coach.github_handle).to.eql('ImALeafyPlant')
+            expect(coach.github_handle).to.eql('kitty_mitty')
             expect(coach.active_coach).to.eql(true)
-            expect(coach.google_token).to.eql("A_TOKEN")
-            expect(coach.email).to.eql("flowers@gmail.netorg")
+            expect(coach.google_token).to.eql("API_TOKEN")
+            expect(coach.email).to.eql("email@email.com")
             expect(coach.calendar_ids).to.be.a('array')
-            expect(coach.calendar_ids).to.eql(['flowers@gmail.netorg', 'flowers@lguild.net'])
+            expect(coach.calendar_ids).to.eql(['email@email.com'])
             done()
           })
       })

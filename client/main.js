@@ -1,5 +1,16 @@
 import ReactDom from 'react-dom'
 import React from 'react'
-import App from './App'
+import { Router, Route, browserHistory } from 'react-router'
+import LandingPage from './LandingPage'
+import ScheduleSession from './SheduleSession'
+import ActivateCoach from './ActivateCoach'
 
-ReactDom.render(<App/>, document.getElementById('root'))
+const ReactRouter = () => (
+  <Router history={browserHistory}>
+    <Route path="/" component={LandingPage} />
+    <Route path="/schedule_session" component={ScheduleSession} />
+    <Route path="/activate_coach" component={ActivateCoach} />
+  </Router>
+)
+
+ReactDom.render(<ReactRouter />, document.getElementById('root'))

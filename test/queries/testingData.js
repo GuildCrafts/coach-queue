@@ -3,24 +3,27 @@ const datetime = new Date(2017, 1, 27, 16, 5)
  const appointmentsData = [
   {
     coach_handle:"ImALeafyPlant",
-    date_time: datetime,
+    appointment_start: datetime,
+    appointment_end: datetime,
     appointment_length: 45,
     description: "Something here now.",
-    attendees: ["someone_123", "aNameIsCool", "peopleLikeLearning"]
+    mentee_handles: ["someone_123", "aNameIsCool", "peopleLikeLearning"]
   },
   {
     coach_handle:"GoSammyGo",
-    date_time: datetime,
+    appointment_start: datetime,
+    appointment_end: datetime,
     appointment_length: 45,
     description: "Solve my bug coach.",
-    attendees: ["someone_123", "reallycoolname"]
+    mentee_handles: ["someone_123", "reallycoolname"]
   },
   {
     coach_handle:"ImALeafyPlant",
-    date_time: datetime,
+    appointment_start: datetime,
+    appointment_end: datetime,
     appointment_length: 45,
     description: "We want a walkthrough for setting up express.",
-    attendees: ["somebody_hit", "aNameIsCool", "peopleLikeLearning"]
+    mentee_handles: ["somebody_hit", "aNameIsCool", "peopleLikeLearning"]
   }
 ]
 

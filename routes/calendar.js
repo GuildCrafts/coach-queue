@@ -41,10 +41,13 @@ router.all('/init/:githubHandle', (request, response) => {
   request.session.github_handle = github_handle
   const {access_token} = request.session
 
+  console.log('github_handle', github_handle, access_token)
   findUserByHandle(github_handle).then(user => {
+
     if (user && user.email !== null) {
       updateUserByHandle(github_handle, {google_token: access_token})
         .then(user => response.json(user))
+        .catch(error => response.json(error))
     } else if (user && user.email === null) {
       response.redirect('/calendar')
     } else {
