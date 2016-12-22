@@ -5,12 +5,12 @@ const gcal = require('google-calendar')
 const rp = require('request-promise')
 const {createAppointment} = require('../io/database/appointments')
 const {
-  findFreeSchedule, 
-  findNextAppointment, 
+  findFreeSchedule,
+  findNextAppointment,
   getAllCoachesNextAppts} = require('../models/appointment')
 const {
-  getActiveCoaches, 
-  findUserByHandle, 
+  getActiveCoaches,
+  findUserByHandle,
   createUser,
   updateUserByHandle} = require('../io/database/users')
 
@@ -22,7 +22,7 @@ router.all('/', (request, response) => {
 
   gcal(access_token).calendarList.list((error, data) => {
     if (error) {
-      return response.send(500, error) 
+      return response.send(500, error)
     } else {
       // use radio buttons to choose which calendar to work with
       // updateUserByHandle(github_handle, {email: gCalEmail})
@@ -48,9 +48,9 @@ router.all('/init/:githubHandle', (request, response) => {
     
     } else {
       createUser({
-        github_handle, 
-        active_coach: false, 
-        google_token: access_token, 
+        github_handle,
+        active_coach: false,
+        google_token: access_token,
       })
       .then((data) => response.json('/calendar'))
     }
@@ -66,15 +66,15 @@ router.all('/find_next', (request, response) => {
     .then(coachesArray => getAllCoachesNextAppts(coachesArray, access_token))
       .then(allCoachesNextAppointments => {
         // TODO: we seem to be going past the time ranges to find appt, fix the bug
-        // TODO: events are created with overlap?! maybe it is not finding the 
+        // TODO: events are created with overlap?! maybe it is not finding the
           // newly created events when you check for busytimes in the next request
-        const sortedAppointments = allCoachesNextAppointments.sort((a, b) => 
+        const sortedAppointments = allCoachesNextAppointments.sort((a, b) =>
           a.earliestAppointment.start > b.earliestAppointment.start
         )
         let earliestApptData = sortedAppointments[0]
         let {calendarId, earliestAppointment} = earliestApptData
         console.log('earliest Appointment Start: ', earliestAppointment.start)
-        
+
         let event = {
           'summary': 'Coaching session with **insert Github Handle***',
           'description': 'Go get \'em champ',
@@ -89,8 +89,8 @@ router.all('/find_next', (request, response) => {
         }
 
         gcal(access_token).events.insert(calendarId, event, (error, data) =>
-          error 
-          ? res.send(500, error) 
+          error
+          ? res.send(500, error)
           : createAppointment({
             appointment_start: data.start.dateTime,
             appointment_end: data.end.dateTime,
@@ -104,7 +104,6 @@ router.all('/find_next', (request, response) => {
         )
       })
 })
-
 
 // router.all('/:calendarId', (req, res) => {
 //   const { access_token } = req.session;
@@ -162,6 +161,5 @@ router.all('/find_next', (request, response) => {
 //     })
 //   })
 // })
-
 
 module.exports = router

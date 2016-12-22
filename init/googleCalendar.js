@@ -1,10 +1,8 @@
 const init = function(expressApp, config) {
-  var passport = require('passport');
-  var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-  var session = require('express-session');
+  const passport = require('passport')
+  const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 
-  expressApp.use(session({ secret: 'learnersguildsecretkey-coach-que'}));
-  expressApp.use(passport.initialize());
+  expressApp.use(passport.initialize())
 
   passport.use(new GoogleStrategy({
       clientID: config.google.clientID,
@@ -13,10 +11,10 @@ const init = function(expressApp, config) {
       scope: config.google.scopes
     },
     function(accessToken, refreshToken, profile, done) {
-      profile.accessToken = accessToken;
-      return done(null, profile);
+      profile.accessToken = accessToken
+      return done(null, profile)
     }
-  ));
+  ))
 }
 
-module.exports = {init};
+module.exports = {init}
