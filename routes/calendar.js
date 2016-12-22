@@ -7,17 +7,43 @@ const moment = require('moment')
 const rp = require('request-promise')
 const {findFreeSchedule, findNextAppointment} = require('../models/appointment')
 const {createAppointment} = require('../io/database/appointments')
-const {getActiveCoaches, 
+const {
+  getActiveCoaches, 
   findUserByHandle, 
   createUser,
   updateUserByHandle} = require('../io/database/users')
 
-router.all('/', (request, response) => {
-  const {accessToken} = request.session
+//YOU WILL BE FORCED TO LOG IN TO GCAL ACCESS ANY OF THESE ROUTES
 
-  gcal(accessToken).calendarList.list((err, data) =>
-    err ? response.send(500, err) : response.json(data)
+router.all('/', (request, response) => {
+  const {access_token} = request.session
+  gcal(access_token).calendarList.list((error, data) => 
+    error ? response.send(500, error) : response.json(data)
   )
+})
+
+
+router.all('/checkIDM', (request, response) => {
+  // route they hit when they first see if they're a coach, from spash screen
+  // gets their github information
+  const {access_token} = request.session
+  response.json({message: "you're verified with idm, we're passing your github info (will redirect to /init/:githubHandle"})
+})
+
+router.all('/chooseCal', (request, response) => {
+  const {access_token} = request.session
+  //need to make sure github info is here..
+
+  gcal(access_token).calendarList.list((error, data) => {
+    if (error) {
+      return response.send(500, error) 
+    } else {
+      // use radio buttons to choose which calendar to work with
+      // updateUserByHandle(github_handle, {email: gCalEmail})
+      response.json(data)
+      // ultimately will redirect to init/:githubHandle
+    }
+  })
 })
 
 router.all('/init/:githubHandle', (request, response) => {
@@ -26,19 +52,24 @@ router.all('/init/:githubHandle', (request, response) => {
   const {access_token} = request.session
 
   findUserByHandle(github_handle).then(user => {
-    if (user) {
+    console.log('user=============', user)
+    if (user && user.email !== null) {
+      console.log('got into user if block')
       updateUserByHandle(github_handle, {google_token: access_token})
-      .then(response.json({message: `You're already in the system.`}))
+      .then(response.json({message: `You're already in the system.(redirect me to activate/deactivate page)`}))
       .catch(error => console.error(error))
+    } else if (user && user.email === null) {
+      console.log('in the user.email is null block')
+      response.redirect('/calendar/chooseCal')
     } else {
+      console.log('got into else')
       createUser({
         github_handle, 
         active_coach: false, 
         google_token: access_token, 
       })
-      .then(() => {
-        request.session.github_handle = github_handle
-        response.redirect('/google/auth')
+      .then((data) => {
+        response.redirect('/calendar/chooseCal')
       })
       .catch(error => console.error(error))
     }
@@ -46,7 +77,6 @@ router.all('/init/:githubHandle', (request, response) => {
 })
 
 router.all('/find_next', (request, response) => {
-  //TODO: make sure email and calendar id's fields in DB are filled in on 'onboarding'
   const startOfToday = moment().startOf('day').add({h:9})
   const endOfToday = moment().startOf('day').add({h:17.5})
 
