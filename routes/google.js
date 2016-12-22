@@ -1,21 +1,25 @@
-var express = require('express');
-var router = express.Router();
-var passport = require('passport')
+const express = require('express')
+const router = express.Router()
+const passport = require('passport')
 const {updateUserByHandle} = require('../io/database/users')
 
 router.get('/auth',
-  passport.authenticate('google', { session: false }));
+  passport.authenticate('google', { session: false }))
 
 router.get('/auth/callback',
-  passport.authenticate('google', { session: false, failureRedirect: '/login' }),
-  (req, res) => {
-    req.session.access_token = req.user.accessToken;
-    const {access_token, github_handle} = req.session
+  passport.authenticate('google', {session: false, failureRedirect: '/login'}),
+  (request, response) => {
+    request.session.access_token = request.user.accessToken
+    console.log('am i getting redirected here??')
+    response.redirect('/')
+  })
 
-    if(github_handle){
-      updateUserByHandle(github_handle, {google_token: access_token})
-    }
-    res.redirect('/');
-  });
+// TODO 
+// ERROR HANDLING
+// an error I got back from google that needs to be sorted out: 
+// {"error":{"name":"InternalOAuthError",
+  // "message":"failed to obtain access token",
+  // "oauthError":{"statusCode":400,"data":"{\n  \"error\" : \"invalid_grant\",\n  \"error_description\" : \"Code was already redeemed.\"\n}"}}}
 
-module.exports = router;
+module.exports = router
+

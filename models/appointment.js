@@ -1,4 +1,6 @@
 const gcal = require('google-calendar')
+const P = require('bluebird')
+const gcalP = P.promisifyAll(gcal)
 const moment = require('moment')
 const { findUserByHandle } = require('../io/database/users')
 
@@ -12,7 +14,7 @@ const findFreeSchedule = (busyTime) => {
     : moment()
   let counter = 0
 
-  if(busyTime.length === 0) {
+  if(!Array.isArray(busyTime)) {
     return {start: currentTime, end: dayEndTime}
   }
 
@@ -29,7 +31,7 @@ const findFreeSchedule = (busyTime) => {
     if(busyTime.length === counter){
       freetimes.push({start:currentTime, end:dayEndTime})
     }
-
+    console.log('your freetimes are:', freetimes)
     return freetimes
   }, [])
 }
@@ -64,8 +66,44 @@ const findNextAppointment = (freetimes) => {
   }
 }
 
+const getAllCoachesNextAppts = (coachesArray, access_token) => {
+  const startOfToday = moment().startOf('day').add({h:9})
+  const endOfToday = moment().startOf('day').add({h:17.5})
+  let endOfDay = moment() > endOfToday
+    ? moment().endOf('day').add({h:17.5, ms:1})
+    : endOfToday
 
-module.exports = {
+  let startOfDay = moment().isBetween(endOfToday, moment().endOf('day'))
+    ? moment().endOf('day').add({h:9, ms:1})
+    : startOfToday
+
+  return P.all(coachesArray.map(coach => {
+    const freeBusyP = P.promisifyAll(gcal(access_token).freebusy)
+    const calendarId = coach.calendar_ids[0]
+
+    return freeBusyP.queryAsync({
+      items: [{id:`${calendarId}`}],
+      timeMin: startOfDay,
+      timeMax: endOfDay
+    })
+    .then(coachBusyTime => {
+      // console.log(calendarId)
+      console.log('YOUR BUSY TIME =======', coachBusyTime.calendars)
+      console.dir(coachBusyTime.calendars)
+      return findFreeSchedule(coachBusyTime)
+    })
+    .then(coachFreeTime => {
+      return {
+        calendarId,
+        github_handle: coach.github_handle,
+        earliestAppointment: findNextAppointment(coachFreeTime.freeTime)
+      }
+    })
+  }))
+}
+
+module.exports = { 
   findFreeSchedule,
-  findNextAppointment
+  findNextAppointment,
+  getAllCoachesNextAppts
 }

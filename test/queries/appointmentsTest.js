@@ -1,5 +1,6 @@
 const {expect, app, chai} = require('../setup')
 const {appointmentsData} = require('./testingData')
+const moment = require('moment')
 const {
   createAppointment,
   findFirstAppointmentByAttendee,
@@ -9,36 +10,33 @@ const {
   deleteAppointmentById
 } = require('../../io/database/appointments')
 
-describe('Appointment Query', () => {
+describe('Appointment DB Queries: ', () => {
   const appointment = {
-    date_time: new Date(2017, 1, 27, 16, 5),
-    coach_handle: 'ImALeafyPlant',
     appointment_length: 45,
     description: "We want a walkthrough for setting up express.",
-    mentee_handles: ['someone_123', 'aNameIsCool', 'peopleLikeLearning']
+    coach_handle: 'ImALeafyPlant',
+    mentee_handles: ['someone_123', 'aNameIsCool', 'peopleLikeLearning'],
+    appointment_start: moment('Wed, 31 Jan 2018 22:00:00 GMT').toDate(),
+    appointment_end: moment('Wed, 31 Jan 2018 22:30:00 GMT').toDate(),
   }
-  createAppointment({
-    date_time: apptData.start, 
-    coach_handle: "imaleafyplant",
-    appointment_length: 30,
-    description: "Please help.",
-    mentee_handles: [ luvlearning, cupofjoe, codeandstuff ]
-  })
 
-  describe('Inserts new appointment', () => {
+  xdescribe('Inserts new appointment', () => {
     it('should insert a appointment into the database', done => {
       createAppointment(appointment)
         .then(newAppointment => {
+          console.log(newAppointment)
           expect(newAppointment).to.be.a('object')
           expect(newAppointment.coach_handle).to.eql('ImALeafyPlant')
-          expect(newAppointment.date_time)
-            .to.equalDate(new Date(2017, 1, 27, 16, 5))
+          expect(newAppointment.appointment_start)
+            .to.equal(moment('Wed, 31 Jan 2018 22:30:00 GMT').toDate())
           expect(newAppointment.appointment_length).to.eql(45)
           expect(newAppointment.description)
             .to.eql("We want a walkthrough for setting up express.")
           expect(newAppointment.mentee_handles).to.be.a('array')
           expect(newAppointment.mentee_handles)
             .to.eql(['someone_123', 'aNameIsCool', 'peopleLikeLearning'])
+          expect(newAppointment.appointment_end)
+            .to.equal(moment('Wed, 31 Jan 2018 22:30:00 GMT').toDate())
           done()
         })
     })
