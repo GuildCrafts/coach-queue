@@ -4,6 +4,7 @@ const favicon = require('serve-favicon')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const session = require('express-session')
 // Note: this is required because idm-jwt-auth doesnt work with ES5
 require('babel-polyfill')
 
@@ -40,26 +41,24 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-calendar.init(app, _config)
-
-const ensureGoogleAuth = (req, res, next) =>
-  req.session.access_token ? next() : res.redirect('/google/auth')
-
 //need to do this as idm-jwt-auth token needs this
 process.env.JWT_PUBLIC_KEY  = _config.auth.JWT_PUBLIC_KEY
 
 
-app.use('/api/v1/coaches', coach)
-app.use('/api/v1/appointments', appointment)
-app.use('/google', googleRoutes)
-app.use(ensureGoogleAuth)
-app.use('/calendar', calendarRoutes)
-// app.use('/init', initRoutes)
-
 //we dont have a dev IDM, so
 if (!_config.auth.isDisabled) {
-  auth.init(app, _config)
+    auth.init(app, _config)
 };
+
+app.use('/api/v1/coaches', coach)
+app.use('/api/v1/appointments', appointment)
+
+app.use('/google', googleRoutes)
+
+calendar.init(app, _config)
+
+app.use('/calendar', calendarRoutes)
+// app.use('/init', initRoutes)
 
 const compiler = webpack(webpackConfig)
 const middleware = webpackMiddleware(compiler, {
@@ -90,7 +89,7 @@ app.use((err, req, res, next) => {
   res.locals.error = req.app.get('env') === 'development' ? err : {}
 
   res.status(err.status || 500)
-  res.json({error:err})
+  res.json({error:err.stack})
 })
 
 module.exports = app

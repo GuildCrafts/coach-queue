@@ -14,7 +14,11 @@ const {
   createUser,
   updateUserByHandle} = require('../io/database/users')
 
+const ensureGoogleAuth = (req, res, next) =>
+      (req.session && req.session.access_token) ? next() : res.redirect('/google/auth')
+
 //YOU WILL BE FORCED TO LOG IN TO GCAL ACCESS ANY OF THESE ROUTES
+router.use(ensureGoogleAuth)
 
 router.all('/', (request, response) => {
   const {access_token} = request.session

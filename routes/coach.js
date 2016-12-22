@@ -14,7 +14,6 @@ router.get('/active', (request, response) =>
 router.get('/active/:githubHandle', (request, response) => {
   const github_handle = request.params.githubHandle
   const {access_token} = request.session
-  console.log('SESSSION>>??', request.session)
   findUserByHandle(github_handle).then(user => {
     if (user) {
       activateCoach(github_handle)
