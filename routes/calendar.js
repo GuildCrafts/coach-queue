@@ -35,7 +35,7 @@ router.all('/', (request, response) => {
   })
 })
 
-router.all('/active', (request, response) => {
+router.all('/init/:githubHandle', (request, response) => {
   // const github_handle = request.user.handle // When we're live with IDM
   const github_handle = request.params.githubHandle
   request.session.github_handle = github_handle
@@ -44,26 +44,24 @@ router.all('/active', (request, response) => {
   findUserByHandle(github_handle).then(user => {
     if (user && user.email !== null) {
       updateUserByHandle(github_handle, {google_token: access_token})
-        .then(response.json(user))
-    
+        .then(user => response.json(user))
     } else if (user && user.email === null) {
       response.redirect('/calendar')
-    
     } else {
       createUser({
         github_handle,
         active_coach: false,
         google_token: access_token,
       })
-      .then((data) => response.json('/calendar'))
+      .then(data => response.json('/calendar'))
     }
   })
   .catch(error => console.error(error))
 })
 
 router.all('/find_next', (request, response) => {
-  const requestingMenteeHandle = request.user.handle
-  const secondMenteeHandle = request.params.handle
+  // const requestingMenteeHandle = request.user.handle
+  // const secondMenteeHandle = request.params.handle
   const access_token = request.session.access_token
 
   getActiveCoaches()
@@ -75,12 +73,14 @@ router.all('/find_next', (request, response) => {
         const sortedAppointments = allCoachesNextAppointments.sort((a, b) =>
           a.earliestAppointment.start > b.earliestAppointment.start
         )
+        console.log('sortedAppointments', sortedAppointments)
         let earliestApptData = sortedAppointments[0]
         let {calendarId, earliestAppointment} = earliestApptData
         console.log('earliest Appointment Start: ', earliestAppointment.start)
+        console.log('calendarId', calendarId)
 
         let event = {
-          'summary': `Coaching session with ${requestingMenteeHandle}`,
+          'summary': 'Coaching session with A-HUMAN',
           'description': 'Go get \'em champ',
           'start': {
             'dateTime': earliestAppointment.start.toDate(),
@@ -94,14 +94,14 @@ router.all('/find_next', (request, response) => {
 
         gcal(access_token).events.insert(calendarId, event, (error, data) =>
           error
-          ? res.send(500, error)
+          ? response.send(500, error)
           : createAppointment({
             appointment_start: data.start.dateTime,
             appointment_end: data.end.dateTime,
             coach_handle: earliestApptData.github_handle,
             appointment_length: 30,
             description: 'Please help.',
-            mentee_handles: [ requestingMenteeHandle, secondMenteeHandle ]
+            mentee_handles: [ 'someone', 'a-person', 'humansLoveCode' ]
           })
           .then(apptRecord => response.json(apptRecord))
         )

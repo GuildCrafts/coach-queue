@@ -14,6 +14,10 @@ const findFreeSchedule = (busyTime) => {
     : moment()
   let counter = 0
 
+  console.log('dayEndTim', dayEndTime)
+  console.log('dayStartTime', dayStartTime)
+  console.log('current', currentTime)
+
   if(!Array.isArray(busyTime)) {
     return {start: currentTime, end: dayEndTime}
   }
@@ -45,9 +49,7 @@ const findNextAppointment = (freetimes) => {
 
   let firstApppointment = {}
 
-  if(!Array.isArray(freetimes)) {
-    return {start: aptStart, end: aptEnd}
-  }
+  if(!Array.isArray(freetimes)) {return {start: aptStart, end: aptEnd}}
 
   for (let i = 0; i < freetimes.length; i++) {
     let startFreeTime = freetimes[i].start
