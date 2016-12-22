@@ -12,7 +12,7 @@ const findFreeSchedule = (busyTime) => {
     : moment()
   let counter = 0
 
-  if(busyTime.length === 0) {
+  if(typeof busyTime) {
     return {start: currentTime, end: dayEndTime}
   }
 

@@ -29,7 +29,7 @@ router.all('/init/:githubHandle', (request, response) => {
   findUserByHandle(github_handle).then(user => {
     if (user) {
       updateUserByHandle(github_handle, {google_token: access_token})
-      .then(response.json({message: `You're already in the system. run '/coach activate' to get started coaching.`}))
+      .then(response.json({message: `You're already in the system.`}))
       .catch(error => console.error(error))
     } else {
       createUser({
@@ -58,30 +58,86 @@ router.all('/find_next', (request, response) => {
   let startOfDay = moment().isBetween(endOfToday, moment().endOf('day'))
     ? moment().endOf('day').add({h:9, ms:1})
     : startOfToday
-  const busytimes = []
 
+  console.log('endofDay', endOfDay)
+  console.log('startof Day', startOfDay)
+
+  const access_token = request.session.access_token
+  const google_calendar = gcal(access_token)
   getActiveCoaches()
     .then(coachesArray => {
-      console.log('coachesArray', coachesArray)
+      // console.log('coachesArray', coachesArray)
+      //refactor this into a function
       P.all(coachesArray.map(coach => {
-        console.log('coach info', coach)
-        console.log('session', request.session)
-        // use google access token from db
-        const access_token = request.session.access_token
-        const google_calendar = gcal(access_token)
+        // TODO figure out how to pass the calendarId the subsequent then blocks
+        // console.log('coach info', coach)
+        // console.log('session', request.session)
+        console.log('coach:', coach)
         const freeBusyP = P.promisifyAll(google_calendar.freebusy)
-        const calendarId = coach.calendar_ids[0]        
+        const calendarId = coach.calendar_ids[0]
         return freeBusyP.queryAsync({
           items: [{id:`${calendarId}`}],
           timeMin: startOfDay,
           timeMax: endOfDay
         })
-      }))
-      .then(freeBusyTimes => {
-        console.log('got values::', freeBusyTimes)
-        response.json({a:1})
+        .then(coachBusyTime => {
+          console.log(calendarId)
+          console.log('YOUR BUSY TIME =======', coachBusyTime)
+          console.dir(coachBusyTime.calendars)
+          return findFreeSchedule(coachBusyTime)
+        })
+        .then(coachFreeTime => { 
+
+          return {calendarId,
+                  github_handle: coach.github_handle,
+                  earliestAppointment: findNextAppointment(coachFreeTime.freeTime)
+          }
+        })
+      }))      
+      .then(allCoachesNextAppointments => {
+        console.log('allCoaches::::', allCoachesNextAppointments)
+        // TODO: we seem to be going past the time ranges to find appt, fix the bug
+        const sortedAppointments = allCoachesNextAppointments.sort((a, b) => {
+          return a.earliestAppointment.start > b.earliestAppointment.start
+        })
+        let earliestApptData = sortedAppointments[0]
+        let earliestAppt = earliestApptData.earliestAppointment            
+        console.log('earliestApptData', earliestApptData) 
+        console.log('earliestAppt.end.toDate()', earliestAppt.end.toDate())
+        // TODO events are created with overlap?! maybe it is not finding the newly created events when you check for busytimes in the next request
+        let event = {
+          'summary': 'Coaching session with Somebody',
+          'description': 'Go get \'em champ',
+          'start': {
+            'dateTime': earliestAppt.start.toDate(),
+            'timeZone': 'America/Los_Angeles'
+          },
+          'end': {
+            'dateTime': earliestAppt.end.toDate(),
+            'timeZone': 'America/Los_Angeles'
+          }
+        }
+        console.log('earliestAppt', earliestAppt)
+        // let calendarId = 
+
+        google_calendar.events.insert(earliestApptData.calendarId, event, (err, data) => {
+          if (err) { return res.send(500, err) }
+          createAppointment({
+            appointment_start: data.start.dateTime,
+            appointment_end: data.end.dateTime,
+            coach_handle: earliestApptData.github_handle,
+            appointment_length: 30,
+            description: 'Please help.',
+            // TODO take this from the request params
+            mentee_handles: [ 'luvlearning', 'cupofjoe', 'codeandstuff' ]
+          }).then(databaseData => response.json(databaseData))
       })
     })
+      // .then( )
+      // console.log('everybody\'s next available appointments::', allCoachesNextAppointments)
+      // response.json({a:1})
+      // })
+  })
 })
 
 
