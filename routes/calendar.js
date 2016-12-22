@@ -12,7 +12,6 @@ const {getActiveCoaches,
   createUser,
   updateUserByHandle} = require('../io/database/users')
 
-
 router.all('/', (request, response) => {
   const {accessToken} = request.session
 

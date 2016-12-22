@@ -26,8 +26,6 @@ const datetime = new Date(2017, 1, 27, 16, 5)
 
 const user = [{
     github_handle: "ImALeafyPlant",
-    can_coach: true,
-    active_calender: true,
     active_coach: false,
     google_token: "A_TOKEN",
     email: "flowers@gmail.netorg",
@@ -35,8 +33,6 @@ const user = [{
   },
   {
     github_handle: "GoSammyGo",
-    can_coach: false,
-    active_calender: false,
     active_coach: false,
     google_token: "ANOTHER_TOKEN",
     email: "Samsamsam@someemail.org",

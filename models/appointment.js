@@ -12,7 +12,7 @@ const findFreeSchedule = (busyTime) => {
     : moment()
   let counter = 0
 
-  if(typeof busyTime) {
+  if(busyTime.length === 0) {
     return {start: currentTime, end: dayEndTime}
   }
 
@@ -64,8 +64,7 @@ const findNextAppointment = (freetimes) => {
   }
 }
 
-
-module.exports = {
+module.exports = { 
   findFreeSchedule,
   findNextAppointment
 }
