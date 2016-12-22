@@ -41,22 +41,21 @@ router.all('/init/:githubHandle', (request, response) => {
   findUserByHandle(github_handle).then(user => {
     if (user && user.email !== null) {
       updateUserByHandle(github_handle, {google_token: access_token})
-        .then(response.json({message: `You're already in the system.(redirect me to activate/deactivate page)`}))
-        .catch(error => console.error(error))
+        .then(response.json(user))
+    
     } else if (user && user.email === null) {
       response.redirect('/calendar')
+    
     } else {
       createUser({
         github_handle, 
         active_coach: false, 
         google_token: access_token, 
       })
-      .then((data) => {
-        response.redirect('/calendar')
-      })
-      .catch(error => console.error(error))
+      .then((data) => response.json('/calendar'))
     }
   })
+  .catch(error => console.error(error))
 })
 
 router.all('/find_next', (request, response) => {
