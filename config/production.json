@@ -1,2 +1,7 @@
 {"env": "production",
- "host": "idontknow.yet"}
+ "host": "idontknow.yet",
+ "auth": {
+   "JWT_PUBLIC_KEY": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2CPgyeZAlVYvX8RPX3E8\n1Xzq0Al4jfD4jyJmbyh594vGhigVOC17//Skq4oRPFBitI0IaTHUxcLNnok7nf2c\n0Nb4LtudpE48lp7PxpLrYivh3L2+5mhhWyh4W9dT8926lf5L2rj/NdqIyCTSllAt\nbbnOReDkdk7d3qc+chlmvEyM6NfV2gJFzZ4tFSZNyUyIZ2gJ7Fp50MJrNVEXYrom\nIeWSPmkxIyhEj9sOU2lw4GYNWCc+NmM62f2sq/JnuHXWod4a3IpTvsijISW9zjS6\nJUCXreAOWBp/Efy+pzAaC/Mg4hu7vcNvvKHqkW02ShXmvmnL42BTYCr/GbFqZAHF\niwIDAQAB\n-----END PUBLIC KEY-----",
+   "IDM_BASE_URL": "http://idm.learnersguild.org",
+  }
+}

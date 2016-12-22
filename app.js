@@ -4,11 +4,18 @@ const favicon = require('serve-favicon')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
-const session = require('express-session')
+// Note: this is required because idm-jwt-auth doesnt work with ES5
+require('babel-polyfill')
+
 
 const webpack = require('webpack')
 const webpackMiddleware = require('webpack-dev-middleware')
 const webpackConfig = require('./webpack.config.js')
+const {
+  addUserToRequestFromJWT,
+  extendJWTExpiration,
+  refreshUserFromIDMService
+} = require('@learnersguild/idm-jwt-auth/lib/middlewares')
 
 const coach = require('./routes/coach')
 const appointment = require('./routes/appointment')
@@ -16,6 +23,7 @@ const googleRoutes = require('./routes/google')
 const calendarRoutes = require('./routes/calendar')
 
 const calendar = require('./init/googleCalendar')
+const auth = require('./init/auth')
 
 const app = express()
 
@@ -37,12 +45,21 @@ calendar.init(app, _config)
 const ensureGoogleAuth = (req, res, next) =>
   req.session.access_token ? next() : res.redirect('/google/auth')
 
+//need to do this as idm-jwt-auth token needs this
+process.env.JWT_PUBLIC_KEY  = _config.auth.JWT_PUBLIC_KEY
+
+
 app.use('/api/v1/coaches', coach)
 app.use('/api/v1/appointments', appointment)
 app.use('/google', googleRoutes)
 app.use(ensureGoogleAuth)
 app.use('/calendar', calendarRoutes)
 // app.use('/init', initRoutes)
+
+//we dont have a dev IDM, so
+if (!_config.auth.isDisabled) {
+  auth.init(app, _config)
+};
 
 const compiler = webpack(webpackConfig)
 const middleware = webpackMiddleware(compiler, {
@@ -60,13 +77,8 @@ const middleware = webpackMiddleware(compiler, {
 
 app.use(middleware)
 
-app.get('*', (request, response) => {
-  response.write(middleware.fileSystem.readFileSync(
-    path.join(__dirname, '/public/dist/index.html'))
-  )
-  response.end()
-})
 
+// catch 404 and forward to error handler
 app.use((req, res, next) => {
   const error = new Error('Not Found')
   error.status = 404
