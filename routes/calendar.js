@@ -27,7 +27,7 @@ router.all('/find_next', (request, response) => {
   getActiveCoaches()
     .then(coachesArray => {
       if (_.isEmpty(coachesArray)) {
-        response.json({message: 'Could not book appointment',
+        response.json({error: 'Could not book appointment',
                        reason: 'There are no active coaches'})
       }
       return getAllCoachesNextAppts(coachesArray, currentTime)
@@ -61,7 +61,7 @@ router.all('/find_next', (request, response) => {
                                          .then(apptRecord => response.json(apptRecord))
                                         )
       } else {
-        response.json({message: 'Could not schedule appointment!',
+        response.json({error: 'Could not schedule appointment!',
                        reason: 'All coaches are booked out'});
       }
     })
