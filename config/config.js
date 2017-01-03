@@ -1,6 +1,8 @@
 const path = require('path')
 const fs = require('fs')
 
+let config
+
 const env = () => {
   return process.env.NODE_ENV || 'development'
 }
@@ -10,12 +12,17 @@ const testEnv = () => {
 }
 
 const readConfig = () => {
-  const _env = env()
-  const filepath = path.join(__dirname, `./${_env}.json`)
-  try {
-    return JSON.parse(fs.readFileSync(filepath).toString())
-  } catch(e) {
-    throw new Error(`Error reading config file : ${filepath}`)
+  if(config){
+    return config
+  } else {
+    const _env = env()
+    const filepath = path.join(__dirname, `./${_env}.json`)
+    try {
+      config = JSON.parse(fs.readFileSync(filepath).toString())
+      return config
+    } catch(e) {
+      throw new Error(`Error reading config file : ${filepath}`)
+    }
   }
 }
 

@@ -2,16 +2,26 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 const {updateUserByHandle} = require('../io/database/users')
+const config = require('../config/config').readConfig()
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+    done(null, user);
+});
 
 router.get('/auth',
-  passport.authenticate('google', { session: false }))
+           passport.authenticate('google', {scope: config.google.scopes}))
 
 router.get('/auth/callback',
-  passport.authenticate('google', {session: false, failureRedirect: '/login'}),
+  passport.authenticate('google', {failureRedirect: '/google/auth'}),
   (request, response) => {
     request.session.access_token = request.user.accessToken
-    console.log('am i getting redirected here??')
-    response.redirect('/')
+    updateUserByHandle(request.idmUser.handle,
+                       {google_token: request.user.accessToken})
+     .then(user => response.redirect('/'))
   })
 
 // TODO

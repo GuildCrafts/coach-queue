@@ -5,6 +5,7 @@ const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const passport = require('passport');
 require('babel-polyfill')
 
 const webpack = require('webpack')
@@ -28,6 +29,8 @@ const app = express()
 
 const config = require('./config/config')
 const _config = config.readConfig()
+const session = require('express-session')
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
@@ -35,12 +38,20 @@ app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
+app.use(session({secret: 'learners-guild-coach-que'}))
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'public')))
 
-process.env.JWT_PUBLIC_KEY  = _config.auth.JWT_PUBLIC_KEY
-
+//we dont have a dev IDM, so
 if (!_config.auth.isDisabled) {
   auth.init(app, _config)
+  app.use((req, res, next) => {
+    //Note: Since we are also using Passport, req.user is overriden on those
+    //routes
+    req.idmUser = req.user
+    next()
+  })
 }
 
 app.use(cors())
@@ -51,9 +62,10 @@ app.use(cors())
 //   next()
 // })
 
+app.use('/google', googleRoutes)
 app.use('/api/v1/coaches', coach)
 app.use('/api/v1/appointments', appointment)
-app.use('/google', googleRoutes)
+
 
 calendar.init(app, _config)
 app.use('/calendar', calendarRoutes)
@@ -91,7 +103,7 @@ app.use((err, req, res, next) => {
 
   // render the error page
   res.status(err.status || 500)
-  res.json({error:err})
+  res.json({error:err.stack})
 })
 
 module.exports = app

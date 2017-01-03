@@ -7,7 +7,7 @@ const init = function(expressApp, config) {
   passport.use(new GoogleStrategy({
       clientID: config.google.clientID,
       clientSecret: config.google.client_secret,
-      callbackURL: config.host + config.google.callbackURLPath,
+      callbackURL: config.host_fully_qualified + config.google.callbackURLPath,
       scope: config.google.scopes
     },
     function(accessToken, refreshToken, profile, done) {

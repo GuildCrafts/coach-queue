@@ -9,7 +9,7 @@
     "migrate:latest:rollback": "knex migrate:rollback --knexfile config/DBconfig.js",
     "migrate:test": "NODE_ENV=test knex migrate:latest --knexfile config/DBconfig.js",
     "migrate:rollback:test": "NODE_ENV=test knex migrate:rollback --knexfile config/DBconfig.js",
-    "test": "NODE_ENV=test mocha --timeout 10000 --recursive",
+    "test": "NODE_ENV=test mocha --timeout 10000 --recursive test/models/*.js",
     "seed:testdb": "knex seed:run --knexfile config/DBconfig.js",
     "webpack": "webpack --progress --colors --json | webpack-bundle-size-analyzer"
   },
@@ -30,6 +30,7 @@
     "knex": "^0.12.6",
     "material-ui": "^0.16.4",
     "moment": "^2.17.1",
+    "moment-timezone": "^0.5.10",
     "morgan": "~1.7.0",
     "passport": "^0.3.2",
     "pg": "^6.1.0",
