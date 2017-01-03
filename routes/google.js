@@ -27,7 +27,11 @@ router.get('/auth/callback',
     updateUserByHandle(request.idmUser.handle,
                        {google_token: request.user.accessToken,
                         google_refresh_token: request.user.refreshToken})
-     .then(user => response.redirect('/'))
+     .then(() => {
+       const redirectTo = request.session.redirectTo || '/'
+       delete request.session.redirectTo;
+       response.redirect(redirectTo)
+     })
   })
 
 module.exports = router

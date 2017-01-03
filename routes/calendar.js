@@ -46,7 +46,6 @@ router.all('/find_next', (request, response) => {
         let {calendarId, earliestAppointment, google_token} = earliestApptData
         console.log('earliest Appointment Start: ', earliestAppointment.start)
         console.log('calendarId', calendarId)
-        console.log('$$ appt::', earliestAppointment);
         let event = makeCalendarEvent(earliestAppointment.start, earliestAppointment.end);
         gcal(google_token).events.insert(calendarId, event, (error, data) =>
                                          error
@@ -68,21 +67,8 @@ router.all('/find_next', (request, response) => {
     })
 })
 
-//YOU WILL BE FORCED TO LOG IN TO GCAL ACCESS ANY OF THESE ROUTES
-router.use(ensureGoogleAuth)
-
-router.all('/', (request, response) => {
-  const {access_token, github_handle} = request.session
-  gcal(access_token).calendarList.list((error, calendarList) => {
-    if (error) {
-      return response.send(500, error)
-    } else {
-      // TODO use radio buttons to choose which calendar to work with
-      updateUserByHandle(github_handle,
-                         {calendar_ids: extractCalendarIds(calendarList)})
-        .then(() => response.json(calendarList));
-    }
-  })
+router.all('/', ensureGoogleAuth, (request, response) => {
+  response.json({message: `on page /calendar. Authenticated with google with accessToken:${request.session.access_token}`});
 })
 
 
