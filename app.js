@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const passport = require('passport');
-require('babel-polyfill')
 
 const webpack = require('webpack')
 const webpackMiddleware = require('webpack-dev-middleware')
