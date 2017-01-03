@@ -12,6 +12,7 @@ const init = function(expressApp, config) {
     },
     function(accessToken, refreshToken, profile, done) {
       profile.accessToken = accessToken
+      profile.refreshToken = refreshToken
       return done(null, profile)
     }
   ))

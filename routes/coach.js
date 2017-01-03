@@ -19,11 +19,9 @@ router.all('/active/:githubHandle', ensureGoogleAuth, (request, response) => {
   //githubhandle from the req.idmUser now
   const github_handle = request.params.githubHandle
   request.session.github_handle = github_handle
-  const {access_token} = request.session
+  const {access_token, google_refresh_token} = request.session
 
-  console.log('$$ request.session', request.session);
   findUserByHandle(github_handle).then(user => {
-    console.log('!!! entered user', user)
     gcal(access_token).calendarList.list((error, calendarList) => {
       if (error) {          
         return response.send(500, error.stack)
@@ -38,6 +36,7 @@ router.all('/active/:githubHandle', ensureGoogleAuth, (request, response) => {
           createUser({github_handle,
                       active_coach: true,
                       google_token: access_token,
+                      google_refresh_token: google_refresh_token,
                       calendar_ids: extractCalendarIds(calendarList)})
             .then(() => response.json({message: 'Congrats! You have been activated as a coach.'}))
             .catch(error => response.json(error))

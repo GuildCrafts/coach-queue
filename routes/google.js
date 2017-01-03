@@ -13,22 +13,21 @@ passport.deserializeUser(function(user, done) {
 });
 
 router.get('/auth',
-           passport.authenticate('google', {scope: config.google.scopes}))
+           passport.authenticate('google', {scope: config.google.scopes,
+                                            accessType: 'offline',
+                                            approvalPrompt: 'force'}))
 
 router.get('/auth/callback',
   passport.authenticate('google', {failureRedirect: '/google/auth'}),
   (request, response) => {
     request.session.access_token = request.user.accessToken
+    request.session.google_refresh_token = request.user.refreshToken
+    // TODO: maybe we dont need this, as the user is not created when this is
+    // run the first time
     updateUserByHandle(request.idmUser.handle,
-                       {google_token: request.user.accessToken})
+                       {google_token: request.user.accessToken,
+                        google_refresh_token: request.user.refreshToken})
      .then(user => response.redirect('/'))
   })
-
-// TODO
-// ERROR HANDLING
-// an error I got back from google that needs to be sorted out:
-// {"error":{"name":"InternalOAuthError",
-  // "message":"failed to obtain access token",
-  // "oauthError":{"statusCode":400,"data":"{\n  \"error\" : \"invalid_grant\",\n  \"error_description\" : \"Code was already redeemed.\"\n}"}}}
 
 module.exports = router
