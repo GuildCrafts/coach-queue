@@ -12,23 +12,6 @@ const {extractCalendarIds,
 const {ensureGoogleAuth} = require('../middleware')
 
 
-//YOU WILL BE FORCED TO LOG IN TO GCAL ACCESS ANY OF THESE ROUTES
-router.use(ensureGoogleAuth)
-
-router.all('/', (request, response) => {
-  const {access_token, github_handle} = request.session
-  gcal(access_token).calendarList.list((error, calendarList) => {
-    if (error) {
-      return response.send(500, error)
-    } else {
-      // TODO use radio buttons to choose which calendar to work with
-      updateUserByHandle(github_handle,
-                         {calendar_ids: extractCalendarIds(calendarList)})
-        .then(() => response.json(calendarList));
-    }
-  })
-})
-
 const filterUnavailableCoaches = (coachesAppointmentData) => {
   return coachesAppointmentData.filter(
       (coachAppointmentData) => coachAppointmentData.earliestAppointment);
@@ -58,13 +41,14 @@ router.all('/find_next', (request, response) => {
         a.earliestAppointment.start > b.earliestAppointment.start
       )
       console.log('sortedAppointments', sortedAppointments)
-       if(sortedAppointments[0]) {
+      if(sortedAppointments[0]) {
         let earliestApptData = sortedAppointments[0]
-        let {calendarId, earliestAppointment} = earliestApptData
+        let {calendarId, earliestAppointment, google_token} = earliestApptData
         console.log('earliest Appointment Start: ', earliestAppointment.start)
         console.log('calendarId', calendarId)
-         let event = makeCalendarEvent(earliestAppointment.start, earliestAppointment.end);
-         gcal(access_token).events.insert(calendarId, event, (error, data) =>
+        console.log('$$ appt::', earliestAppointment);
+        let event = makeCalendarEvent(earliestAppointment.start, earliestAppointment.end);
+        gcal(google_token).events.insert(calendarId, event, (error, data) =>
                                          error
                                          ? response.send(500, error)
                                          : createAppointment({
@@ -83,5 +67,23 @@ router.all('/find_next', (request, response) => {
       }
     })
 })
+
+//YOU WILL BE FORCED TO LOG IN TO GCAL ACCESS ANY OF THESE ROUTES
+router.use(ensureGoogleAuth)
+
+router.all('/', (request, response) => {
+  const {access_token, github_handle} = request.session
+  gcal(access_token).calendarList.list((error, calendarList) => {
+    if (error) {
+      return response.send(500, error)
+    } else {
+      // TODO use radio buttons to choose which calendar to work with
+      updateUserByHandle(github_handle,
+                         {calendar_ids: extractCalendarIds(calendarList)})
+        .then(() => response.json(calendarList));
+    }
+  })
+})
+
 
 module.exports = router

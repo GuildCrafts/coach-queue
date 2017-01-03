@@ -6,7 +6,9 @@ const { findUserByHandle } = require('../io/database/users')
 
 const findFreeSchedule = (busyTime, currentTime, dayStartTime, dayEndTime) => {
   let counter = 0
-
+  // Note: Need to convert to local timezone, otherwise it doesnt book correctly.
+  busyTime = busyTime.map((time) => {return {start: moment(time.start).tz("America/Los_Angeles"),
+                                             end: moment(time.end).tz("America/Los_Angeles")}})
   console.log('busyTime===========', busyTime)
   if (busyTime.length == 0) {
     return [{start: currentTime, end: dayEndTime}];
@@ -36,7 +38,8 @@ const findFreeSchedule = (busyTime, currentTime, dayStartTime, dayEndTime) => {
 }
 
 const isTimeSlotBigEnough = (timeSlot, lengthOfTimeInMins) => {
-  return (timeSlot.end - timeSlot.start) > moment(lengthOfTimeInMins)
+  const durationInMinutes = moment.duration(timeSlot.end.diff(timeSlot.start)).asMinutes();
+  return durationInMinutes > lengthOfTimeInMins
 }
 
 const findNextAppointment = (freetimes, now) => {
@@ -100,6 +103,7 @@ const getAllCoachesNextAppts = (coachesArray, currentTime) => {
       return {
         calendarId,
         github_handle: coach.github_handle,
+        google_token: coach.google_token,
         earliestAppointment: data
       }
     })
