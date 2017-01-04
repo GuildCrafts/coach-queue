@@ -7,6 +7,10 @@ const env = () => {
   return process.env.NODE_ENV || 'development'
 }
 
+const isProduction = () => {
+  return env() === 'production';
+}
+
 const testEnv = () => {
   return process.env.NODE_ENV || 'test'
 }
@@ -26,4 +30,4 @@ const readConfig = () => {
   }
 }
 
-module.exports = {env, testEnv, readConfig}
+module.exports = {env, testEnv, readConfig, isProduction}

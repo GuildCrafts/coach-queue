@@ -1,3 +1,5 @@
+const {isProduction} = require('../config/config')
+
 const init = function(expressApp, config) {
   const {
     addUserToRequestFromJWT,
@@ -5,8 +7,11 @@ const init = function(expressApp, config) {
     refreshUserFromIDMService
   } = require('@learnersguild/idm-jwt-auth/lib/middlewares')
 
-  //need to do this as idm-jwt-auth token needs this
-  process.env.JWT_PUBLIC_KEY  = config.auth.JWT_PUBLIC_KEY
+  //NOTE: need to do this as idm-jwt-auth token needs this env var
+  //Also we dont want to store the production key on github
+  if(!isProduction()) {
+    process.env.JWT_PUBLIC_KEY = config.auth.JWT_PUBLIC_KEY
+  }
 
   expressApp.use(addUserToRequestFromJWT)
   const ensureUserLoggedIn = (req, res, next) => {
