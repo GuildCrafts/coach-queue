@@ -55,12 +55,6 @@ if (!_config.auth.isDisabled) {
 
 app.use(cors())
 
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "*")
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-//   next()
-// })
-
 app.use('/google', googleRoutes)
 app.use('/api/v1/coaches', coach)
 app.use('/api/v1/appointments', appointment)

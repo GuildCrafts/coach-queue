@@ -84,6 +84,7 @@ const getAllCoachesNextAppts = (coachesArray, currentTime) => {
   return P.all(coachesArray.map(coach => {
     const freeBusyP = P.promisifyAll(gcal(coach.google_token).freebusy)
     const calendarId = coach.calendar_ids[0]
+    const google_token = coach.google_token
 
     refreshAccessTokenAsync(coach.google_token, coach.google_refresh_token, coach.github_handle)
 
@@ -105,6 +106,7 @@ const getAllCoachesNextAppts = (coachesArray, currentTime) => {
       console.log('Data you get back from findNextAppointment', data)
       return {
         calendarId,
+        google_token,
         github_handle: coach.github_handle,
         google_token: coach.google_token,
         earliestAppointment: data
@@ -113,8 +115,38 @@ const getAllCoachesNextAppts = (coachesArray, currentTime) => {
   }))
 }
 
-module.exports = { 
+// TODO maybe move these functions into its own file
+
+const apptData = (coach, mentees, startTime, endTime) => {
+  return {
+    appointment_length: 45,
+    description: 'Static Description, until next version',
+    coach_handle: coach,
+    mentee_handles: mentees,
+    appointment_start: startTime,
+    appointment_end: endTime
+  }
+}
+
+const calendarEvent = (github_handle, pair_handle, startTime, endTime) => {
+  return {
+    'summary': `Coaching session with ${github_handle} and ${pair_handle}`,
+    'description': 'Go get \'em champ',
+    'start': {
+      'dateTime': moment(startTime).toDate(),
+      'timeZone': 'America/Los_Angeles'
+    },
+    'end': {
+      'dateTime': moment(endTime).toDate(),
+      'timeZone': 'America/Los_Angeles'
+    }
+  }
+}
+
+module.exports = {
   findFreeSchedule,
   findNextAppointment,
-  getAllCoachesNextAppts
+  getAllCoachesNextAppts,
+  apptData,
+  calendarEvent
 }

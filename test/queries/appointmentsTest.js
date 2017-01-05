@@ -25,7 +25,6 @@ describe('Appointment DB Queries: ', () => {
     it('should insert a appointment into the database', done => {
       createAppointment(appointment)
         .then(newAppointment => {
-          console.log(newAppointment)
           expect(newAppointment).to.be.a('object')
           expect(newAppointment.coach_handle).to.eql('ImALeafyPlant')
           expect(newAppointment.appointment_start)

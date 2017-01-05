@@ -1,4 +1,4 @@
-const init = function(expressApp, config) {
+const init = (expressApp, config) => {
   const passport = require('passport')
   const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 
@@ -10,7 +10,7 @@ const init = function(expressApp, config) {
       callbackURL: config.host_fully_qualified + config.google.callbackURLPath,
       scope: config.google.scopes
     },
-    function(accessToken, refreshToken, profile, done) {
+    (accessToken, refreshToken, profile, done) => {
       profile.accessToken = accessToken
       profile.refreshToken = refreshToken
       return done(null, profile)

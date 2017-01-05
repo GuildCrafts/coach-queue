@@ -1,16 +1,16 @@
 import React from 'react'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import SheduleButton from './SheduleButton'
-import CoachActivate from './CoachActivate'
+import ScheduleButton from './ScheduleButton'
+import RaisedButton from 'material-ui/RaisedButton'
+import {Link} from 'react-router'
 
 const LandingPage = () => (
-  <MuiThemeProvider >
-    <div className="mui-container">
-      <SheduleButton />
-      <div>OR</div>
-      <CoachActivate />
-    </div>
-  </MuiThemeProvider>
+  <center>
+    <ScheduleButton />
+    <div></div>
+    <Link to="/activate_coach">
+      <RaisedButton label="I'm a Coach" />
+    </Link>
+  </center>
 )
 
 export default LandingPage

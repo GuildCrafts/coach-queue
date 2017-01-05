@@ -7,7 +7,6 @@ describe('Coach Route: ', () => {
       chai.request(app)
         .get('/api/v1/coaches/active')
         .end((error, response) => {
-          console.log(response.body)
           response.should.have.status(200)
           response.body.should.be.a('object')
           response.body.should.have.property('coaches')

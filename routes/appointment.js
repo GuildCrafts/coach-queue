@@ -1,51 +1,82 @@
 const express = require('express')
 const router = express.Router()
 const rp = require('request-promise')
+const gcal = require('google-calendar')
+const moment = require('moment')
 
-const { findFirstAppointment } = require('../models/appointment')
+const {getActiveCoaches} = require('../io/database/users')
 const {
-  createAppointment, 
-  findActiveCoaches
+  getAllCoachesNextAppts,
+  findNextAppointment,
+  apptData,
+  calendarEvent
+} = require('../models/appointment')
+
+const {
+  createAppointment,
+  findActiveCoaches,
+  findAllAppointmentByMenteeHandle
 } = require('../io/database/appointments')
 
-router.get('/', (request, response)  => {
-  //getting these from chat
-  let { 
-    appointment_length, 
-    description, 
-    attendees
-  } = request.params
-  
+router.post('/mentee-schedule', (request, response) => {
+  const {currentUserHandle} = request.body
 
-  let date = findFirstAppointment(activeCoaches, appointment_length)
+  findAllAppointmentByMenteeHandle(currentUserHandle)
+    .then(appointments => {
+      console.log('Mentee appointment', appointments)
+      response.json(appointments)
+    })
+})
 
-  let appointmentData = {
-    coach_handle: coach_handle,
-    date_time: date,
-    appointment_length: appointment_length,
-    description: description,
-    attendees: attendees
-  }
+router.post('/create', (request, response) => {
+  const {currentUserHandle, pairs_github_handle} = request.body
 
-  createAppointment(appointmentData)
-    .then( apptDetails => response.json({apptDetails}))
+  getActiveCoaches()
+    .then(activeCoaches => getAllCoachesNextAppts(activeCoaches))
+    .then(availableTimes => {
+      const appointment = findNextAppointment(availableTimes)
+      const appointmentData = apptData(
+        appointment.github_handle,
+        [currentUserHandle, pairs_github_handle],
+        appointment.start,
+        appointment.end
+      )
+
+      const event = calendarEvent(
+        currentUserHandle,
+        pairs_github_handle,
+        appointment.start,
+        appointment.end
+      )
+
+      gcal(appointment.google_token).events
+        .insert(appointment.calendarId, event, (error, data) => {
+          if (error) {
+            response.status(500).json(null)
+          } else {
+            createAppointment(appointmentData)
+              .then(apptDetails => response.status(200).json(apptDetails))
+          }
+        })
+    })
+    .catch(() => response.status(401).json(null))
 })
 
 
 router.get('/feedback', (request, response, next) =>{
-  var options = {
+  const options = {
     uri: 'https://api.typeform.com/v1/form/jWG4Fo',
     qs: {
-      key: '89cf37a725f924ce42131e0aa7523822ca885d30' // -> uri + '?access_token=xxxxx%20xxxxx' 
+      key: '89cf37a725f924ce42131e0aa7523822ca885d30' // -> uri + '?access_token=xxxxx%20xxxxx'
     },
     headers: {'User-Agent': 'Request-Promise'},
-    json: true 
-  };
- 
+    json: true
+  }
+
   rp(options)
-    .then(responses => {
-        console.log('Did I get anything?', responses.responses[0].answers);
-    })
+    .then(responses =>
+      console.log('Did I get anything?', responses.responses[0].answers)
+    )
     .catch(error => console.log(error))
 })
 

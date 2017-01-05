@@ -2,9 +2,9 @@ const extractCalendarIds = (gCalListResponse) => {
   return [gCalListResponse.items[0].id]
 };
 
-const makeCalendarEvent = (startTime, endTime, summary) => {
+const makeCalendarEvent = (startTime, endTime, menteeHandle1, menteeHandle2) => {
   return {
-    'summary': 'Coaching session with A-HUMAN',
+    'summary': `Coaching with ${menteeHandle1} & ${menteeHandle2}` ,
     'description': 'Go get \'em champ',
     'start': {
       'dateTime': startTime,
