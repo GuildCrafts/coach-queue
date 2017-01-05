@@ -15,8 +15,19 @@ const {
 const {
   createAppointment,
   findActiveCoaches,
-  findAllAppointmentByMenteeHandle
+  findAllAppointmentByMenteeHandle,
+  findAllAppointmentByCoachId
 } = require('../io/database/appointments')
+
+router.get('/coach-schedule', (request, response) => {
+  const coach_handle = request.idmUser.handle
+
+  findAllAppointmentByCoachId(coach_handle)
+    .then(appointments => {
+      console.log('Coach Appointments', appointments);
+      response.json(appointments)
+  })
+})
 
 router.post('/mentee-schedule', (request, response) => {
   const {currentUserHandle} = request.body
@@ -27,41 +38,6 @@ router.post('/mentee-schedule', (request, response) => {
       response.json(appointments)
     })
 })
-
-router.post('/create', (request, response) => {
-  const {currentUserHandle, pairs_github_handle} = request.body
-
-  getActiveCoaches()
-    .then(activeCoaches => getAllCoachesNextAppts(activeCoaches))
-    .then(availableTimes => {
-      const appointment = findNextAppointment(availableTimes)
-      const appointmentData = apptData(
-        appointment.github_handle,
-        [currentUserHandle, pairs_github_handle],
-        appointment.start,
-        appointment.end
-      )
-
-      const event = calendarEvent(
-        currentUserHandle,
-        pairs_github_handle,
-        appointment.start,
-        appointment.end
-      )
-
-      gcal(appointment.google_token).events
-        .insert(appointment.calendarId, event, (error, data) => {
-          if (error) {
-            response.status(500).json(null)
-          } else {
-            createAppointment(appointmentData)
-              .then(apptDetails => response.status(200).json(apptDetails))
-          }
-        })
-    })
-    .catch(() => response.status(401).json(null))
-})
-
 
 router.get('/feedback', (request, response, next) =>{
   const options = {

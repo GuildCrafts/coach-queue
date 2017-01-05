@@ -17,7 +17,6 @@ const filterUnavailableCoaches = (coachesAppointmentData) => {
 }
 
 router.post('/find_next', (request, response) => {
-  console.log("I need this ====>", request.body.pairs_github_handle)
   const requestingMenteeHandle = request.user.handle
   const pairsGuthubHandle = request.body.pairs_github_handle
   const access_token = request.session.access_token

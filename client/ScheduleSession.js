@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
-import jwtDecode from 'jwt-decode'
 import Appointment from './Appointment'
 import fetchMethod from './fetchMethod'
 
@@ -26,7 +25,6 @@ export default class ScheduleSession extends Component {
         ? appointment
         : null
     })
-
     return fetchMethod('POST', path, params, callback)
   }
 

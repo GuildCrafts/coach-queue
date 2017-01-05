@@ -7,7 +7,7 @@ const LandingPage = () => (
   <center>
     <ScheduleButton />
     <div></div>
-    <Link to="/activate_coach">
+    <Link to="/coach_landing">
       <RaisedButton label="I'm a Coach" />
     </Link>
   </center>
