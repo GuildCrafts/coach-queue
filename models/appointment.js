@@ -3,6 +3,7 @@ const P = require('bluebird')
 const gcalP = P.promisifyAll(gcal)
 const moment = require('moment-timezone');
 const { findUserByHandle } = require('../io/database/users')
+const {refreshAccessTokenAsync} = require('../io/gateway/google_calendar');
 
 const findFreeSchedule = (busyTime, currentTime, dayStartTime, dayEndTime) => {
   let counter = 0
@@ -83,6 +84,8 @@ const getAllCoachesNextAppts = (coachesArray, currentTime) => {
   return P.all(coachesArray.map(coach => {
     const freeBusyP = P.promisifyAll(gcal(coach.google_token).freebusy)
     const calendarId = coach.calendar_ids[0]
+
+    refreshAccessTokenAsync(coach.google_token, coach.google_refresh_token, coach.github_handle)
 
     return freeBusyP.queryAsync({
       items: [{id:`${calendarId}`}],
