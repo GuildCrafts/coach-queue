@@ -35,12 +35,17 @@ export default class LandingPage extends Component {
   render(){
     return <center>
       <ScheduleButton />
-      <div></div>
       <Link to="/coach_landing">
-        <RaisedButton label="I'm a Coach" />
+        <RaisedButton
+          label="I'm a Coach"
+          fullWidth={true}
+          backgroundColor="#9af0e2"
+        />
       </Link>
-      <RaisedButton label="Who's coaching?"
+      <RaisedButton
+        label="Who's coaching?"
         onClick={this.coachList.bind(this)}
+        fullWidth={true}
       />
       <div>{this.renderCoachList()}</div>
     </center>

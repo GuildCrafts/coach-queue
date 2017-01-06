@@ -46,17 +46,28 @@ export default class CoachLanding extends Component {
       button = <ActivateCoach />
     } else {
       button = <Link to="/google/auth" target="_blank">
-                <RaisedButton 
+                <RaisedButton
                   label="Login to Google Calendar"
-                  onClick={this.clickedOnGoogle.bind(this)}/>
+                  onClick={this.clickedOnGoogle.bind(this)}
+                  fullWidth={true}
+                  primary={true}
+                />
                </Link>
     }
     return <center>
       {button}
-      <div></div>
-      <RaisedButton label="See Your Appointments"
+      <RaisedButton
+        label="See Your Appointments"
         onClick={this.appointmentList.bind(this)}
+        fullWidth={true}
+        backgroundColor="#c6fff3"
       />
+      <Link to="/">
+      <RaisedButton
+        label="Back"
+        fullWidth={true}
+      />
+    </Link>
       <div>{this.renderAppointmentList()}</div>
     </center>
   }

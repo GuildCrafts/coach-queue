@@ -33,13 +33,16 @@ export default class ActivateCoach extends Component {
       <RaisedButton
         onClick={() => this.activateCoach()}
         label="Activate"
-        primary={isCoach}
+        primary={!isCoach}
+        disabled={isCoach}
+        fullWidth={true}
       />
-      <div></div>
       <RaisedButton
         onClick={() => this.deactivateCoach()}
         label="Deactivate"
-        primary={!isCoach}
+        primary={isCoach}
+        disabled={!isCoach}
+        fullWidth={true}
       />
     </center>
   }

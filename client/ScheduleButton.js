@@ -5,7 +5,11 @@ import RaisedButton from 'material-ui/RaisedButton'
 export default class ScheduleButton extends Component {
   render() {
     return <Link to="/schedule_session">
-        <RaisedButton label="Schedule an Appointment" primary={true}/>
+        <RaisedButton
+          label="Schedule an Appointment"
+          primary={true}
+          fullWidth={true}
+        />
       </Link>
   }
 }

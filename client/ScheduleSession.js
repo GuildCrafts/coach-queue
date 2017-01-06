@@ -4,6 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import Appointment from './Appointment'
 import fetchMethod from './fetchMethod'
 import MenteeApptList from './MenteeApptList'
+import {Link} from 'react-router'
 
 export default class ScheduleSession extends Component {
   constructor() {
@@ -57,24 +58,30 @@ export default class ScheduleSession extends Component {
   }
 
   render() {
-    const block = <div></div>
     return <center>
       <TextField
         id="pair-input"
         ref="mentee_handles"
         hintText="Your pair's github name"
       />
-      {block}
       <RaisedButton
         onClick={() => this.createAppointment()}
         label="Request a coach"
         primary={true}
+        fullWidth={true}
       />
       <RaisedButton
         onClick={() => this.menteeAppointments()}
         label="My Scheduled Appointments"
-        primary={true}
+        backgroundColor="#c6fff3"
+        fullWidth={true}
       />
+      <Link to="/">
+        <RaisedButton
+          label="Back"
+          fullWidth={true}
+        />
+      </Link>
       <div>{this.renderAppointmentCard()}</div>
       <div>{this.renderMenteeAppointments()}</div>
     </center>
