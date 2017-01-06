@@ -6,15 +6,11 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const passport = require('passport');
+const enforce = require('express-sslify');
 
 const webpack = require('webpack')
 const webpackMiddleware = require('webpack-dev-middleware')
 const webpackConfig = require('./webpack.config.js')
-const {
-  addUserToRequestFromJWT,
-  extendJWTExpiration,
-  refreshUserFromIDMService
-} = require('@learnersguild/idm-jwt-auth/lib/middlewares')
 
 const coach = require('./routes/coach')
 const appointment = require('./routes/appointment')
@@ -51,6 +47,11 @@ if (!_config.auth.isDisabled) {
     req.idmUser = req.user
     next()
   })
+}
+
+if (config.isProduction()) {
+  console.log('enforcing https');
+  app.use(enforce.HTTPS())
 }
 
 app.use(cors())
