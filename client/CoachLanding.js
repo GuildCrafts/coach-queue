@@ -3,13 +3,16 @@ import RaisedButton from 'material-ui/RaisedButton'
 import fetchMethod from './fetchMethod'
 import {Link} from 'react-router'
 import CoachApptList from './CoachApptList'
+import ActivateCoach from './ActivateCoach'
+
 
 export default class CoachLanding extends Component {
   constructor() {
     super()
     this.state = {
       coachAppointments:[],
-      fetchExcuted: false
+      fetchExcuted: false,
+      clickedOnGoogle: false
     }
   }
 
@@ -31,11 +34,25 @@ export default class CoachLanding extends Component {
       : null
   }
 
+  clickedOnGoogle() {
+    this.setState({
+      clickedOnGoogle: true
+    })
+  }
+
   render(){
+    let button
+    if(this.state.clickedOnGoogle) {
+      button = <ActivateCoach />
+    } else {
+      button = <Link to="/google/auth" target="_blank">
+                <RaisedButton 
+                  label="Login to Google Calendar"
+                  onClick={this.clickedOnGoogle.bind(this)}/>
+               </Link>
+    }
     return <center>
-      <Link to="/google/auth" target="_blank">
-        <RaisedButton label="Login to Google Calendar" />
-      </Link>
+      {button}
       <div></div>
       <RaisedButton label="See Your Appointments"
         onClick={this.appointmentList.bind(this)}
