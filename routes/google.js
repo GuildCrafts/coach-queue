@@ -30,8 +30,14 @@ router.get('/auth/callback',
      .then(() => {
        const redirectTo = request.session.redirectTo || '/'
        delete request.session.redirectTo;
-       response.redirect(redirectTo)
+       //response.redirect(redirectTo)
+       //NOTE: This is a hack so that we can close the browser when when the Google Auth is done
+       response.redirect('/google/close/window')
      })
   })
+
+router.get('/close/window', (request, response) => {
+  response.send('<script>window.close()</script>')
+});
 
 module.exports = router
