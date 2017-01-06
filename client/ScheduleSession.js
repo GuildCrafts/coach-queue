@@ -3,12 +3,15 @@ import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import Appointment from './Appointment'
 import fetchMethod from './fetchMethod'
+import MenteeApptList from './MenteeApptList'
 
 export default class ScheduleSession extends Component {
   constructor() {
     super()
     this.state = {
       currentAppointments: [],
+      menteeAppointments: [],
+      requestedMenteeAppts: false,
       requestedSchedule: false,
       createdAppointment: null
     }
@@ -28,10 +31,28 @@ export default class ScheduleSession extends Component {
     return fetchMethod('POST', path, params, callback)
   }
 
+  menteeAppointments() {
+    const path = '/api/v1/appointments/mentee-schedule'
+    const callback = appointments => this.setState({
+      requestedMenteeAppts: true,
+      menteeAppointments: appointments
+        ? appointments
+        : null
+    })
+    return fetchMethod('POST', path, null).then(callback)
+  }
+
   renderAppointmentCard() {
     const createdAppointment = this.state.createdAppointment
     return this.state.requestedSchedule
       ? <Appointment createdAppointment={createdAppointment} />
+      : null
+  }
+
+  renderMenteeAppointments() {
+    const menteeAppointments = this.state.menteeAppointments
+    return this.state.requestedMenteeAppts
+      ? <MenteeApptList menteeAppointments={menteeAppointments} />
       : null
   }
 
@@ -49,7 +70,13 @@ export default class ScheduleSession extends Component {
         label="Request a coach"
         primary={true}
       />
+      <RaisedButton
+        onClick={() => this.menteeAppointments()}
+        label="My Scheduled Appointments"
+        primary={true}
+      />
       <div>{this.renderAppointmentCard()}</div>
+      <div>{this.renderMenteeAppointments()}</div>
     </center>
   }
 }

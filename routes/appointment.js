@@ -30,11 +30,11 @@ router.get('/coach-schedule', (request, response) => {
 })
 
 router.post('/mentee-schedule', (request, response) => {
-  const {currentUserHandle} = request.body
+  const currentUserHandle = request.idmUser.handle
 
   findAllAppointmentByMenteeHandle(currentUserHandle)
     .then(appointments => {
-      console.log('Mentee appointment', appointments)
+      console.log('Mentee appointment!!', appointments)
       response.json(appointments)
     })
 })
