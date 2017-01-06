@@ -49,10 +49,10 @@ if (!_config.auth.isDisabled) {
   })
 }
 
-if (config.isProduction()) {
-  console.log('enforcing https');
-  app.use(enforce.HTTPS())
-}
+// if (config.isProduction()) {
+//   console.log('enforcing https');
+//   app.use(enforce.HTTPS())
+// }
 
 app.use(cors())
 
