@@ -21,13 +21,12 @@ router.post('/find_next', (request, response) => {
   const pairsGuthubHandle = request.body.pairs_github_handle
   const access_token = request.session.access_token
   const currentTime = moment()
-
   getActiveCoaches()
     .then(coachesArray => {
       if (_.isEmpty(coachesArray)) {
         response.json({
-          error: 'Could not book appointment',
-          reason: 'There are no active coaches'
+          error: 'Could not book appointment.',
+          reason: 'There are no active coaches.'
         })
       }
       return getAllCoachesNextAppts(coachesArray, currentTime)
@@ -60,7 +59,7 @@ router.post('/find_next', (request, response) => {
       } else {
         response.json({
           error: 'Could not schedule appointment!',
-          reason: 'All coaches are booked'
+          reason: 'All coaches are booked.'
         })
       }
     })

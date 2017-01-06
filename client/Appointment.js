@@ -9,26 +9,32 @@ export default props => {
 
   if(createdAppointment) {
     startTime = JSON.stringify(
-      moment(createdAppointment.appointment_start).format('MMMM Do YYYY, h:mm a')
-    )
+      moment(createdAppointment.appointment_start)
+      .format('MMMM Do YYYY, h:mm a'))
     endTime = JSON.stringify(
-      moment(createdAppointment.appointment_end).format('MMMM Do YYYY, h:mm a')
-    )
+      moment(createdAppointment.appointment_end)
+      .format('MMMM Do YYYY, h:mm a'))
   }
 
-  if (createdAppointment === null) {
-    var unavailable = 'Sorry but no one is availble at this time'
-    startTime = 'No times availble'
-  }
-
-  return <Card>
+  if(createdAppointment.error) {
+    return <Card>
+      <blockquote></blockquote>
+      <CardText>
+        <strong>{createdAppointment.error} </strong>
+      </CardText>
+      <CardText>
+        {createdAppointment.reason}
+      </CardText>
+    </Card>
+  } else {
+    return <Card>
       <blockquote></blockquote>
       <CardText>
         <strong>Your appointment is with: </strong>
-         {createdAppointment
-           ? createdAppointment.coach_handle
-           : unavailable
-         }
+        {createdAppointment
+          ? createdAppointment.coach_handle
+          : unavailable
+        }
       </CardText>
       <CardText>
         <strong>At: </strong>
@@ -42,4 +48,5 @@ export default props => {
         }
       </CardText>
     </Card>
+  }
 }
