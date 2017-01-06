@@ -19,7 +19,7 @@ const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
   }
 })
 const APP_URL = process.env.NODE_ENV === 'production'
-                ? 'PRODUCTION_URL'
+                ? 'https://coach-que.learnersguild.org'
                 : 'http://coach-que.learnersguild.dev'
 const processDotEnvPlugin = new webpack.DefinePlugin({
   'APP_URL': JSON.stringify(APP_URL)
