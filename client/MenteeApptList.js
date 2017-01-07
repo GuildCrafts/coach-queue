@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {Card, CardText} from 'material-ui/Card'
 import moment from 'moment'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import {Link} from 'react-router'
 
 export default class MenteeApptList extends Component {
   render() {
@@ -14,13 +15,17 @@ export default class MenteeApptList extends Component {
           const apptDate = moment(appointment.appointment_start).format('MMMM Do YYYY')
           const mentees = appointment.mentee_handles.join(", ")
 
-          return <TableRow>
+          return <TableRow key={appointment.id}>
             <TableRowColumn>{mentees}</TableRowColumn>
             <TableRowColumn>{appointment.coach_handle}</TableRowColumn>
             <TableRowColumn>{appointment.appointment_length}</TableRowColumn>
             <TableRowColumn>{apptDate}</TableRowColumn>
             <TableRowColumn>{startTime}</TableRowColumn>
             <TableRowColumn>{endTime}</TableRowColumn>
+            <TableRowColumn >
+              <a href="https://lguild.typeform.com/to/kDvUzF"
+              target="_blank">Feedback Form</a>
+            </TableRowColumn>
           </TableRow>
       })
 
@@ -34,6 +39,7 @@ export default class MenteeApptList extends Component {
           <TableHeaderColumn>Date</TableHeaderColumn>
           <TableHeaderColumn>Start Time</TableHeaderColumn>
           <TableHeaderColumn>End Time</TableHeaderColumn>
+          <TableHeaderColumn>Feedback</TableHeaderColumn>
         </TableRow>
       </TableHeader>
         <TableBody displayRowCheckbox={false}>{appointmentRows}</TableBody>

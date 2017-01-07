@@ -27,6 +27,7 @@ const _config = config.readConfig()
 const session = require('express-session')
 
 const compiler = webpack(webpackConfig)
+
 if (!config.isProduction()) {
   app.use(webpackMiddleware(compiler, {
       publicPath: webpackConfig.output.publicPath,
@@ -52,6 +53,7 @@ app.use(session({secret: 'learners-guild-coach-que'}))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'public')))
+
 
 //we dont have a dev IDM, so
 if (!_config.auth.isDisabled) {
