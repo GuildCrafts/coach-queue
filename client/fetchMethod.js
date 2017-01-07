@@ -14,7 +14,7 @@ export default (method, path, values, callback) => {
     options.body = JSON.stringify(values)
   }
 
-  return fetch(`${path}`, options)
+  return fetch(path, options)
     .then(response => response.json())
     .then(callback)
 }
