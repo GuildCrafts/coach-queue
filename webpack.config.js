@@ -18,12 +18,7 @@ const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
     minifyURLs: true
   }
 })
-const APP_URL = process.env.NODE_ENV === 'production'
-                ? 'https://coach-que.learnersguild.org'
-                : 'http://coach-que.learnersguild.dev'
-const processDotEnvPlugin = new webpack.DefinePlugin({
-  'APP_URL': JSON.stringify(APP_URL)
-})
+
 module.exports = {
   entry: ['./client/main.js'],
   module: {
