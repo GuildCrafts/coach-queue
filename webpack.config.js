@@ -30,5 +30,5 @@ module.exports = {
     filename: 'bundle.js',
     path: `${rootDir}/public/dist`
   },
-  plugins: [HTMLWebpackPluginConfig, processDotEnvPlugin]
+  plugins: [HTMLWebpackPluginConfig]
 }
