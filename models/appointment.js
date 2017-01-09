@@ -68,7 +68,7 @@ const findNextAppointment = (freetimes, now) => {
 
 const getAllCoachesNextAppts = (coachesArray, currentTime) => {
   const workStartHour = 9
-  const workEndHour = 23.5
+  const workEndHour = 17.5
 
   const dayStartTime = currentTime.clone().startOf('day').add({h:workStartHour})
   const dayEndTime = currentTime.clone().startOf('day').add({h:workEndHour})

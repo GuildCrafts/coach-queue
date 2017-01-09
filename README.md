@@ -36,14 +36,14 @@ We're using `knex` to generate our SQL
 
 ##### Appointments
 
-| action                           | CRUD   | verb | path                       | echo call (if applicable) |
-| -------------------------------- | ------ | ---- | -------------------------- | ------------------------- |
-| createAppointment()              | create | post | /api/v1/appointments/      | /coach @partnersGithub    |
-| findFirstAppointmentByCoachId()  | read   | get  | /api/v1/appointments/      | /coach nextAppointment    |
-| findFirstAppointmentByAttendee() | read   | get  | /api/v1/appointments/      | /coach nextAppointment    |
-| findAllAppointmentByCoachId()    | read   | get  | /api/v1/appointments/      | /coach mySchedule         |
-| findAllAppointmentByAttendee()   | read   | get  | /api/v1/appointments/      | /coach mySchedule         |
-| deleteAppointmentById()          | delete | post | /api/v1/appointments/      |                           |
+| action                           | verb | path                       |
+| -------------------------------- | ---- | -------------------------- |
+| Get Coach Appt List              | get  | /api/v1/appointments/coach-schedule      |
+| Get Mentee Appt List             | get  | /api/v1/appointments/mentee-schedule      |
+| Schedule Next Available Appt | post | /calendar/find-next     |
+| findAllAppointmentByCoachId()    | get  | /api/v1/appointments/      |
+| findAllAppointmentByAttendee()   | get  | /api/v1/appointments/      |
+| deleteAppointmentById()          | post | /api/v1/appointments/      |
 
 ##### Coaches/Mentees
 
@@ -56,20 +56,3 @@ We're using `knex` to generate our SQL
 | deactivateCoach()                | update | post | /api/v1/coaches/           | /coach deactivate         |
 | deleteUserByLgId()               | delete | post | /api/v1/coaches/           |                           |
 
-#### Commands by User Type
-
-##### Attendees
-| Command                      |  V  | Description                                                                  |
-| ---------------------------- | --- | ---------------------------------------------------------------------------- |
-| /coach                       |  V1 | Gets a list of all available coaches.                                        |
-| /coach @partnersGithub       |  V1 | Searches all coaches and finds and schedules the next available appointment. |
-| /coach nextAppointment       |  V2 | Finds and displays a Mentee's next appointment.                              |
-| /coach mySchedule            |  V2 | Shows all scheduled appointments                                             |
-
-##### Coaches
-| Command                      |  V  | Description                                                                  |
-| ---------------------------- | --- | ---------------------------------------------------------------------------- |
-| /coach                       |  V1 | Gets a list of all available coaches.                                        |
-| /coach init                  |  V1 | Creates a user in the DB & validates their google account.                   |
-| /coach activate              |  V1 | Makes them available to coach, turns active_coach in Users to true.          |
-| /coach deactivate            |  V1 | Makes them unavailable to coach, turns active_coach in Users to false.       |

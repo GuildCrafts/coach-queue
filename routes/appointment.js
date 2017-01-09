@@ -3,6 +3,7 @@ const router = express.Router()
 const rp = require('request-promise')
 const gcal = require('google-calendar')
 const moment = require('moment')
+const config = require('../config/config').readConfig()
 
 const {getActiveCoaches} = require('../io/database/users')
 const {
@@ -41,9 +42,9 @@ router.post('/mentee-schedule', (request, response) => {
 
 router.get('/feedback', (request, response, next) =>{
   const options = {
-    uri: 'https://api.typeform.com/v1/form/jWG4Fo',
+    uri: 'https://api.typeform.com/v1/form/kDvUzF',
     qs: {
-      key: '89cf37a725f924ce42131e0aa7523822ca885d30' // -> uri + '?access_token=xxxxx%20xxxxx'
+      key: process.env.TYPEFORM_API_KEY || config.typeform.API_KEY
     },
     headers: {'User-Agent': 'Request-Promise'},
     json: true

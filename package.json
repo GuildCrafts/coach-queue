@@ -11,6 +11,7 @@
     "migrate:rollback:test": "NODE_ENV=test knex migrate:rollback --knexfile config/DBconfig.js",
     "test": "NODE_ENV=test mocha --timeout 10000 --recursive test/models/*.js",
     "seed:testdb": "knex seed:run --knexfile config/DBconfig.js",
+    "heroku-postbuild": "webpack -p",
     "webpack": "webpack --progress --colors --json | webpack-bundle-size-analyzer"
   },
   "dependencies": {

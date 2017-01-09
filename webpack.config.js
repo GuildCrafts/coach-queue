@@ -18,12 +18,7 @@ const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
     minifyURLs: true
   }
 })
-const APP_URL = process.env.NODE_ENV === 'production'
-                ? 'PRODUCTION_URL'
-                : 'http://coach-que.learnersguild.dev'
-const processDotEnvPlugin = new webpack.DefinePlugin({
-  'APP_URL': JSON.stringify(APP_URL)
-})
+
 module.exports = {
   entry: ['./client/main.js'],
   module: {
@@ -35,5 +30,5 @@ module.exports = {
     filename: 'bundle.js',
     path: `${rootDir}/public/dist`
   },
-  plugins: [HTMLWebpackPluginConfig, processDotEnvPlugin]
+  plugins: [HTMLWebpackPluginConfig]
 }

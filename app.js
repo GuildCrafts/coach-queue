@@ -26,6 +26,22 @@ const config = require('./config/config')
 const _config = config.readConfig()
 const session = require('express-session')
 
+const compiler = webpack(webpackConfig)
+
+if (!config.isProduction()) {
+  app.use(webpackMiddleware(compiler, {
+      publicPath: webpackConfig.output.publicPath,
+      contentBase: 'src',
+      stats: {
+          colors: true,
+          hash: false,
+          timings: true,
+          chunks: false,
+          chunkModules: false,
+          modules: false
+      }
+  }))
+}
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
@@ -37,6 +53,7 @@ app.use(session({secret: 'learners-guild-coach-que'}))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'public')))
+
 
 //we dont have a dev IDM, so
 if (!_config.auth.isDisabled) {
@@ -66,21 +83,9 @@ app.use('/calendar', calendarRoutes)
 
 //we dont have a dev IDM, so
 
-const compiler = webpack(webpackConfig)
-const middleware = webpackMiddleware(compiler, {
-  publicPath: webpackConfig.output.publicPath,
-  contentBase: 'src',
-  stats: {
-    colors: true,
-    hash: false,
-    timings: true,
-    chunks: false,
-    chunkModules: false,
-    modules: false
-  }
+app.use('/', (req, res, next) => {
+  res.sendFile(path.join(__dirname, 'client/index.html'))
 })
-
-app.use(middleware)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

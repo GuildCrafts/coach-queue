@@ -15,7 +15,7 @@ export default class CoachApptList extends Component{
           const apptDate = moment(appointment.appointment_start).format('MMMM Do YYYY')
           const mentees = appointment.mentee_handles.join(", ")
 
-          return <TableRow>
+          return <TableRow key={appointment.id}>
             <TableRowColumn>{mentees}</TableRowColumn>
             <TableRowColumn>{appointment.appointment_length}</TableRowColumn>
             <TableRowColumn>{apptDate}</TableRowColumn>
