@@ -40,7 +40,7 @@ export default class ScheduleSession extends Component {
         ? appointments
         : null
     })
-    return fetchMethod('POST', path, null).then(callback)
+    return fetchMethod('GET', path, null).then(callback)
   }
 
   renderAppointmentCard() {
@@ -65,13 +65,13 @@ export default class ScheduleSession extends Component {
         hintText="Your pair's github name"
       />
       <RaisedButton
-        onClick={() => this.createAppointment()}
+        onClick={this.createAppointment().bind(this)}
         label="Request a coach"
         primary={true}
         fullWidth={true}
       />
       <RaisedButton
-        onClick={() => this.menteeAppointments()}
+        onClick={this.menteeAppointments().bind(this)}
         label="My Scheduled Appointments"
         backgroundColor="#c6fff3"
         fullWidth={true}

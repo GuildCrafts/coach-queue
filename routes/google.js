@@ -4,18 +4,19 @@ const passport = require('passport')
 const {updateUserByHandle} = require('../io/database/users')
 const config = require('../config/config').readConfig()
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser((user, done) => {
     done(null, user);
 });
 
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
-router.get('/auth',
-           passport.authenticate('google', {scope: config.google.scopes,
-                                            accessType: 'offline',
-                                            approvalPrompt: 'force'}))
+router.get('/auth', passport.authenticate('google', {
+  scope: config.google.scopes,
+  accessType: 'offline',
+  approvalPrompt: 'force'
+}))
 
 router.get('/auth/callback',
   passport.authenticate('google', {failureRedirect: '/google/auth'}),
