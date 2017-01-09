@@ -1,5 +1,7 @@
 ##USER GUIDE 
 
+###Quick! Please submit any bugs or other issues here: https://github.com/GuildCrafts/coach-que/issues
+
 This is a brief step by step guide to using Coach-Que your way to get coaching assistance during your project cycles at the guild!
 
 We start at the home page. If you are not a coach, go ahead and click on ```Schedule an Appointment```
