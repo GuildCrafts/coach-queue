@@ -65,13 +65,13 @@ export default class ScheduleSession extends Component {
         hintText="Your pair's github name"
       />
       <RaisedButton
-        onClick={this.createAppointment().bind(this)}
+        onClick={this.createAppointment.bind(this)}
         label="Request a coach"
         primary={true}
         fullWidth={true}
       />
       <RaisedButton
-        onClick={this.menteeAppointments().bind(this)}
+        onClick={this.menteeAppointments.bind(this)}
         label="My Scheduled Appointments"
         backgroundColor="#c6fff3"
         fullWidth={true}

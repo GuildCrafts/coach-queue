@@ -18,7 +18,7 @@ router.get('/coach-schedule', (request, response) => {
   })
 })
 
-router.post('/mentee-schedule', (request, response) => {
+router.get('/mentee-schedule', (request, response) => {
   const currentUserHandle = request.idmUser.handle
 
   findAllAppointmentByMenteeHandle(currentUserHandle)
