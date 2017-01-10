@@ -5,7 +5,7 @@ const moment = require('moment-timezone');
 const { findUserByHandle } = require('../io/database/users')
 const { refreshAccessTokenAsync } = require('../io/gateway/google_calendar');
 
-const findFreeSchedule = (busyTime, currentTime, dayStartTime, dayEndTime) => {
+const findFreeSchedule = (busyTime, currentTime, dayStartTime, dayEndTime, coach) => {
   let counter = 0
   // Note: Need to convert to local timezone, otherwise it doesnt book correctly.
   busyTime = busyTime.map((time) => {
@@ -14,9 +14,9 @@ const findFreeSchedule = (busyTime, currentTime, dayStartTime, dayEndTime) => {
       end: moment(time.end).tz("America/Los_Angeles")
     }
   })
-  console.log('busyTime===========', busyTime)
-  if (busyTime.length === 0) {
-    return [{start: currentTime, end: dayEndTime}];
+  console.log(`busyTime=========== ${coach.github_handle}`, busyTime)
+  if (busyTime.length == 0) {
+    return [{start: dayStartTime, end: dayEndTime}];
   } else {
     return busyTime.reduce((freetimes, currentAppt) => {
       let busyStartTime = currentAppt.start
@@ -31,12 +31,12 @@ const findFreeSchedule = (busyTime, currentTime, dayStartTime, dayEndTime) => {
 
       counter++
 
-      //Note: have to do this to accommodate for the time after the final busy slice
+      //Note: have to do this to accommodate for the time between the final busy slice
       //and the dayEndTime
       if (busyTime.length === counter && !currentTime.isSame(dayEndTime)){
         freetimes.push({start:currentTime, end:dayEndTime})
       }
-      console.log('your freetimes are:', freetimes)
+      console.log(`your freetimes are: ${coach.github_handle}`, freetimes)
       return freetimes
     }, [])
   }
@@ -44,10 +44,11 @@ const findFreeSchedule = (busyTime, currentTime, dayStartTime, dayEndTime) => {
 
 const isTimeSlotBigEnough = (timeSlot, lengthOfTimeInMins) => {
   const durationInMinutes = moment.duration(timeSlot.end.diff(timeSlot.start)).asMinutes();
-  return durationInMinutes > lengthOfTimeInMins
+  return durationInMinutes >= lengthOfTimeInMins
 }
 
-const findNextAppointment = (freetimes, now) => {
+const findNextAppointment = (freetimes, now, coach) => {
+  console.log(`-------> coach ${coach.github_handle} free time is::`, freetimes);
   const appointmentLengthInMins = 30
   // let aptStart = now.clone().add({m:10})
   // let aptEnd = now.clone().add({m:40})
@@ -81,6 +82,7 @@ const getAllCoachesNextAppts = (coachesArray, currentTime) => {
   if (currentTime > dayEndTime) {
     startOfDay = dayStartTime.clone().add(1, 'day')
     endOfDay = dayEndTime.clone().add(1, 'day')
+    currentTime = startOfDay.clone()
   } else {
     startOfDay = dayStartTime.clone()
     endOfDay = dayEndTime.clone()
@@ -101,12 +103,14 @@ const getAllCoachesNextAppts = (coachesArray, currentTime) => {
       return findFreeSchedule(coachBusyTime.calendars[calendarId].busy,
                               currentTime.clone(),
                               startOfDay,
-                              endOfDay)
+                              endOfDay,
+                              coach)
     })
     .then(coachFreeTime => findNextAppointment(coachFreeTime,
-                                               currentTime.clone()))
+                                               currentTime.clone(),
+                                               coach))
     .then( data => {
-      console.log('Data you get back from findNextAppointment', data)
+      console.log(`Data you get back from findNextAppointment ${coach.github_handle}`, data)
       return {
         calendarId,
         google_token,
@@ -131,25 +135,9 @@ const apptData = (coach, mentees, startTime, endTime) => {
   }
 }
 
-const calendarEvent = (github_handle, pair_handle, startTime, endTime) => {
-  return {
-    'summary': `Coaching session with ${github_handle} and ${pair_handle}`,
-    'description': 'Go get \'em champ',
-    'start': {
-      'dateTime': moment(startTime).toDate(),
-      'timeZone': 'America/Los_Angeles'
-    },
-    'end': {
-      'dateTime': moment(endTime).toDate(),
-      'timeZone': 'America/Los_Angeles'
-    }
-  }
-}
-
 module.exports = {
   findFreeSchedule,
   findNextAppointment,
   getAllCoachesNextAppts,
-  apptData,
-  calendarEvent
+  apptData
 }

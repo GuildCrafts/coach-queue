@@ -7,7 +7,7 @@ const {
   deactivateCoach,
   findUserByHandle,
   updateUserByHandle} = require('../io/database/users')
-const {extractCalendarIds} = require('../models/calendar') ;
+const {extractCalendarIds, extractEmailFromGoogleSession} = require('../models/calendar') ;
 const {ensureGoogleAuth} = require('../middleware')
 
 router.get('/active', (request, response) =>
@@ -16,9 +16,9 @@ router.get('/active', (request, response) =>
 router.post('/active', ensureGoogleAuth, (request, response) => {
   const github_handle = request.user.handle
   const {access_token, google_refresh_token} = request.session
-
+  const googleEmail = extractEmailFromGoogleSession(request.session);
   findUserByHandle(github_handle).then(user => {
-    gcal(access_token).calendarList.list((error, calendarList) => {
+    gcal(access_token).calendarList.list((error, calendarListResp) => {
       if (error) {
         return response.send(500, error.stack)
       } else {
@@ -35,7 +35,7 @@ router.post('/active', ensureGoogleAuth, (request, response) => {
                       active_coach: true,
                       google_token: access_token,
                       google_refresh_token: google_refresh_token,
-                      calendar_ids: extractCalendarIds(calendarList)})
+                      calendar_ids: extractCalendarIds(calendarListResp)})
             .then(() => response.json({
               isCoach: true,
               message: 'Congrats! You have been activated as a coach.'
