@@ -19,7 +19,6 @@ const filterUnavailableCoaches = (coachesAppointmentData) => {
 router.post('/find_next', (request, response) => {
   const requestingMenteeHandle = request.user.handle
   const pairsGuthubHandle = request.body.pairs_github_handle
-  const access_token = request.session.access_token
   const currentTime = moment()
   getActiveCoaches()
     .then(coachesArray => {
@@ -32,17 +31,14 @@ router.post('/find_next', (request, response) => {
       return getAllCoachesNextAppts(coachesArray, currentTime)
     })
     .then(allCoachesNextAppointments => {
-      // TODO: BUGFIX we're scheduling outside of business hours
       const coachesWithAvailableAppointments = filterUnavailableCoaches(allCoachesNextAppointments);
       const sortedAppointments = coachesWithAvailableAppointments.sort((a, b) =>
         a.earliestAppointment.start > b.earliestAppointment.start
       )
-
       if(sortedAppointments[0]) {
         let earliestApptData = sortedAppointments[0]
         let {calendarId, earliestAppointment, google_token} = earliestApptData
         let event = makeCalendarEvent(earliestAppointment.start, earliestAppointment.end, requestingMenteeHandle, pairsGuthubHandle)
-
         gcal(google_token).events.insert(calendarId, event, (error, data) =>
           error
             ? response.send(500, error)

@@ -1,21 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const rp = require('request-promise')
-const gcal = require('google-calendar')
-const moment = require('moment')
 const config = require('../config/config').readConfig()
 
-const {getActiveCoaches} = require('../io/database/users')
 const {
-  getAllCoachesNextAppts,
-  findNextAppointment,
-  apptData,
-  calendarEvent
-} = require('../models/appointment')
-
-const {
-  createAppointment,
-  findActiveCoaches,
   findAllAppointmentByMenteeHandle,
   findAllAppointmentByCoachId
 } = require('../io/database/appointments')

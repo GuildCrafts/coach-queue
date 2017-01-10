@@ -122,22 +122,8 @@ const getAllCoachesNextAppts = (coachesArray, currentTime) => {
   }))
 }
 
-// TODO maybe move these functions into its own file
-
-const apptData = (coach, mentees, startTime, endTime) => {
-  return {
-    appointment_length: 45,
-    description: 'Static Description, until next version',
-    coach_handle: coach,
-    mentee_handles: mentees,
-    appointment_start: startTime,
-    appointment_end: endTime
-  }
-}
-
 module.exports = {
   findFreeSchedule,
   findNextAppointment,
-  getAllCoachesNextAppts,
-  apptData
+  getAllCoachesNextAppts
 }
