@@ -10,8 +10,8 @@ const findFreeSchedule = (busyTime, currentTime, dayStartTime, dayEndTime, coach
   // Note: Need to convert to local timezone, otherwise it doesnt book correctly.
   busyTime = busyTime.map((time) => {
     return {
-      start: moment(time.start).tz("America/Los_Angeles"),
-      end: moment(time.end).tz("America/Los_Angeles")
+      start: moment(time.start).tz('America/Los_Angeles'),
+      end: moment(time.end).tz('America/Los_Angeles')
     }
   })
   console.log(`busyTime=========== ${coach.github_handle}`, busyTime)
@@ -75,11 +75,11 @@ const getAllCoachesNextAppts = (coachesArray, currentTime) => {
   const workStartHour = 9
   const workEndHour = 17.5
 
-  const dayStartTime = currentTime.clone().startOf('day').add({h:workStartHour})
-  const dayEndTime = currentTime.clone().startOf('day').add({h:workEndHour})
+  const dayStartTime = currentTime.clone().startOf('day').tz('America/Los_Angeles').add({h:workStartHour})
+  const dayEndTime = currentTime.clone().startOf('day').tz('America/Los_Angeles').add({h:workEndHour})
 
   let endOfDay, startOfDay
-  if (currentTime > dayEndTime) {
+  if (currentTime.diff(dayEndTime) >= 0) {
     startOfDay = dayStartTime.clone().add(1, 'day')
     endOfDay = dayEndTime.clone().add(1, 'day')
     currentTime = startOfDay.clone()

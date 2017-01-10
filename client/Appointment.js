@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Card, CardText} from 'material-ui/Card'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 export default props => {
   const createdAppointment = props.createdAppointment
@@ -9,11 +9,11 @@ export default props => {
 
   if(createdAppointment) {
     startTime = JSON.stringify(
-      moment(createdAppointment.appointment_start)
-      .format('MMMM Do YYYY, h:mm a'))
+      moment(createdAppointment.appointment_start).tz('America/Los_Angeles')
+      .format('MMMM Do YYYY, h:mm a z'))
     endTime = JSON.stringify(
-      moment(createdAppointment.appointment_end)
-      .format('MMMM Do YYYY, h:mm a'))
+      moment(createdAppointment.appointment_end).tz('America/Los_Angeles')
+      .format('MMMM Do YYYY, h:mm a z'))
   }
 
   if(createdAppointment.error) {

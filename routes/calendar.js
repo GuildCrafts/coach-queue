@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const _ = require('lodash')
-const moment = require('moment')
+const moment = require('moment-timezone')
 const gcal = require('google-calendar')
 const {createAppointment} = require('../io/database/appointments')
 const {getActiveCoaches,
@@ -19,7 +19,7 @@ const filterUnavailableCoaches = (coachesAppointmentData) => {
 router.post('/find_next', (request, response) => {
   const requestingMenteeHandle = request.user.handle
   const pairsGuthubHandle = request.body.pairs_github_handle
-  const currentTime = moment()
+  const currentTime = moment().tz('America/Los_Angeles');
   getActiveCoaches()
     .then(coachesArray => {
       if (_.isEmpty(coachesArray)) {
