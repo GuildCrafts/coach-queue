@@ -5,7 +5,8 @@ const moment = require('moment-timezone')
 const gcal = require('google-calendar')
 const {createAppointment} = require('../io/database/appointments')
 const {getActiveCoaches,
-       updateUserByHandle} = require('../io/database/users')
+       updateUserByHandle,
+       findUserByHandle} = require('../io/database/users')
 const {getAllCoachesNextAppts} = require('../models/appointment')
 const {extractCalendarIds,
        makeCalendarEvent} = require('../models/calendar') ;
@@ -41,7 +42,9 @@ router.post('/find_next', (request, response) => {
         let event = makeCalendarEvent(earliestAppointment.start, earliestAppointment.end, requestingMenteeHandle, pairsGuthubHandle)
         gcal(google_token).events.insert(calendarId, event, (error, data) =>
           error
-            ? response.send(500, error)
+            ? response.status(500).json({error: error,
+                                         google_token: google_token,
+                                         calendarId: calendarId})
             : createAppointment({
               appointment_start: data.start.dateTime,
               appointment_end: data.end.dateTime,
@@ -63,6 +66,21 @@ router.post('/find_next', (request, response) => {
 
 router.all('/', ensureGoogleAuth, (request, response) => {
   response.json({message: `on page /calendar. Authenticated with google with accessToken:${request.session.access_token}`});
+})
+
+router.get('/test/:github_handle', (request, response) => {
+    console.log('request.params.github_handle', request.params.github_handle)
+  findUserByHandle(request.params.github_handle)
+    .then(user => {
+      console.log('user::', user);
+      gcal(user.google_token).calendarList.list((error, calendarListResp) => {
+        if (error) {
+          response.send(500, error)
+        } else {
+          response.json(calendarListResp)
+        }
+    })
+  })
 })
 
 
