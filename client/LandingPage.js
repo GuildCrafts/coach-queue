@@ -1,6 +1,7 @@
 import React, {Component}  from 'react'
 import ScheduleButton from './ScheduleButton'
 import RaisedButton from 'material-ui/RaisedButton'
+import BottomNavigationLink from './BottomNavigation'
 import {Link} from 'react-router'
 import fetchMethod from './fetchMethod'
 import CoachList from './CoachList'
@@ -47,6 +48,8 @@ export default class LandingPage extends Component {
         fullWidth={true}
       />
       <div>{this.renderCoachList()}</div>
+      <BottomNavigationLink  />
     </center>
+
   }
 }

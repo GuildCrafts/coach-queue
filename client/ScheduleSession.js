@@ -4,6 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import Appointment from './Appointment'
 import fetchMethod from './fetchMethod'
 import MenteeApptList from './MenteeApptList'
+import BottomNavigationLink from './BottomNavigation'
 import {Link} from 'react-router'
 
 export default class ScheduleSession extends Component {
@@ -84,6 +85,7 @@ export default class ScheduleSession extends Component {
       </Link>
       <div>{this.renderAppointmentCard()}</div>
       <div>{this.renderMenteeAppointments()}</div>
+      <BottomNavigationLink  />
     </center>
   }
 }

@@ -5,3 +5,9 @@ body {
 a {
   color: rgb(0, 188, 212);
 }
+
+.BottomNavigationLink {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}

@@ -4,7 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import ActivateCoach from './ActivateCoach'
 import CoachApptList from './CoachApptList'
 import fetchMethod from './fetchMethod'
-
+import BottomNavigationLink from './BottomNavigation'
 
 export default class CoachLanding extends Component {
   constructor() {
@@ -63,6 +63,7 @@ export default class CoachLanding extends Component {
               fullWidth={true}
             />
           </Link>
+          <BottomNavigationLink />
         </center>
       }
       else if (clickedOnGoogle) {
@@ -77,6 +78,7 @@ export default class CoachLanding extends Component {
               fullWidth={true}
             />
           </Link>
+          <BottomNavigationLink />
         </center>
       }
     } else {
@@ -98,8 +100,8 @@ export default class CoachLanding extends Component {
           />
         </Link>
         <div>{this.renderAppointmentList()}</div>
+        <BottomNavigationLink />
       </center>
     }
-    return coachOptions
   }
 }
