@@ -103,5 +103,6 @@ export default class CoachLanding extends Component {
         <BottomNavigationLink />
       </center>
     }
+    return coachOptions
   }
 }
