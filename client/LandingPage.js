@@ -9,8 +9,8 @@ export default class LandingPage extends Component {
   constructor() {
     super()
     this.state = {
-      coachList:[],
-      fetchExcuted: false
+      coachesList:[],
+      fetchExecuted: false
     }
   }
 
@@ -18,29 +18,28 @@ export default class LandingPage extends Component {
     const path = '/api/v1/coaches/active'
     const callback = coaches => {
       this.setState({
-        coachList: coaches,
-        fetchExcuted: true
+        coachesList: coaches,
+        fetchExecuted: true
       })
     }
     return fetchMethod('GET', path, null).then(callback)
   }
 
   renderCoachList() {
-    const coaches = this.state.coachList
-    return this.state.fetchExcuted
-      ? <CoachList coaches={coaches} />
+    const { coachesList, fetchExecuted } = this.state
+    return fetchExecuted
+      ? <CoachList coaches={coachesList} />
       : null
   }
 
-  render(){
+  render() {
     return <center>
       <ScheduleButton />
-      <Link to="/coach_landing">
+      <Link to={"/coach_landing"} >
         <RaisedButton
           label="I'm a Coach"
           fullWidth={true}
-          backgroundColor="#9af0e2"
-        />
+          backgroundColor="#9af0e2"/>
       </Link>
       <RaisedButton
         label="Who's coaching?"
