@@ -17,8 +17,10 @@ const makeCalendarEvent = (startTime, endTime, menteeHandle1, menteeHandle2) => 
   }
 };
 
-const extractEmailFromGoogleSession = (session) => {
-  return session.passport.user._json.email
+const extractEmailFromGooglePassportUser = (user) => {
+  return user._json.email
 }
 
-module.exports = {extractCalendarIds, makeCalendarEvent, extractEmailFromGoogleSession};
+module.exports = {extractCalendarIds,
+                  makeCalendarEvent,
+                  extractEmailFromGooglePassportUser}

@@ -8,7 +8,7 @@ const {
   findUserByHandle,
   updateUserByHandle
 } = require('../io/database/users')
-const { extractCalendarIds, extractEmailFromGoogleSession } = require('../models/calendar')
+const { extractCalendarIds } = require('../models/calendar')
 const { ensureGoogleAuth } = require('../middleware')
 
 router.get('/active', (request, response) =>
@@ -51,7 +51,6 @@ router.post('/deactivate', (request, response) => {
 router.post('/active', ensureGoogleAuth, (request, response) => {
   const github_handle = request.user.handle
   const {access_token, google_refresh_token} = request.session
-  const googleEmail = extractEmailFromGoogleSession(request.session)
   findUserByHandle(github_handle).then(user => {
     gcal(access_token).calendarList.list((error, calendarListResp) => {
       if (error) {

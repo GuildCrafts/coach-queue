@@ -1,5 +1,5 @@
 const {expect} = require('../setup');
-const {extractCalendarIds} = require('../../models/calendar');
+const {extractCalendarIds, extractEmailFromGooglePassportUser} = require('../../models/calendar');
 
 const mockGoogleCalendarResponse =
 { kind: 'calendar#calendarList',
@@ -35,5 +35,12 @@ const mockGoogleCalendarResponse =
 describe('extractCalendarIds', () => {
   it('should return the primary emails from the list of emails', () => {
     expect(extractCalendarIds(mockGoogleCalendarResponse)).to.eql(['foobar@learnersguild.org'])
+  })
+})
+
+describe('extractEmailFromGoogleSession', () => {
+  it('should extract the email', () => {
+    const googlePassportUser = {_json: {email: 'foo@bar.com'}}
+    expect(extractEmailFromGooglePassportUser(googlePassportUser)).to.eql('foo@bar.com')
   })
 })

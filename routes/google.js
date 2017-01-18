@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 const {updateUserByHandle} = require('../io/database/users')
+const {extractEmailFromGooglePassportUser} = require('../models/calendar')
 const config = require('../config/config').readConfig()
 
 passport.serializeUser((user, done) => {
@@ -27,7 +28,8 @@ router.get('/auth/callback',
     // run the first time
     updateUserByHandle(request.idmUser.handle,
                        {google_token: request.user.accessToken,
-                        google_refresh_token: request.user.refreshToken})
+                        google_refresh_token: request.user.refreshToken,
+                        calendar_ids: [extractEmailFromGooglePassportUser(request.user)]})
      .then(() => {
        const redirectTo = request.session.redirectTo || '/'
        delete request.session.redirectTo;
