@@ -91,7 +91,6 @@ const getAllCoachesNextAppts = (coachesArray, currentTime) => {
     const freeBusyP = P.promisifyAll(gcal(coach.google_token).freebusy)
     const calendarId = coach.calendar_ids[0]
     const google_token = coach.google_token
-    refreshAccessTokenAsync(coach.google_token, coach.google_refresh_token, coach.github_handle)
 
     return freeBusyP.queryAsync({
       items: [{id:`${calendarId}`}],

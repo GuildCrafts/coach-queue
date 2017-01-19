@@ -19,6 +19,7 @@ const calendarRoutes = require('./routes/calendar')
 
 const calendar = require('./init/googleCalendar')
 const auth = require('./init/auth')
+const refreshGoogleToken = require('./init/refreshGoogleToken');
 
 const app = express()
 
@@ -27,6 +28,8 @@ const _config = config.readConfig()
 const session = require('express-session')
 
 const compiler = webpack(webpackConfig)
+
+refreshGoogleToken.init()
 
 if (!config.isProduction()) {
   app.use(webpackMiddleware(compiler, {

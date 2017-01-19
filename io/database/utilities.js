@@ -22,6 +22,11 @@ const findAllRecords = (table, column, data) =>
     .where(column, data)
     .returning('*')
 
+const findAll = (table) =>
+  knex
+    .table(table)
+    .returning('*')
+
 const updateRecord = (table, column, data, attributes) =>
   knex
     .table(table)
@@ -42,5 +47,6 @@ module.exports = {
     findRecord,
     firstRecord,
     updateRecord,
-    findAllRecords
+    findAllRecords,
+    findAll
 }

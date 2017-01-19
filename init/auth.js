@@ -15,8 +15,6 @@ const init = function(expressApp, config) {
 
   expressApp.use(addUserToRequestFromJWT)
   const ensureUserLoggedIn = (req, res, next) => {
-    console.log('request.session::', req.session);
-    console.log('request.user::', req.user);
     const redirectTo = encodeURIComponent(config.host_fully_qualified)
     if (!req.user) {
       return res.redirect(`${config.auth.IDM_BASE_URL}/sign-in?redirect=${redirectTo}`)

@@ -4,7 +4,8 @@ const {
   findRecord,
   updateRecord,
   deleteRecord,
-  findAllRecords} = require('./utilities')
+  findAllRecords,
+  findAll} = require('./utilities')
 
 const createUser = attributes =>
   createRecord('users', attributes).then( user => user )
@@ -27,6 +28,9 @@ const activateCoach = (github_handle) =>
 const deactivateCoach = (github_handle) => 
   updateRecord('users', 'github_handle', github_handle, {active_coach: false})
 
+const findAllUsers = () =>
+  findAll('users').then(user => user)
+
 module.exports = {
   knex,
   createUser, 
@@ -35,5 +39,6 @@ module.exports = {
   deleteUserByHandle,
   getActiveCoaches,
   activateCoach,
-  deactivateCoach
+  deactivateCoach,
+  findAllUsers
 }
