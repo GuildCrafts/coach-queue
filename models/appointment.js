@@ -15,17 +15,19 @@ const findFreeSchedule = (busyTime, currentTime, dayStartTime, dayEndTime, coach
     }
   })
   console.log(`busyTime=========== ${coach.github_handle}`, busyTime)
-  if (busyTime.length == 0) {
-    return [{start: dayStartTime, end: dayEndTime}];
+  if (busyTime.length == 0 && (dayStartTime.diff(currentTime) >= 0)) {
+    return [{start: dayStartTime, end: dayEndTime}]
+  } else if (busyTime.length == 0 && (currentTime.diff(dayStartTime) >= 0)) {
+    return [{start: currentTime, end: dayEndTime}]
   } else {
     return busyTime.reduce((freetimes, currentAppt) => {
       let busyStartTime = currentAppt.start
       let busyEndTime = currentAppt.end
 
-      if(busyStartTime >= currentTime) {
+      if(busyStartTime.diff(currentTime) >= 0) {
         freetimes.push({start:currentTime, end: busyStartTime})
         currentTime = busyEndTime
-      } else if(busyEndTime >= currentTime) {
+      } else if(busyEndTime.diff(currentTime) >= 0) {
         currentTime = busyEndTime
       }
 
