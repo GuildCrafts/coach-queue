@@ -15,7 +15,7 @@ const refreshAccessTokenAsync = (access_token, refresh_token, github_handle) => 
   });
 
   oauth2Client.refreshAccessToken(function(err, tokens) {
-    if(err) { console.error('error getting back a token from Google.')}
+    if(err) { console.error(`Error getting back a token from Google for ${github_handle}.`)}
     else {
       updateUserByHandle(github_handle,
                          {google_token: tokens.access_token})
