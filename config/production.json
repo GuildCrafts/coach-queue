@@ -1,6 +1,6 @@
 {"env": "production",
- "host": "https://coach-que.apps.learnersguild.org",
- "host_fully_qualified": "https://coach-que.apps.learnersguild.org",
+ "host": "https://coach-que.learnersguild.org",
+ "host_fully_qualified": "https://coach-que.learnersguild.org",
  "google":
  {"clientID": "259173355137-rcgi9a201b12oj2r6fq3kvepbd58n288.apps.googleusercontent.com",
   "client_secret": "Tl2ZvO_G8e_py4309tQUQWGR",
