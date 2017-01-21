@@ -165,6 +165,7 @@ const cancelAppointmentHelper = (response, request, appointment_id) =>
         setupOptions(google_token, deleteGoogleEventUrl(calendar_ids, event_id))
       )
       .then(() => cancelAppointment(appointment_id, {is_canceled: true}))
+      .then(() => response.json({message: 'Successfully cancelled the appointment.'}))
     }
   }
 
