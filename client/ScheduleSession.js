@@ -6,6 +6,7 @@ import fetchMethod from './fetchMethod'
 import MenteeApptList from './MenteeApptList'
 import BottomNavigationLink from './BottomNavigation'
 import {Link} from 'react-router'
+import {CANCELED_APPOINTMENT_PATH} from '../config/constants'
 
 export default class ScheduleSession extends Component {
   constructor() {
@@ -16,6 +17,19 @@ export default class ScheduleSession extends Component {
       requestedMenteeAppts: false,
       requestedSchedule: false,
       createdAppointment: null
+    }
+  }
+
+  cancelAppointment(appointment_id) {
+    const canceledAppointment = confirm('Cancel appointment, is this Ok?')
+
+    if (canceledAppointment) {
+      return fetchMethod(
+        'POST',
+        CANCELED_APPOINTMENT_PATH,
+        {appointment_id},
+        () => this.menteeAppointments()
+      )
     }
   }
 
@@ -54,7 +68,9 @@ export default class ScheduleSession extends Component {
   renderMenteeAppointments() {
     const menteeAppointments = this.state.menteeAppointments
     return this.state.requestedMenteeAppts
-      ? <MenteeApptList menteeAppointments={menteeAppointments} />
+      ? <MenteeApptList
+          menteeAppointments={menteeAppointments}
+          cancelAppointment={this.cancelAppointment.bind(this)}/>
       : null
   }
 

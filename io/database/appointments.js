@@ -9,6 +9,7 @@ const {
 const createAppointment = attributes =>
   createRecord('appointments', attributes).then( appointment => appointment )
 
+
 const findFirstAppointmentByCoachId = coach_handle =>
   findRecord('appointments', 'coach_handle', coach_handle)
     .then( appointment => appointment )
@@ -36,11 +37,19 @@ const findAllAppointmentByMenteeHandle = mentee_handle =>
 const deleteAppointmentById = apt_id =>
   deleteRecord('appointments', 'id', apt_id)
 
+const cancelAppointment = (appointment_id, isCanceled) =>
+  updateRecord('appointments', 'id', appointment_id, isCanceled)
+
+const findAppointmentById = appointment_id =>
+  findRecord('appointments', 'id', appointment_id)
+
 module.exports = {
   createAppointment,
   findFirstAppointmentByMenteeHandle,
   findFirstAppointmentByCoachId,
   findAllAppointmentByMenteeHandle,
   findAllAppointmentByCoachId,
-  deleteAppointmentById
+  deleteAppointmentById,
+  cancelAppointment,
+  findAppointmentById
 }

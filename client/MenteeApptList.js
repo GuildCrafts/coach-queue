@@ -26,6 +26,12 @@ export default class MenteeApptList extends Component {
               <a href="https://lguild.typeform.com/to/kDvUzF"
               target="_blank">Feedback Form</a>
             </TableRowColumn>
+            <TableRowColumn>
+              <button
+                onClick={() => this.props.cancelAppointment(appointment.id)}>
+                X
+              </button>
+            </TableRowColumn>
           </TableRow>
       })
 
@@ -40,6 +46,7 @@ export default class MenteeApptList extends Component {
           <TableHeaderColumn>Start Time</TableHeaderColumn>
           <TableHeaderColumn>End Time</TableHeaderColumn>
           <TableHeaderColumn>Feedback</TableHeaderColumn>
+          <TableHeaderColumn>Cancel</TableHeaderColumn>
         </TableRow>
       </TableHeader>
         <TableBody displayRowCheckbox={false}>{appointmentRows}</TableBody>

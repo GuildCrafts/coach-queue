@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import {Card, CardText} from 'material-ui/Card'
 import moment from 'moment'
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
+import fetchMethod from './fetchMethod'
 
 export default class CoachApptList extends Component{
-
   render() {
     const coachAppointments = this.props.coachAppointments
     const appointmentRows = coachAppointments.sort((apptA, apptB) => {
@@ -21,6 +21,7 @@ export default class CoachApptList extends Component{
             <TableRowColumn>{apptDate}</TableRowColumn>
             <TableRowColumn>{startTime}</TableRowColumn>
             <TableRowColumn>{endTime}</TableRowColumn>
+            <TableRowColumn><button onClick={() => this.props.cancelAppointment(appointment.id)}>X</button></TableRowColumn>
           </TableRow>
       })
 
@@ -33,6 +34,7 @@ export default class CoachApptList extends Component{
           <TableHeaderColumn>Date</TableHeaderColumn>
           <TableHeaderColumn>Start Time</TableHeaderColumn>
           <TableHeaderColumn>End Time</TableHeaderColumn>
+          <TableHeaderColumn>Cancel</TableHeaderColumn>
         </TableRow>
       </TableHeader>
         <TableBody displayRowCheckbox={false}>{appointmentRows}</TableBody>

@@ -3,7 +3,10 @@ const P = require('bluebird')
 const gcalP = P.promisifyAll(gcal)
 const moment = require('moment-timezone');
 const { findUserByHandle } = require('../io/database/users')
-const { refreshAccessTokenAsync } = require('../io/gateway/google_calendar');
+const { refreshAccessTokenAsync } = require('../io/gateway/google_calendar')
+const requestPromise = require('request-promise')
+const {deleteGoogleEventUrl} = require('../config/constants')
+const {cancelAppointment} = require('../io/database/appointments')
 
 const findFreeSchedule = (busyTime, currentTime, dayStartTime, dayEndTime, coach) => {
   let counter = 0
@@ -123,8 +126,54 @@ const getAllCoachesNextAppts = (coachesArray, currentTime) => {
   }))
 }
 
+const requester = request =>
+  request.session.mentees_handles
+    ? request.session.mentees_handles[ 0 ]
+    : request.user.handle
+
+const pairHandle = request => {
+  return request.body.pairs_github_handle || request.session.mentees_handles[1]
+}
+
+const findCoach = request => appointment => {
+  const {coach_handle, mentee_handles, event_id} = appointment
+  request.session.mentees_handles = mentee_handles
+
+  return findUserByHandle(coach_handle).then(coach => ({coach, event_id}))
+}
+
+const setupOptions = (access_token, url) => ({
+  method: 'DELETE',
+  qs: {access_token},
+  url,
+  headers: {'user-agent': 'node.js'}
+})
+
+const cancelAppointmentHelper = (response, request, appointment_id) =>
+  results => {
+    const {github_handle, google_token, calendar_ids} = results.coach
+    const {event_id} = results
+
+    if (request.user.handle === github_handle) {
+      requestPromise(
+        setupOptions(google_token, deleteGoogleEventUrl(calendar_ids, event_id))
+      )
+      .then(() => cancelAppointment(appointment_id, {is_canceled: true}))
+      .then(() => response.redirect(307, '/calendar/find_next'))
+    } else {
+      requestPromise(
+        setupOptions(google_token, deleteGoogleEventUrl(calendar_ids, event_id))
+      )
+      .then(() => cancelAppointment(appointment_id, {is_canceled: true}))
+    }
+  }
+
 module.exports = {
   findFreeSchedule,
   findNextAppointment,
-  getAllCoachesNextAppts
+  getAllCoachesNextAppts,
+  requester,
+  pairHandle,
+  findCoach,
+  cancelAppointmentHelper
 }

@@ -5,6 +5,7 @@ import ActivateCoach from './ActivateCoach'
 import CoachApptList from './CoachApptList'
 import fetchMethod from './fetchMethod'
 import BottomNavigationLink from './BottomNavigation'
+import {CANCELED_APPOINTMENT_PATH} from '../config/constants'
 
 export default class CoachLanding extends Component {
   constructor() {
@@ -27,10 +28,25 @@ export default class CoachLanding extends Component {
     return fetchMethod('GET', path, null).then(callback)
   }
 
+  cancelAppointment(appointment_id) {
+    const canceledAppointment = confirm('Cancel appointment, is this Ok?')
+
+    if (canceledAppointment) {
+      return fetchMethod(
+        'POST',
+        CANCELED_APPOINTMENT_PATH,
+        {appointment_id},
+        () => this.appointmentList()
+      )
+    }
+  }
+
   renderAppointmentList() {
     const { coachAppointments, fetchExecuted } = this.state
     return fetchExecuted
-      ? <CoachApptList coachAppointments={coachAppointments} />
+      ? <CoachApptList
+          coachAppointments={coachAppointments}
+          cancelAppointment={this.cancelAppointment.bind(this)} />
       : null
   }
 

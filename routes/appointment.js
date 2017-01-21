@@ -13,8 +13,11 @@ router.get('/coach-schedule', (request, response) => {
 
   findAllAppointmentByCoachId(coach_handle)
     .then(appointments => {
-      console.log('Coach Appointments', appointments);
-      response.json(appointments)
+      const activeAppointments = appointments.filter(
+        appointment => !appointment.is_canceled
+      )
+
+      response.json(activeAppointments)
   })
 })
 
@@ -23,8 +26,11 @@ router.get('/mentee-schedule', (request, response) => {
 
   findAllAppointmentByMenteeHandle(currentUserHandle)
     .then(appointments => {
-      console.log('Mentee appointment!!', appointments)
-      response.json(appointments)
+      const activeAppointments = appointments.filter(
+        appointment => !appointment.is_canceled
+      )
+
+      response.json(activeAppointments)
     })
 })
 

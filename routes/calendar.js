@@ -3,13 +3,23 @@ const router = express.Router()
 const _ = require('lodash')
 const moment = require('moment-timezone')
 const gcal = require('google-calendar')
-const {createAppointment} = require('../io/database/appointments')
+
+const {
+  createAppointment,
+  findAppointmentById
+} = require('../io/database/appointments')
 const {getActiveCoaches,
        updateUserByHandle,
        findUserByHandle} = require('../io/database/users')
-const {getAllCoachesNextAppts} = require('../models/appointment')
+const {
+  getAllCoachesNextAppts,
+  requester,
+  pairHandle,
+  findCoach,
+  cancelAppointmentHelper
+} = require('../models/appointment')
 const {extractCalendarIds,
-       makeCalendarEvent} = require('../models/calendar') ;
+       makeCalendarEvent} = require('../models/calendar')
 const {ensureGoogleAuth} = require('../middleware')
 
 const filterUnavailableCoaches = (coachesAppointmentData) => {
@@ -18,9 +28,10 @@ const filterUnavailableCoaches = (coachesAppointmentData) => {
 }
 
 router.post('/find_next', (request, response) => {
-  const requestingMenteeHandle = request.user.handle
-  const pairsGuthubHandle = request.body.pairs_github_handle
-  const currentTime = moment().tz('America/Los_Angeles');
+  const requestingMenteeHandle = requester(request)
+  const pairsGithubHandle = pairHandle(request)
+
+  const currentTime = moment().tz('America/Los_Angeles')
   getActiveCoaches()
     .then(coachesArray => {
       if (_.isEmpty(coachesArray)) {
@@ -39,7 +50,7 @@ router.post('/find_next', (request, response) => {
       if(sortedAppointments[0]) {
         let earliestApptData = sortedAppointments[0]
         let {calendarId, earliestAppointment, google_token} = earliestApptData
-        let event = makeCalendarEvent(earliestAppointment.start, earliestAppointment.end, requestingMenteeHandle, pairsGuthubHandle)
+        let event = makeCalendarEvent(earliestAppointment.start, earliestAppointment.end, requestingMenteeHandle, pairsGithubHandle)
         gcal(google_token).events.insert(calendarId, event, (error, data) =>
           error
             ? response.status(500).json({error: error,
@@ -50,8 +61,9 @@ router.post('/find_next', (request, response) => {
               appointment_end: data.end.dateTime,
               coach_handle: earliestApptData.github_handle,
               appointment_length: 30,
-              description: `Coaching Appointment with ${requestingMenteeHandle} & ${pairsGuthubHandle}.`,
-              mentee_handles: [requestingMenteeHandle, pairsGuthubHandle]
+              description: `Coaching Appointment with ${requestingMenteeHandle} & ${pairsGithubHandle}.`,
+              mentee_handles: [requestingMenteeHandle, pairsGithubHandle],
+              event_id: data.id
             })
              .then(apptRecord => response.status(200).json(apptRecord))
         )
@@ -81,6 +93,14 @@ router.get('/test/:github_handle', (request, response) => {
         }
     })
   })
+})
+
+router.post('/cancel_appointment', (request, response) => {
+  const {appointment_id} = request.body
+
+  findAppointmentById(request.body.appointment_id)
+    .then(findCoach(request))
+    .then(cancelAppointmentHelper(response, request, appointment_id))
 })
 
 
