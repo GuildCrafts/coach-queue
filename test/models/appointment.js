@@ -1,14 +1,21 @@
 const { expect, app, chai, chaiDateTime } = require('../setup')
 const moment = require('moment')
+
 const {
-  busyTimeData, 
-  freeTimeData, 
+  busyTimeData,
+  freeTimeData,
   freeTimeData2
-} = require('./appointmentTestData')
+} = require('./mock_data/appointmentTestData')
+
 const {
-  findFreeSchedule, 
-  findNextAppointment 
+  findFreeSchedule,
+  findNextAppointment
 } = require('../../models/appointment')
+
+const { 
+  createAppointment,
+  findAllAppointmentsByWeek
+} = require( '../../io/database/appointments' )
 
 describe('Appointment Models: ', () => {
   describe('findFreeSchedule', () => {
@@ -59,4 +66,28 @@ describe('Appointment Models: ', () => {
       })
     })
   })
+
+  describe( 'findAllAppointmentsByWeek', () => {
+    it( 'should get all appointments within a specified week time period', () => {
+      const demoData = {
+        id: 2,
+        appointment_length: 30,
+        description: 'help!!',
+        coach_handle: 'coachQ',
+        mentee_handles: [ 'person', 'person2' ],
+        appointment_start: moment( 'Wed, 17 Jan 2017 22:00:00 GMT' ).toDate(),
+        appointment_end: moment( 'Wed, 17 Jan 2017 22:30:00 GMT' ).toDate(),
+        created_at_timestamp: moment( 'Wed, 17 Jan 2017 20:30:00 GMT' ).toDate()
+      }
+      createAppointment( demoData )
+        .then( () => {
+          findAllAppointmentsByWeek( moment( '2017-01-17T16:40:00.000-08:00' ).toDate() )
+            .then( data => {
+              expect( data ).to.be.an( 'array' )
+              expect( data ).to.eql( [ demoData ] )
+            })
+        })
+    })
+  })
+
 })

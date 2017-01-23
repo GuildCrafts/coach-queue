@@ -1,5 +1,6 @@
 const startTime = new Date(2017, 1, 27, 16, 5)
 const endTime = new Date(2017, 1, 28, 16, 5)
+const createdAt = new Date(2016, 1, 28, 16, 5)
 const users = [
   {
     github_handle: 'kitty_mitty',
@@ -44,7 +45,8 @@ const appointments = {
   coach_handle: 'kitty_mitty',
   mentee_handles: ['hayward_bay', 'mickey_mouse'],
   appointment_start: startTime,
-  appointment_end: endTime
+  appointment_end: endTime,
+  created_at_timestamp: createdAt
 }
 
 module.exports = {users, appointments}

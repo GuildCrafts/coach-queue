@@ -25,6 +25,11 @@ function reset_db {
   migrate_db ${env}
 }
 
+function create_migration {
+  echo ${2}
+  ./node_modules/knex/bin/cli.js migrate:make ${2} --knexfile config/DBconfig.js
+}
+
 function test {
   echo "calling the test function"
   migrate_db
@@ -63,6 +68,7 @@ for the project"
 specified environment"
   echo "   ./go reset_db [development|test]  ....  Resets the db in the \
 specified environment"
+  echo "   ./go create_migration [new_file_name]   Creates a new knex migration file"
 }
 
 if [ -z "${1}" ] ; then
@@ -82,6 +88,8 @@ case $1 in
   reset_db|reset-db) shift; reset_db $@
   ;;
   migrate_db|migrate-db|migrate) shift; migrate_db $@
+  ;;
+  create_migration) create_migration $@
   ;;
   *) help
 esac

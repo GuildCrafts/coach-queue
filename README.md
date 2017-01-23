@@ -56,3 +56,8 @@ We're using `knex` to generate our SQL
 | deactivateCoach()                | update | post | /api/v1/coaches/           | /coach deactivate         |
 | deleteUserByLgId()               | delete | post | /api/v1/coaches/           |                           |
 
+##### Analytics
+
+| action                           | verb | path                       |
+| -------------------------------- | ---- | -------------------------- |
+| Get Analytics List               | get  | /api/v1/analytics          |                    
