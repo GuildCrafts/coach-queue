@@ -1,22 +1,62 @@
 # coach-que
-Service to help with scheduling/feedback for Coaches/Mentees
+Scheduling/feedback service for Coaches/Mentees
 
 #### Get started
-This installs all dependencies in the project, and sets up the db
+Install dependencies and set up database:
 ```
 ./go
 ```
 
 #### Migrate the Database
-
 ```
-./go migrate_db [development|test]
+./go migrate_db development
+./go migrate_db test
 ```
 
 ####Testing
-Make sure to write your tests as you write your code. Passing tests for new code required for PR acceptance.
 ```
 ./go test
+```
+
+#### Instal nvm
+Some dependencies of this project require node v5.6.0. We recommend using nvm to switch between different versions of node:
+```
+$ brew install nvm
+```
+Install node 5.6.0 and switch to it:
+```
+$ nvm install 5.6.0
+$ nvm use 5.6.0
+```
+To switch back to your system node version:
+```
+$ nvm use system
+```
+
+#### Install IDM
+Make sure you are a collaborator on the IDM repo. Upon graduating to level 3, you are automatically sent an invite email.
+
+Clone the [IDM repository](https://github.com/LearnersGuild/idm)
+
+Run the multitudinous setup instructions in the README
+
+### Update JWT Public Key
+In coach-que directory, open config/development.json. Replace the public key on line 11 with the JWT_PUBLIC_KEY you used in IDM setup: `"JWT_PUBLIC_KEY"=[your public key]`
+
+### Running the project
+Three servers must be running for this to work. First, Navigate to the directory of your IDM installation.
+
+Start IDM server:
+```
+$ npm start
+```
+Open another terminal window and run mehserve:
+```
+$ mehserve run
+```
+And finally, open a third terminal window in the coach-que root directory and run:
+```
+$ ./go start
 ```
 
 ### Architecture
