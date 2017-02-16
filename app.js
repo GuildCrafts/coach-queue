@@ -57,7 +57,7 @@ app.use(session({secret: 'learners-guild-coach-que'}))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'public')))
-
+app.use(express.static(path.join(__dirname, 'public/dist')))
 
 //we dont have a dev IDM, so
 if (!_config.auth.isDisabled) {
