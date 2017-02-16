@@ -18,6 +18,12 @@ function migrate_db {
   NODE_ENV=${env} ./node_modules/knex/bin/cli.js migrate:latest --knexfile config/DBconfig.js
 }
 
+function rollback_db {
+  env=${1:-test}
+  echo "Going to rollback db in ${env}"
+  NODE_ENV=${env} ./node_modules/knex/bin/cli.js migrate:rollback --knexfile config/DBconfig.js
+}
+
 function reset_db {
   env=${1:-test}
   drop_db ${env}
@@ -33,7 +39,7 @@ function create_migration {
 function test {
   echo "calling the test function"
   migrate_db
-  NODE_ENV=test npm run seed:testdb && ./node_modules/mocha/bin/mocha --recursive ./test/models/ --compilers js:babel-core/register --timeout 10000
+  NODE_ENV=test npm run seed:testdb && ./node_modules/mocha/bin/mocha --recursive "./test/**/*.js" --compilers js:babel-core/register --timeout 10000 --require babel-polyfill
 }
 
 function full_tests {
@@ -66,6 +72,8 @@ for the project"
   echo "   ./go test  ...........................  Run all tests"
   echo "   ./go migrate_db [development|test] ...  Runs migrations in the \
 specified environment"
+  echo "   ./go rollback_db [development|test] ..  Rolls back migrations in the \
+specified environment"
   echo "   ./go reset_db [development|test]  ....  Resets the db in the \
 specified environment"
   echo "   ./go create_migration [new_file_name]   Creates a new knex migration file"
@@ -88,6 +96,8 @@ case $1 in
   reset_db|reset-db) shift; reset_db $@
   ;;
   migrate_db|migrate-db|migrate) shift; migrate_db $@
+  ;;
+  rollback_db) shift; rollback_db $@
   ;;
   create_migration) create_migration $@
   ;;

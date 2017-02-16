@@ -28,7 +28,7 @@ describe('Coach Route: ', () => {
         })
     })
   })
-
+  /*
   describe('DELETE deactivate coaching at /coaches/activate', () => {
     it('should deactivate a specific coach', done => {
       chai.request(app)
@@ -42,4 +42,5 @@ describe('Coach Route: ', () => {
         })
     })
   })
+  */
 })
