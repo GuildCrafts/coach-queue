@@ -1,4 +1,3 @@
-
 exports.up = (knex, Promise) =>
   Promise.all([
     knex.schema.createTable('users', table =>  {
@@ -20,7 +19,6 @@ exports.up = (knex, Promise) =>
       table.timestamps(true, true)
     })
   ])
-
 
 exports.down = (knex, Promise) =>
   Promise.all([

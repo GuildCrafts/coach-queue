@@ -1,4 +1,3 @@
-
 exports.up = function(knex, Promise) {
   return Promise.all([
     knex.schema.table('users', table => table.string('google_refresh_token'))

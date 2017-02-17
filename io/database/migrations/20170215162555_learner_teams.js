@@ -1,4 +1,3 @@
-
 exports.up = knex =>
   knex.schema.createTable('learner-teams', table => {
     table.string('learner_id')

@@ -1,4 +1,3 @@
-
 exports.up = knex =>
   knex.schema.createTable('teams', table => {
     table.increments('id').primary()

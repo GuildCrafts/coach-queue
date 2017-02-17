@@ -1,9 +1,7 @@
 const knex = require('./knex')
-const {
-  createRecord
-} = require('./utilities')
+const { createRecord } = require('./utilities')
 
-const addLearnerTeams = datas =>
-  Promise.all( datas.map( data => createRecord('learner-teams', data) ))
+const associateLearnersWithTeams = teams =>
+  Promise.all( teams.map( team => createRecord('learner-teams', team) ))
 
-module.exports = { addLearnerTeams }
+module.exports = { associateLearnersWithTeams }
