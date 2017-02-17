@@ -7,6 +7,8 @@ import MenteeApptList from './MenteeApptList'
 import BottomNavigationLink from './BottomNavigation'
 import {Link} from 'react-router'
 import {CANCELED_APPOINTMENT_PATH} from '../config/constants'
+import injectTapEventPlugin from 'react-tap-event-plugin'
+injectTapEventPlugin()
 
 export default class ScheduleSession extends Component {
   constructor() {
