@@ -12,7 +12,6 @@ const moment = require('moment-timezone')
 const createAppointment = attributes =>
   createRecord('appointments', attributes).then( appointment => appointment )
 
-
 const findFirstAppointmentByCoachId = coach_handle =>
   findRecord('appointments', 'coach_handle', coach_handle)
     .then( appointment => appointment )
