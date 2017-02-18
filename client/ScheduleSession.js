@@ -22,6 +22,10 @@ export default class ScheduleSession extends Component {
     }
   }
 
+  componentDidMount() {
+    this.createAppointment()
+  }
+
   cancelAppointment(appointment_id) {
     const canceledAppointment = confirm('Cancel appointment, is this Ok?')
 
@@ -36,17 +40,26 @@ export default class ScheduleSession extends Component {
   }
 
   createAppointment() {
-    const path = '/calendar/find_next'
-    const params = {
-      pairs_github_handle: this.refs.mentee_handles.input.value
+    const handleTeammates = teammates => {
+      teammates = JSON.parse(teammates)
+      const teammatesString = teammates.reduce( (string, current) => {
+        return string.concat(current.handle)
+      }, '')
+
+      const path = '/calendar/find_next'
+      const params = {
+        pairs_github_handle: teammatesString
+      }
+      const callback = appointment => this.setState({
+        requestedSchedule: true,
+        createdAppointment: appointment
+          ? appointment
+          : null
+      })
+      return fetchMethod('POST', path, params, callback)
     }
-    const callback = appointment => this.setState({
-      requestedSchedule: true,
-      createdAppointment: appointment
-        ? appointment
-        : null
-    })
-    return fetchMethod('POST', path, params, callback)
+
+    return fetchMethod('GET', '/api/v1/appointments/teammates', null, handleTeammates)
   }
 
   menteeAppointments() {
@@ -78,21 +91,10 @@ export default class ScheduleSession extends Component {
 
   render() {
     return <center>
-      <TextField
-        id="pair-input"
-        ref="mentee_handles"
-        hintText="Your pair's github name"
-      />
-      <RaisedButton
-        onClick={this.createAppointment.bind(this)}
-        label="Request a coach"
-        primary={true}
-        fullWidth={true}
-      />
       <RaisedButton
         onClick={this.menteeAppointments.bind(this)}
         label="My Scheduled Appointments"
-        backgroundColor="#c6fff3"
+        primary={true}
         fullWidth={true}
       />
       <Link to="/">

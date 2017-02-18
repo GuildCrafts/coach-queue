@@ -8,6 +8,8 @@ const {
   findAllAppointmentByCoachId
 } = require('../io/database/appointments')
 
+const { getTeamMemberHandles } = require('../io/database/teams')
+
 router.get('/coach-schedule', (request, response) => {
   const coach_handle = request.idmUser.handle
 
@@ -49,6 +51,14 @@ router.get('/feedback', (request, response, next) =>{
       console.log('Did I get anything?', responses.responses[0].answers)
     )
     .catch(error => console.log(error))
+})
+
+router.get('/teammates', (request, response, next) => {
+  const handle = request.user.handle
+  getTeamMemberHandles(handle).then( teammates => {
+    teammates = teammates.rows.filter( teammate => teammate.handle !== handle )
+    response.json(JSON.stringify(teammates))
+  })
 })
 
 module.exports = router

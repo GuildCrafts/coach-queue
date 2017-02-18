@@ -1,11 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const parse = require('csv-parse/lib/sync')
-const db = Object.assign({},
-  require('../io/database/teams'),
-  require('../io/database/learners'),
-  require('../io/database/learner_teams')
-)
+const db = require('../io/database/teams')
 
 router.post('/', (request, response) => {
   const data = request.files.teams.data.toString()
