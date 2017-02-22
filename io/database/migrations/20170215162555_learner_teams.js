@@ -1,8 +1,8 @@
 exports.up = knex =>
-  knex.schema.createTable('learner-teams', table => {
-    table.string('learner_id')
-    table.string('team_id')
+  knex.schema.createTable('learner_teams', table => {
+    table.integer('learner_id')
+    table.integer('team_id')
   })
 
 exports.down = knex =>
-  knex.schema.dropTable('learner-teams')
+  knex.schema.dropTable('learner_teams')

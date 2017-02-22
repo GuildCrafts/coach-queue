@@ -14,7 +14,6 @@ const {getActiveCoaches,
 const {
   getAllCoachesNextAppts,
   requester,
-  pairHandle,
   findCoach,
   cancelAppointmentHelper
 } = require('../models/appointment')
@@ -29,7 +28,7 @@ const filterUnavailableCoaches = (coachesAppointmentData) => {
 
 router.post('/find_next', (request, response) => {
   const requestingMenteeHandle = requester(request)
-  const pairsGithubHandle = pairHandle(request)
+  const pairsGithubHandle = request.body.pairs_github_handle
 
   const currentTime = moment().tz('America/Los_Angeles')
   getActiveCoaches()

@@ -40,7 +40,7 @@ export default class ScheduleSession extends Component {
   }
 
   createAppointment() {
-    const handleTeammates = teammates => {
+    return fetchMethod('GET', '/api/v1/appointments/teammates', null, teammates => {
       teammates = JSON.parse(teammates)
       const teammatesString = teammates.reduce( (string, current) => {
         return string.concat(current.handle)
@@ -57,9 +57,7 @@ export default class ScheduleSession extends Component {
           : null
       })
       return fetchMethod('POST', path, params, callback)
-    }
-
-    return fetchMethod('GET', '/api/v1/appointments/teammates', null, handleTeammates)
+    })
   }
 
   menteeAppointments() {

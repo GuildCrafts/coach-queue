@@ -17,8 +17,9 @@ const {
   findAllAppointmentsByWeek
 } = require( '../../io/database/appointments' )
 
-/*
+  /*
 describe('Appointment Models: ', () => {
+
   describe('findFreeSchedule', () => {
     it('converts Gcal busytimes to Freetime during LG business hours', () => {
       const freeTime = findFreeSchedule(busyTimeData)
@@ -90,6 +91,5 @@ describe('Appointment Models: ', () => {
         })
     })
   })
-
-})
 */
+})
