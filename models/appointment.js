@@ -131,10 +131,6 @@ const requester = request =>
     ? request.session.mentees_handles[ 0 ]
     : request.user.handle
 
-const pairHandle = request => {
-  return request.body.pairs_github_handle || request.session.mentees_handles[1]
-}
-
 const findCoach = request => appointment => {
   const {coach_handle, mentee_handles, event_id} = appointment
   request.session.mentees_handles = mentee_handles
@@ -174,7 +170,6 @@ module.exports = {
   findNextAppointment,
   getAllCoachesNextAppts,
   requester,
-  pairHandle,
   findCoach,
   cancelAppointmentHelper
 }

@@ -5,7 +5,7 @@ const addTeams = teams =>
   Promise.all( teams.map( team => createRecord('teams', team) ))
 
 const associateLearnersWithTeams = teams =>
-  Promise.all( teams.map( team => createRecord('learner-teams', team) ))
+  Promise.all( teams.map( team => createRecord('learner_teams', team) ))
 
 const addLearners = handles =>
   Promise.all( handles.map( handle => createRecord('learners', handle) ))
@@ -15,10 +15,10 @@ const getTeamMemberHandles = handle =>
     `SELECT handle
      FROM learners
      INNER JOIN (SELECT lt.*
-      FROM "learner-teams" lt
+      FROM "learner_teams" lt
       INNER JOIN (SELECT *
         FROM learners
-		    INNER JOIN "learner-teams" lt
+		    INNER JOIN "learner_teams" lt
 		    ON learners.id = lt.learner_id::int
 		    WHERE handle = '${handle}') foo
       ON lt.team_id = foo.team_id) boo
