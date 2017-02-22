@@ -10,24 +10,49 @@ router.post('/', (request, response) => {
   const handles = extractHandles(learners)
 
   db.addTeams( teams )
-    .then( addedTeams => setTeamIds(addedTeams, learners) )
-    .then( learners => db.addLearners(handles) )
-    .then( addedLearners => setLearnerIds(addedLearners, learners) )
+    .then( setTeamIds(learners) )
+    .then( _ => db.addLearners(handles) )
+    .then( setLearnerIds(learners) )
     .then( extractLearnerAndTeamIds )
-    .then( learnAndTeamIds => db.associateLearnersWithTeams(learnAndTeamIds) )
+    .then( db.associateLearnersWithTeams )
     .then( learnerTeams => response.json(learnerTeams) )
 })
 
-const removeDuplicateTeams = arrayOfObjects =>
-  arrayOfObjects.reduce( (uniqueObjects, currentObject) => {
-    if ( !uniqueObjects.find( uniqueObject =>
-        uniqueObject.team === currentObject.team &&
-        uniqueObject.cycle === currentObject.cycle
-    )) {
-      uniqueObjects.push(currentObject)
+const setLearnerIds = learners => addedLearners => {
+  addedLearners.forEach( addedLearner => {
+    learners.forEach( (learner, index) => {
+      if ( addedLearner.handle === learner.handle ) {
+        learner.learner_id = addedLearner.id
+      }
+    })
+  })
+
+  return learners
+}
+
+const setTeamIds = learners => addedTeams => {
+  addedTeams.forEach( team => {
+    learners.forEach( learner => {
+      if ( team.team === learner.team ) {
+        learner.team_id = team.id
+      }
+    })
+  })
+
+  return learners
+}
+
+const removeDuplicateTeams = teams =>
+  teams.reduce( (uniqueTeams, currentTeam) => {
+    if ( !uniqueTeams.find( teamsAreTheSame(currentTeam) )) {
+      uniqueTeams.push(currentTeam)
     }
-    return uniqueObjects
+    return uniqueTeams
   }, [])
+
+const teamsAreTheSame = currentTeam => uniqueTeam =>
+  uniqueTeam.team === currentTeam.team &&
+  uniqueTeam.cycle === currentTeam.cycle
 
 const extractTeams = learnersList =>
   removeDuplicateTeams(learnersList.map( learner =>
@@ -44,39 +69,13 @@ const extractLearnerAndTeamIds = learners =>
     ({ learner_id: learner.learner_id, team_id: learner.team_id })
   )
 
-const parseLearners = csvString => {
-  const records = parse(csvString, {columns: true})
-  return records.map( record => {
+const parseLearners = csvString =>
+  parse(csvString, {columns: true}).map( record => {
     return {
       handle: record.handle,
       team: record.projectName,
       cycle: record.cycleNumber
     }
   })
-}
-
-const setTeamIds = ( addedTeams, learners ) => {
-  addedTeams.forEach( team => {
-    learners.forEach( learner => {
-      if ( team.team === learner.team ) {
-        learner.team_id = team.id
-      }
-    })
-  })
-
-  return learners
-}
-
-const setLearnerIds = ( addedLearners, learners ) => {
-  addedLearners.forEach( addedLearner => {
-    learners.forEach( (learner, index) => {
-      if ( addedLearner.handle === learner.handle ) {
-        learner.learner_id = addedLearner.id
-      }
-    })
-  })
-
-  return learners
-}
 
 module.exports = router
