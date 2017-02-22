@@ -5,8 +5,9 @@ const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const passport = require('passport');
-const enforce = require('express-sslify');
+const passport = require('passport')
+const enforce = require('express-sslify')
+const fileUpload = require('express-fileupload')
 
 const webpack = require('webpack')
 const webpackMiddleware = require('webpack-dev-middleware')
@@ -17,10 +18,11 @@ const appointment = require('./routes/appointment')
 const googleRoutes = require('./routes/google')
 const calendarRoutes = require('./routes/calendar')
 const analytics = require('./routes/analytics')
+const upload = require('./routes/upload')
 
 const calendar = require('./init/googleCalendar')
 const auth = require('./init/auth')
-const refreshGoogleToken = require('./init/refreshGoogleToken');
+const refreshGoogleToken = require('./init/refreshGoogleToken')
 
 const app = express()
 
@@ -51,6 +53,7 @@ if (!config.isProduction()) {
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(logger('dev'))
 app.use(bodyParser.json())
+app.use(fileUpload())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(session({secret: 'learners-guild-coach-que'}))
@@ -77,6 +80,7 @@ if (!_config.auth.isDisabled) {
 
 app.use(cors())
 
+app.use('/upload', upload)
 app.use('/google', googleRoutes)
 app.use('/api/v1/coaches', coach)
 app.use('/api/v1/appointments', appointment)
@@ -88,7 +92,7 @@ app.use('/calendar', calendarRoutes)
 
 //we dont have a dev IDM, so
 
-app.use('/', (req, res, next) => {
+app.get('*', (req, res, next) => {
   res.sendFile(path.join(__dirname, 'client/index.html'))
 })
 

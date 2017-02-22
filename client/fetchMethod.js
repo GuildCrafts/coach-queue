@@ -15,6 +15,8 @@ export default (method, path, values, callback) => {
   }
 
   return fetch(path, options)
+    .catch(error => console.log("There was an error 🐛", error))
     .then(response => response.json())
+    .catch(error => console.log("There was an error 🐛", error))
     .then(callback)
 }
