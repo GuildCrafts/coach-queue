@@ -29,8 +29,7 @@ const getTeamMemberHandles = handle =>
   )
 
 const getTeamIdByHandle = handle =>
-  knex
-    .select('team_id')
+  knex.select('team_id')
     .from('learners')
     .join('learner_teams', 'learners.id', 'learner_teams.learner_id')
     .where('handle', handle)

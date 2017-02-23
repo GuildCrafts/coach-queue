@@ -14,9 +14,7 @@ describe('addLearners()', () => {
 
   context('when adding learners to the learners table', () => {
     it('should return addedLearner handle and id', () => {
-      const learner = [{
-        handle: 'nodatall'
-      }]
+      const learner = [{ handle: 'nodatall' }]
       addLearners(learner)
         .then( addedLearner => {
           expect(addedLearner[0].handle).to.equal('nodatall')
@@ -51,9 +49,7 @@ describe('getTeamIdByHandle()', () => {
   )
 
   context('when passed a valid handle', () => {
-    const learner = [{
-      handle: 'nodatall'
-    }]
+    const learner = [{ handle: 'nodatall' }]
 
     it('should return a team id', () => {
       addLearners(learner)

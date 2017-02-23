@@ -40,15 +40,15 @@ export default class ScheduleSession extends Component {
   }
 
   createAppointment() {
-    return fetchMethod('GET', '/api/v1/appointments/teaminfo', null, teammates => {
-      teammates = JSON.parse(teammates)
-      const teammatesString = teammates.reduce( (string, current) => {
-        return string.concat(current.handle)
+    return fetchMethod('GET', '/api/v1/appointments/teaminfo', null, teamInfo => {
+      const pairs_github_handle = teamInfo.teammates.reduce( (accumulator, currentTeammate) => {
+        return accumulator.concat(currentTeammate.handle)
       }, '')
 
       const path = '/calendar/find_next'
-      const params = {
-        pairs_github_handle: teammatesString
+      const bodyContent = {
+        pairs_github_handle,
+        team_id: teamInfo.team_id
       }
       const callback = appointment => this.setState({
         requestedSchedule: true,
@@ -56,7 +56,7 @@ export default class ScheduleSession extends Component {
           ? appointment
           : null
       })
-      return fetchMethod('POST', path, params, callback)
+      return fetchMethod('POST', path, bodyContent, callback)
     })
   }
 
