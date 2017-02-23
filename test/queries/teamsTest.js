@@ -1,4 +1,4 @@
-const { expect, app, chai } = require('../setup')
+const { expect } = require('../setup')
 const {
   getTeamIdByHandle,
   addLearners,
@@ -15,7 +15,7 @@ describe('addLearners()', () => {
   context('when adding learners to the learners table', () => {
     it('should return addedLearner handle and id', () => {
       const learner = [{ handle: 'nodatall' }]
-      addLearners(learner)
+      return addLearners(learner)
         .then( addedLearner => {
           expect(addedLearner[0].handle).to.equal('nodatall')
           expect(addedLearner[0].id).to.be.a('number')
@@ -34,9 +34,9 @@ describe('associateLearnersWithTeams()', () => {
         team_id: 1
       }]
 
-      associateLearnersWithTeams(learnerTeam).then( addedLearnerTeam => {
+      return associateLearnersWithTeams(learnerTeam).then( addedLearnerTeam => {
         expect(addedLearnerTeam[0].learner_id).to.equal(1)
-        expect(addedLearnerTeam[0].team_id).to.equal(2)
+        expect(addedLearnerTeam[0].team_id).to.equal(1)
       })
     })
   })
@@ -52,7 +52,7 @@ describe('getTeamIdByHandle()', () => {
     const learner = [{ handle: 'nodatall' }]
 
     it('should return a team id', () => {
-      addLearners(learner)
+      return addLearners(learner)
         .then( addedLearner => {
           const learnerTeam = [{
             learner_id: addedLearner[0].id,
