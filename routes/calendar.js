@@ -29,6 +29,12 @@ const filterUnavailableCoaches = (coachesAppointmentData) => {
 router.post('/find_next', (request, response) => {
   const requestingMenteeHandle = requester(request)
   const pairsGithubHandle = request.body.pairs_github_handle
+  const { team_id } = request.body
+  const description = `Coaching Appointment with ${requestingMenteeHandle}` +
+    pairsGithubHandle === '' ? '.' : ` & ${pairsGithubHandle}.`
+  const mentee_handles = pairsGithubHandle === '' ?
+    [requestingMenteeHandle] :
+    [requestingMenteeHandle, pairsGithubHandle]
 
   const currentTime = moment().tz('America/Los_Angeles')
   getActiveCoaches()
@@ -42,7 +48,7 @@ router.post('/find_next', (request, response) => {
       return getAllCoachesNextAppts(coachesArray, currentTime)
     })
     .then(allCoachesNextAppointments => {
-      const coachesWithAvailableAppointments = filterUnavailableCoaches(allCoachesNextAppointments);
+      const coachesWithAvailableAppointments = filterUnavailableCoaches(allCoachesNextAppointments)
       const sortedAppointments = coachesWithAvailableAppointments.sort((a, b) =>
         a.earliestAppointment.start > b.earliestAppointment.start
       )
@@ -60,9 +66,10 @@ router.post('/find_next', (request, response) => {
               appointment_end: data.end.dateTime,
               coach_handle: earliestApptData.github_handle,
               appointment_length: 30,
-              description: `Coaching Appointment with ${requestingMenteeHandle} & ${pairsGithubHandle}.`,
-              mentee_handles: [requestingMenteeHandle, pairsGithubHandle],
-              event_id: data.id
+              description,
+              mentee_handles,
+              event_id: data.id,
+              team_id: team_id
             })
              .then(apptRecord => response.status(200).json(apptRecord))
         )

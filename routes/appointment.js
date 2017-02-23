@@ -8,7 +8,10 @@ const {
   findAllAppointmentByCoachId
 } = require('../io/database/appointments')
 
-const { getTeamMemberHandles } = require('../io/database/teams')
+const {
+  getTeamMemberHandles,
+  getTeamIdByHandle
+} = require('../io/database/teams')
 
 router.get('/coach-schedule', (request, response) => {
   const coach_handle = request.idmUser.handle
@@ -53,12 +56,18 @@ router.get('/feedback', (request, response, next) =>{
     .catch(error => console.log(error))
 })
 
-router.get('/teammates', (request, response, next) => {
+router.get('/teaminfo', (request, response, next) => {
   const handle = request.user.handle
-  getTeamMemberHandles(handle).then( teammates => {
-    teammates = teammates.rows.filter( teammate => teammate.handle !== handle )
-    response.json(JSON.stringify(teammates))
-  })
+  Promise.all([
+    getTeamMemberHandles(handle),
+    getTeamIdByHandle(handle)
+  ]).then(([ teammates, team_id ]) => {
+    return {
+      team_id: team_id[0].team_id,
+      teammates: teammates.rows.filter( teammate => teammate.handle !== handle )
+    }
+  }).then( teamInfo => response.json(teamInfo) )
+
 })
 
 module.exports = router
