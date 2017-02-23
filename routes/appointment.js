@@ -53,7 +53,7 @@ router.get('/feedback', (request, response, next) =>{
     .catch(error => console.log(error))
 })
 
-router.get('/teammates', (request, response, next) => {
+router.get('/teaminfo', (request, response, next) => {
   const handle = request.user.handle
   getTeamMemberHandles(handle).then( teammates => {
     teammates = teammates.rows.filter( teammate => teammate.handle !== handle )

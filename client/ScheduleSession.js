@@ -40,7 +40,7 @@ export default class ScheduleSession extends Component {
   }
 
   createAppointment() {
-    return fetchMethod('GET', '/api/v1/appointments/teammates', null, teammates => {
+    return fetchMethod('GET', '/api/v1/appointments/teaminfo', null, teammates => {
       teammates = JSON.parse(teammates)
       const teammatesString = teammates.reduce( (string, current) => {
         return string.concat(current.handle)
