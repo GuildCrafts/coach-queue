@@ -1,4 +1,5 @@
 const datetime = new Date(2017, 1, 27, 16, 5)
+const anotherDate = new Date(2016, 1, 25, 16, 5)
 
  const appointmentsData = [
   {
@@ -21,6 +22,30 @@ const datetime = new Date(2017, 1, 27, 16, 5)
     coach_handle:"ImALeafyPlant",
     appointment_start: datetime,
     appointment_end: datetime,
+    appointment_length: 45,
+    description: "We want a walkthrough for setting up express.",
+    mentee_handles: ["somebody_hit", "aNameIsCool", "peopleLikeLearning"]
+  },
+  {
+    coach_handle:"ImALeafyPlant",
+    appointment_start: anotherDate,
+    appointment_end: anotherDate,
+    appointment_length: 45,
+    description: "Something here now.",
+    mentee_handles: ["someone_123", "aNameIsCool", "peopleLikeLearning"]
+  },
+  {
+    coach_handle:"GoSammyGo",
+    appointment_start: anotherDate,
+    appointment_end: anotherDate,
+    appointment_length: 45,
+    description: "Solve my bug coach.",
+    mentee_handles: ["someone_123", "reallycoolname"]
+  },
+  {
+    coach_handle:"ImALeafyPlant",
+    appointment_start: anotherDate,
+    appointment_end: anotherDate,
     appointment_length: 45,
     description: "We want a walkthrough for setting up express.",
     mentee_handles: ["somebody_hit", "aNameIsCool", "peopleLikeLearning"]

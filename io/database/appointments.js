@@ -45,15 +45,18 @@ const cancelAppointment = (appointment_id, isCanceled) =>
 const findAppointmentById = appointment_id =>
   findRecord('appointments', 'id', appointment_id)
 
-const findAllAppointmentsByWeek = weekDate => {
-  const startOfWeek = moment( weekDate ).startOf( 'week' ).add({ d: 1, h: 8 })
-  const endOfWeek = startOfWeek.clone().startOf( 'week' ).add({ d: 5, h: 18 })
+const findAllAppointmentsByDateRange = ({ startDate, endDate }) => {
   return knex
     .table( 'appointments' )
-    .whereBetween( 'created_at_timestamp', [ startOfWeek, endOfWeek ] )
+    .where( 'appointment_start', '>=', startDate )
+    .andWhere( 'appointment_start', '<=', endDate )
+    .andWhere( 'is_canceled', false )
     .returning( '*' )
     .orderBy( 'coach_handle', 'asc' )
 }
+
+const deleteAllAppointments = () =>
+  knex.raw(`DELETE FROM appointments;`)
 
 module.exports = {
   createAppointment,
@@ -64,5 +67,6 @@ module.exports = {
   deleteAppointmentById,
   cancelAppointment,
   findAppointmentById,
-  findAllAppointmentsByWeek,
+  findAllAppointmentsByDateRange,
+  deleteAllAppointments
 }

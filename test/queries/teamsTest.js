@@ -1,9 +1,13 @@
-const { expect } = require('../setup')
+const { expect, app, chai } = require('../setup')
 const {
   getTeamIdByHandle,
   addLearners,
   deleteLearners,
-  associateLearnersWithTeams
+  associateLearnersWithTeams,
+  deleteAllTeams,
+  getAllTeamsByCycle,
+  addTeams,
+  getCycleByTeamId
 } = require('../../io/database/teams')
 
 describe('addLearners()', () => {
@@ -67,4 +71,55 @@ describe('getTeamIdByHandle()', () => {
     })
   })
 
+})
+
+describe('getCycleByTeamId()', () => {
+
+  beforeEach( () => deleteAllTeams() )
+
+  it( 'should return empty array if there is no matching teamId', () => {
+    getCycleByTeamId(1).then( cycle => {
+      expect(cycle).to.eql([])
+    })
+  })
+
+  it( 'should return cycle matching teamId', () => {
+    const demoTeams = [
+      { team: 'noisy gloopflogs', cycle: 109 },
+      { team: 'annoying flatbread', cycle: 109},
+      { team: 'beautiful short-shorts', cycle: 108}
+    ]
+    return addTeams(demoTeams)
+      .then( teams => teams[0].id )
+      .then( id => getCycleByTeamId(id) )
+      .then( cycle => {
+        expect( +cycle[0].cycle ).to.equal(109)
+      })
+  })
+})
+
+describe('getAllTeamsByCycle()', () => {
+
+  beforeEach( () => deleteAllTeams() )
+
+  it( 'should return an empty array if no teams are in db', () => {
+    return getAllTeamsByCycle(109).then( teams => {
+      expect(teams.length).to.equal(0)
+    })
+  })
+
+  it( 'should return an array of all teams', () => {
+    const demoTeams = [
+      { team: 'noisy gloopflogs', cycle: 109 },
+      { team: 'annoying flatbread', cycle: 109},
+      { team: 'beautiful short-shorts', cycle: 108}
+    ]
+    return addTeams(demoTeams)
+      .then( addedTeams => getAllTeamsByCycle(109) )
+      .then( teams => {
+        expect(teams.length).to.equal(2)
+        expect(teams[0].team).to.equal('noisy gloopflogs')
+        expect(teams[1].team).to.equal('annoying flatbread')
+      })
+  })
 })
