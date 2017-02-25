@@ -9,7 +9,8 @@ const week1Appointments = [
     mentee_handles: ['person', 'person2'],
     appointment_start: moment('Wed, 17 Jan 2017 17:00:00 GMT').toDate(),
     appointment_end: moment('Wed, 17 Jan 2017 17:30:00 GMT').toDate(),
-    created_at_timestamp: moment('2017-01-17T08:40:00.000-08:00').toDate()
+    created_at_timestamp: moment('2017-01-17T08:40:00.000-08:00').toDate(),
+    team_id: 1
   },
   {
     id: 2,
@@ -19,7 +20,8 @@ const week1Appointments = [
     mentee_handles: ['person', 'person2'],
     appointment_start: moment('Wed, 17 Jan 2017 18:00:00 GMT').toDate(),
     appointment_end: moment('Wed, 17 Jan 2017 18:30:00 GMT').toDate(),
-    created_at_timestamp: moment('2017-01-17T08:41:00.000-08:00').toDate()
+    created_at_timestamp: moment('2017-01-17T08:41:00.000-08:00').toDate(),
+    team_id: 1
   },
   {
     id: 3,
@@ -29,7 +31,8 @@ const week1Appointments = [
     mentee_handles: ['superman', 'batman'],
     appointment_start: moment('Wed, 17 Jan 2017 18:00:00 GMT').toDate(),
     appointment_end: moment('Wed, 17 Jan 2017 18:30:00 GMT').toDate(),
-    created_at_timestamp: moment('2017-01-17T08:42:00.000-08:00').toDate()
+    created_at_timestamp: moment('2017-01-17T08:42:00.000-08:00').toDate(),
+    team_id: 1
   },
   {
     id: 4,
@@ -39,7 +42,8 @@ const week1Appointments = [
     mentee_handles: ['person', 'person2'],
     appointment_start: moment('Wed, 17 Jan 2017 19:00:00 GMT').toDate(),
     appointment_end: moment('Wed, 17 Jan 2017 19:30:00 GMT').toDate(),
-    created_at_timestamp: moment('2017-01-17T08:43:00.000-08:00').toDate()
+    created_at_timestamp: moment('2017-01-17T08:43:00.000-08:00').toDate(),
+    team_id: 1
   },
   {
     id: 5,
@@ -49,7 +53,8 @@ const week1Appointments = [
     mentee_handles: ['otherPerson', 'person'],
     appointment_start: moment('Wed, 17 Jan 2017 19:30:00 GMT').toDate(),
     appointment_end: moment('Wed, 17 Jan 2017 20:00:00 GMT').toDate(),
-    created_at_timestamp: moment('2017-01-17T08:44:00.000-08:00').toDate()
+    created_at_timestamp: moment('2017-01-17T08:44:00.000-08:00').toDate(),
+    team_id: 1
   },
   {
     id: 6,
@@ -59,7 +64,8 @@ const week1Appointments = [
     mentee_handles: ['otherPerson', 'person2'],
     appointment_start: moment('Wed, 17 Jan 2017 21:00:00 GMT').toDate(),
     appointment_end: moment('Wed, 17 Jan 2017 21:30:00 GMT').toDate(),
-    created_at_timestamp: moment('2017-01-17T08:45:00.000-08:00').toDate()
+    created_at_timestamp: moment('2017-01-17T08:45:00.000-08:00').toDate(),
+    team_id: 1
   },
   {
     id: 7,
@@ -69,7 +75,8 @@ const week1Appointments = [
     mentee_handles: ['menteeIntern', 'Apprentice'],
     appointment_start: moment('Wed, 17 Jan 2017 21:00:00 GMT').toDate(),
     appointment_end: moment('Wed, 17 Jan 2017 21:30:00 GMT').toDate(),
-    created_at_timestamp: moment('2017-01-17T08:46:00.000-08:00').toDate()
+    created_at_timestamp: moment('2017-01-17T08:46:00.000-08:00').toDate(),
+    team_id: 1
   },
   {
     id: 8,
@@ -79,7 +86,8 @@ const week1Appointments = [
     mentee_handles: ['learner', 'student'],
     appointment_start: moment('Wed, 17 Jan 2017 21:30:00 GMT').toDate(),
     appointment_end: moment('Wed, 17 Jan 2017 22:00:00 GMT').toDate(),
-    created_at_timestamp: moment('2017-01-17T08:46:30.000-08:00').toDate()
+    created_at_timestamp: moment('2017-01-17T08:46:30.000-08:00').toDate(),
+    team_id: 1
   },
   {
     id: 9,
@@ -89,7 +97,8 @@ const week1Appointments = [
     mentee_handles: ['person', 'person2'],
     appointment_start: moment('Wed, 17 Jan 2017 22:00:00 GMT').toDate(),
     appointment_end: moment('Wed, 17 Jan 2017 22:30:00 GMT').toDate(),
-    created_at_timestamp: moment('2017-01-17T08:48:00.000-08:00').toDate()
+    created_at_timestamp: moment('2017-01-17T08:48:00.000-08:00').toDate(),
+    team_id: 1
   },
   {
     id: 10,
@@ -99,10 +108,48 @@ const week1Appointments = [
     mentee_handles: ['archer', 'cartman'],
     appointment_start: moment('Wed, 17 Jan 2017 23:00:00 GMT').toDate(),
     appointment_end: moment('Wed, 17 Jan 2017 23:30:00 GMT').toDate(),
-    created_at_timestamp: moment('2017-01-17T08:49:00.000-08:00').toDate()
+    created_at_timestamp: moment('2017-01-17T08:49:00.000-08:00').toDate(),
+    team_id: 1
   },
+]
+
+const week2Appointments = [
+  {
+    id: 1,
+    appointment_length: 30,
+    description: 'help!!!',
+    coach_handle: 'coachQ',
+    mentee_handles: ['person', 'person2'],
+    appointment_start: moment('Wed, 17 Jan 2017 17:00:00 GMT').toDate(),
+    appointment_end: moment('Wed, 17 Jan 2017 17:30:00 GMT').toDate(),
+    created_at_timestamp: moment('2017-01-17T08:40:00.000-08:00').toDate(),
+    team_id: 1
+  },
+  {
+    id: 2,
+    appointment_length: 30,
+    description: 'help Now!!!',
+    coach_handle: 'coachQ',
+    mentee_handles: ['person', 'person2'],
+    appointment_start: moment('Wed, 17 Jan 2017 18:00:00 GMT').toDate(),
+    appointment_end: moment('Wed, 17 Jan 2017 18:30:00 GMT').toDate(),
+    created_at_timestamp: moment('2017-01-17T08:41:00.000-08:00').toDate(),
+    team_id: 2
+  },
+  {
+    id: 3,
+    appointment_length: 30,
+    description: 'Git Merge conflicts',
+    coach_handle: 'secondCoach',
+    mentee_handles: ['superman', 'batman'],
+    appointment_start: moment('Wed, 17 Jan 2017 18:00:00 GMT').toDate(),
+    appointment_end: moment('Wed, 17 Jan 2017 18:30:00 GMT').toDate(),
+    created_at_timestamp: moment('2017-01-17T08:42:00.000-08:00').toDate(),
+    team_id: 3
+  }
 ]
 
 module.exports = {
   week1Appointments,
+  week2Appointments
 }

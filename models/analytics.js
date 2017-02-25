@@ -5,7 +5,7 @@ const waitTimeDurations = waitTimes => {
     const start = moment( time.startTime )
     const created_at = moment( time.created_at )
 
-    return start.diff( created_at, 'minutes' )
+    return start.diff( created_at, 'seconds' )
   })
 }
 
@@ -44,8 +44,6 @@ const getWaitTimesArray = appointments => {
   return waitTimeDurations( waitTimes )
 }
 
-const totalAppointmentsByWeek = appointments => appointments.length
-
 const weeklyNumberOfAppointmentsByCoach = appointments => {
   return appointments.map( appointment => appointment.coach_handle )
     .reduce( ( coachNames, name ) => {
@@ -67,55 +65,73 @@ const findLongestWaitTime = appointments => {
 }
 
 const getAverageWaitTime = appointments => {
-  const totalMinutes = getWaitTimesArray( appointments )
+  const totalSeconds = getWaitTimesArray( appointments )
     .reduce( ( total, time ) => total + time, 0  )
-  
-  return totalMinutes / getWaitTimesArray( appointments ).length
+
+  return totalSeconds / getWaitTimesArray( appointments ).length
 }
 
 const numberOfMentees = appointments => {
-  const menteesObject = weeklyNumberOfAppointmentsByMentees( appointments ) 
-  
+  const menteesObject = weeklyNumberOfAppointmentsByMentees( appointments )
+
   return Object.keys( menteesObject ).reduce( ( previous, key ) => {
     return previous += 1
   }, 0)
 }
 
+const numberOfTeamsRequesting = appointments =>
+  appointments.reduce( (accumulator, currentAppointment) => {
+    const teamId = currentAppointment.team_id
+    if ( !accumulator.includes(teamId) ) {
+      accumulator.push(teamId)
+    }
+    return accumulator
+  }, []).length
+
 const averageRequestedSessionByMentee = appointments => {
-  const totalAppointments = totalAppointmentsByWeek( appointments )
+  const totalAppointments = appointments.length
   const totalMentees = numberOfMentees( appointments )
 
   return totalMentees / totalAppointments
 }
 
-const analysisOfWeek = appointments => {
+const analysisOfWeek = data => {
 
-  if ( appointments.length === 0 ) {
-    return null
+  if ( data.appointments.length === 0 ) {
+    return {}
   }
 
-  const totalAppointments = totalAppointmentsByWeek( appointments )
-  const appointmentsByCoach = weeklyNumberOfAppointmentsByCoach( appointments )
-  const longestWaitTimeInMinutes = findLongestWaitTime( appointments )
-  const averageWaitTimeInMinutes = getAverageWaitTime( appointments )
-  const totalNumberOfMentees = numberOfMentees( appointments )
-  const averageSessionByMentee = averageRequestedSessionByMentee( appointments )
+  const totalAppointments = data.appointments.length
+  const teamsRequesting = numberOfTeamsRequesting( data.appointments )
+  const longestWait = findLongestWaitTime( data.appointments )
+  const averageWait = getAverageWaitTime( data.appointments )
+  const totalNumberOfTeams = data.teams.length
+  const percentageOfTeamsRequesting =
+    Math.round((teamsRequesting / totalNumberOfTeams)*10000)/100
+  const averageSessionsPerProject =
+    Math.round((totalAppointments / totalNumberOfTeams)*100)/100
+  const numberOfLearnersRequesting = numberOfMentees( data.appointments )
+  const totalNumberOfLearners = data.learners.length
+
   return {
     totalAppointments,
-    appointmentsByCoach,
-    longestWaitTimeInMinutes,
-    averageWaitTimeInMinutes,
-    totalNumberOfMentees,
-    averageSessionByMentee
+    teamsRequesting,
+    longestWait,
+    averageWait,
+    totalNumberOfTeams,
+    percentageOfTeamsRequesting,
+    averageSessionsPerProject,
+    numberOfLearnersRequesting,
+    totalNumberOfLearners
   }
 }
 
 module.exports = {
   analysisOfWeek,
-  totalAppointmentsByWeek,
   weeklyNumberOfAppointmentsByCoach,
   findLongestWaitTime,
   getAverageWaitTime,
   numberOfMentees,
-  averageRequestedSessionByMentee
+  averageRequestedSessionByMentee,
+  numberOfTeamsRequesting
 }

@@ -31,7 +31,7 @@ router.post('/find_next', (request, response) => {
   const pairsGithubHandle = request.body.pairs_github_handle
   const { team_id } = request.body
   const description = `Coaching Appointment with ${requestingMenteeHandle}` +
-    pairsGithubHandle === '' ? '.' : ` & ${pairsGithubHandle}.`
+    (pairsGithubHandle === '' ? '.' : ` & ${pairsGithubHandle}.`)
   const mentee_handles = pairsGithubHandle === '' ?
     [requestingMenteeHandle] :
     [requestingMenteeHandle, pairsGithubHandle]

@@ -10,8 +10,9 @@ const associateLearnersWithTeams = teams =>
 const addLearners = handles =>
   Promise.all( handles.map( handle => createRecord('learners', handle) ))
 
-const deleteLearners = () =>
- knex.raw(`DELETE FROM learners;`)
+const deleteLearners = () => knex.raw(`DELETE FROM learners;`)
+
+const deleteAllTeams = () => knex.raw(`DELETE FROM teams;`)
 
 const getTeamMemberHandles = handle =>
   knex.raw(
@@ -34,11 +35,33 @@ const getTeamIdByHandle = handle =>
     .join('learner_teams', 'learners.id', 'learner_teams.learner_id')
     .where('handle', handle)
 
+const getAllTeamsByCycle = cycle =>
+  knex.select('*').from('teams').where('cycle', cycle)
+
+const getCycleByTeamId = teamId =>
+  knex.select('cycle')
+    .from('teams')
+    .where('id', teamId)
+    .then( cycle => {
+      return cycle.length === 0 ? 0 : cycle[0].cycle
+    })
+
+const getAllLearnersByCycle = cycle =>
+  knex.select('*')
+    .from('learners')
+    .join('learner_teams', 'learners.id', 'learner_teams.learner_id')
+    .join('teams', 'learner_teams.team_id', 'teams.id')
+    .where('teams.cycle', cycle)
+
 module.exports = {
   addTeams,
   associateLearnersWithTeams,
   addLearners,
   getTeamMemberHandles,
   getTeamIdByHandle,
-  deleteLearners
+  deleteLearners,
+  getAllTeamsByCycle,
+  deleteAllTeams,
+  getCycleByTeamId,
+  getAllLearnersByCycle
 }

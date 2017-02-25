@@ -9,6 +9,7 @@ import ActivateCoach from './ActivateCoach'
 import CoachLanding from './CoachLanding'
 import fetchMethod from './fetchMethod'
 import SuperSecretUpload from './SuperSecretUpload'
+import Statistics from './Statistics'
 
 export default class ReactRouter extends Component {
   constructor(props) {
@@ -46,12 +47,13 @@ export default class ReactRouter extends Component {
 
     const landingPageComponent = (props, state, params) =>
       <LandingPage coach={this.state.coach}/>
-      
+
     return <MuiThemeProvider>
       <Router history={browserHistory}>
         <Route path="/schedule_session" component={schedulSessionComponent} />
         <Route path="/coach_landing" component={coachLandingComponent} />
         <Route path="/upload" component={SuperSecretUpload} />
+        <Route path="/statistics" component={Statistics} />
         <Route path="*" component={landingPageComponent} />
       </Router>
     </MuiThemeProvider>
