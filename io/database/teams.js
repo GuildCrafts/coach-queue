@@ -39,7 +39,12 @@ const getAllTeamsByCycle = cycle =>
   knex.select('*').from('teams').where('cycle', cycle)
 
 const getCycleByTeamId = teamId =>
-  knex.select('cycle').from('teams').where('id', teamId)
+  knex.select('cycle')
+    .from('teams')
+    .where('id', teamId)
+    .then( cycle => {
+      return cycle.length === 0 ? 0 : cycle[0].cycle
+    })
 
 const getAllLearnersByCycle = cycle =>
   knex.select('*')

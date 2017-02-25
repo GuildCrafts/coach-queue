@@ -20,8 +20,7 @@ router.post('/', (request, response) => {
       const id = appointments[0] ? appointments[0].team_id : 0
       return getCycleByTeamId(id)
     })
-    .then( cycleObject => {
-      const cycle = cycleObject[0] ? cycleObject[0].cycle : 0
+    .then( cycle => {
       return getAllTeamsByCycle(cycle)
     })
     .then( teams => {

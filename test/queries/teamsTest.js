@@ -93,7 +93,7 @@ describe('getCycleByTeamId()', () => {
       .then( teams => teams[0].id )
       .then( id => getCycleByTeamId(id) )
       .then( cycle => {
-        expect( +cycle[0].cycle ).to.equal(109)
+        expect( cycle ).to.equal(109)
       })
   })
 })
