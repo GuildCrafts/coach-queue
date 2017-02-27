@@ -7,6 +7,6 @@
   "callbackURLPath": "/google/auth/callback",
   "scopes": ["openid", "email", "https://www.googleapis.com/auth/calendar"]},
  "auth": {
-   "IDM_BASE_URL": "http://idm.learnersguild.org"
+   "IDM_BASE_URL": "https://idm.learnersguild.org"
   }
 }
