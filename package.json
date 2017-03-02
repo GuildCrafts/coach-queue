@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "start:dev": "NODE_ENV=development ./node_modules/nodemon/bin/nodemon.js ./bin/www",
+    "start:dev": "NODE_ENV=development nodemon ./bin/www --exec babel-node",
     "migrate:latest": "NODE_ENV=development knex migrate:latest --knexfile config/DBconfig.js",
     "migrate:latest:rollback": "knex migrate:rollback --knexfile config/DBconfig.js",
     "migrate:test": "NODE_ENV=test knex migrate:latest --knexfile config/DBconfig.js",
