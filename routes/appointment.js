@@ -58,6 +58,7 @@ router.get('/feedback', (request, response, next) =>{
 
 router.get('/teaminfo', (request, response, next) => {
   const handle = request.user.handle
+
   Promise.all([
     getTeamMemberHandles(handle),
     getTeamIdByHandle(handle)
@@ -67,6 +68,7 @@ router.get('/teaminfo', (request, response, next) => {
       teammates: teammates.rows.filter( teammate => teammate.handle !== handle )
     }
   }).then( teamInfo => response.json(teamInfo) )
+  .catch( error => response.json( error ))
 
 })
 
