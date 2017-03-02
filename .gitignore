@@ -35,3 +35,4 @@ public/dist/
 .env
 .DS_Store
 yarn.lock
+config/development.json

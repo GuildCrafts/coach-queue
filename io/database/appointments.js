@@ -10,7 +10,7 @@ const {
 const moment = require('moment-timezone')
 
 const createAppointment = attributes =>
-  createRecord('appointments', attributes).then( appointment => appointment )
+  createRecord('appointments', attributes)
 
 const findFirstAppointmentByCoachId = coach_handle =>
   findRecord('appointments', 'coach_handle', coach_handle)
@@ -58,6 +58,13 @@ const findAllAppointmentsByDateRange = ({ startDate, endDate }) => {
 const deleteAllAppointments = () =>
   knex.raw(`DELETE FROM appointments;`)
 
+const canScheduleAppointment = mentee_handle =>
+  knex.raw(`SELECT COUNT(*)
+    FROM appointments
+    WHERE appointment_end > now()
+    AND mentee_handles @> '{${mentee_handle}}'::text[]`
+  ).then( results => results.rows[ 0 ].count === '0' )
+
 module.exports = {
   createAppointment,
   findFirstAppointmentByMenteeHandle,
@@ -68,5 +75,6 @@ module.exports = {
   cancelAppointment,
   findAppointmentById,
   findAllAppointmentsByDateRange,
-  deleteAllAppointments
+  deleteAllAppointments,
+  canScheduleAppointment
 }
