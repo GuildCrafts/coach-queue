@@ -53,6 +53,13 @@ const getAllLearnersByCycle = cycle =>
     .join('teams', 'learner_teams.team_id', 'teams.id')
     .where('teams.cycle', cycle)
 
+const addUploads = cycle => createRecord('upload', { cycle })
+
+const getUploadTimeByCycle = uploadTime =>
+  knex
+    .select('uploaded_at')
+    .from('upload')
+
 module.exports = {
   addTeams,
   associateLearnersWithTeams,
@@ -63,5 +70,7 @@ module.exports = {
   getAllTeamsByCycle,
   deleteAllTeams,
   getCycleByTeamId,
-  getAllLearnersByCycle
+  getAllLearnersByCycle,
+  addUploads,
+  getUploadTimeByCycle
 }

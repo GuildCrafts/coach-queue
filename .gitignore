@@ -32,7 +32,7 @@ npm-debug.log
 # ignore the dist folder that webpack creates for are react app.
 public/dist/
 
-.env
+.env*
 .DS_Store
 yarn.lock
 config/development.json

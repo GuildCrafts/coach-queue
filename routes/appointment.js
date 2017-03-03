@@ -10,7 +10,7 @@ const {
 
 const {
   getTeamMemberHandles,
-  getTeamIdByHandle
+  getTeamIdByHandle,
 } = require('../io/database/teams')
 
 router.get('/coach-schedule', (request, response) => {
@@ -69,7 +69,6 @@ router.get('/teaminfo', (request, response, next) => {
     }
   }).then( teamInfo => response.json(teamInfo) )
   .catch( error => response.json( error ))
-
 })
 
 module.exports = router
