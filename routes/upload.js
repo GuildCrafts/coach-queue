@@ -15,8 +15,12 @@ router.post('/', (request, response) => {
     .then( setLearnerIds(learners) )
     .then( extractLearnerAndTeamIds )
     .then( db.associateLearnersWithTeams )
+    .then( db.addUploads(teams[0].cycle) )
     .then( learnerTeams => response.json(learnerTeams) )
 })
+
+router.get('/getUploadTime', (request, response) =>
+  db.getUploadTimeByCycle().then(uploadedTime => response.send(uploadedTime)))
 
 const setLearnerIds = learners => addedLearners => {
   addedLearners.forEach( addedLearner => {
@@ -60,7 +64,7 @@ const extractTeams = learnersList =>
   ))
 
 const extractHandles = learnersList =>
-  handles = learnersList.map( learner =>
+  learnersList.map( learner =>
     ({ handle: learner.handle })
   )
 
