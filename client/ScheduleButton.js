@@ -22,22 +22,23 @@ export default class ScheduleButton extends Component {
     this.compareTime()
   }
 
-  handleOpen = () => {
+  handleOpen() {
     this.setState({open: true});
   };
 
-  handleClose = () => {
+  handleClose() {
     this.setState({open: false});
   };
 
-  getUploadTime = () =>
-    fetchMethod( 'GET', '/api/v1/upload/getUploadTime', null, time => moment(time) )
+  getUploadTime() {
+    fetchMethod( 'GET', '/api/v1/upload/getUploadTime', null, time => moment(time)
+  )}
 
-  getLastFriday = () => {
+  getLastFriday() {
     return moment().startOf('week').subtract(2, 'days').add(10, 'hours').toISOString()
   }
 
-  compareTime = () => {
+  compareTime() {
     this.getUploadTime()
       .then( time => {
         if( moment(time).isBefore(this.getLastFriday() ) ) {
