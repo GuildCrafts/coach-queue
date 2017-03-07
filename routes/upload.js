@@ -7,43 +7,23 @@ router.post('/', (request, response) => {
   const data = request.files.teams.data.toString()
   const learners = parseLearners(data)
   const teams = extractTeams(learners)
-  const handles = extractHandles(learners)
+  const handles = extractUniqueHandles(learners)
 
   console.log('learners:', learners)
   console.log('teams:', teams)
   console.log('handles:', handles)
 
   db.addTeams( teams )
-    .then( a => {
-      console.log('--->inserted teams into table:', a)
-      return setTeamIds(learners)(a)
-    })
-    .then( b => {
-      console.log('--->did set team ids?:', b)
-      console.log('learners:', learners)
-      console.log('handles:', handles)
-      return db.addLearners(handles)
-    })
-    .then( c => {
-      console.log('---> learners added to table:',c )
-      return setLearnerIds(learners)
-    })
-    .then( d => {
-      console.log('---> learner ids set?:', d )
-      return extractLearnerAndTeamIds
-    })
-    .then( e => {
-      console.log('--> ids extracted:', e)
-      return db.associateLearnersWithTeams(e)
-    })
-    .then( f => {
-      console.log('---> join table rec for learner_team:', )
-      return db.addUploads(teams[0].cycle)
-    })
-    .then( learnerTeams => {
-      console.log('--> teams of learnerTeams?:', learnerTeams )
-      response.json(learnerTeams)
-    })
+    .then( setTeamIds(learners) )
+    .then( _ => db.getAllLearners() )
+    .then( findNewLearners(handles) )
+    .then( db.addLearners )
+    .then( _ => db.getAllLearners() )
+    .then( setLearnerIds(learners) )
+    .then( extractLearnerAndTeamIds )
+    .then( db.associateLearnersWithTeams )
+    .then( db.addUploads(teams[0].cycle) )
+    .then( learnerTeams => response.json(learnerTeams) )
 })
 
 router.get('/getUploadTime', (request, response) =>
@@ -90,10 +70,23 @@ const extractTeams = learnersList =>
     ({ team: learner.team, cycle: learner.cycle })
   ))
 
-const extractHandles = learnersList =>
-  learnersList.map( learner =>
-    ({ handle: learner.handle })
-  )
+const extractUniqueHandles = learnersList =>
+  learnersList.map( learner => learner.handle)
+    .filter( (item, index, inputArr) => {
+      return inputArr.indexOf(item) === index
+    })
+
+const findNewLearners = handles => allLearners =>
+  handles.filter( handle => {
+    let unique = true
+    allLearners.forEach( learner => {
+      if( learner.handle === handle){
+        unique = false
+      }
+    })
+    return unique
+  })
+
 
 const extractLearnerAndTeamIds = learners =>
   learners.map( learner =>
