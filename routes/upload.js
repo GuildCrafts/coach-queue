@@ -9,14 +9,41 @@ router.post('/', (request, response) => {
   const teams = extractTeams(learners)
   const handles = extractHandles(learners)
 
+  console.log('learners:', learners)
+  console.log('teams:', teams)
+  console.log('handles:', handles)
+
   db.addTeams( teams )
-    .then( setTeamIds(learners) )
-    .then( _ => db.addLearners(handles) )
-    .then( setLearnerIds(learners) )
-    .then( extractLearnerAndTeamIds )
-    .then( db.associateLearnersWithTeams )
-    .then( db.addUploads(teams[0].cycle) )
-    .then( learnerTeams => response.json(learnerTeams) )
+    .then( a => {
+      console.log('--->inserted teams into table:', a)
+      return setTeamIds(learners)(a)
+    })
+    .then( b => {
+      console.log('--->did set team ids?:', b)
+      console.log('learners:', learners)
+      console.log('handles:', handles)
+      return db.addLearners(handles)
+    })
+    .then( c => {
+      console.log('---> learners added to table:',c )
+      return setLearnerIds(learners)
+    })
+    .then( d => {
+      console.log('---> learner ids set?:', d )
+      return extractLearnerAndTeamIds
+    })
+    .then( e => {
+      console.log('--> ids extracted:', e)
+      return db.associateLearnersWithTeams(e)
+    })
+    .then( f => {
+      console.log('---> join table rec for learner_team:', )
+      return db.addUploads(teams[0].cycle)
+    })
+    .then( learnerTeams => {
+      console.log('--> teams of learnerTeams?:', learnerTeams )
+      response.json(learnerTeams)
+    })
 })
 
 router.get('/getUploadTime', (request, response) =>
