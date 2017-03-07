@@ -7,11 +7,14 @@ router.post('/', (request, response) => {
   const data = request.files.teams.data.toString()
   const learners = parseLearners(data)
   const teams = extractTeams(learners)
-  const handles = extractHandles(learners)
+  const handles = extractUniqueHandles(learners)
 
   db.addTeams( teams )
     .then( setTeamIds(learners) )
-    .then( _ => db.addLearners(handles) )
+    .then( _ => db.getAllLearners() )
+    .then( findNewLearners(handles) )
+    .then( db.addLearners )
+    .then( _ => db.getAllLearners() )
     .then( setLearnerIds(learners) )
     .then( extractLearnerAndTeamIds )
     .then( db.associateLearnersWithTeams )
@@ -63,10 +66,23 @@ const extractTeams = learnersList =>
     ({ team: learner.team, cycle: learner.cycle })
   ))
 
-const extractHandles = learnersList =>
-  learnersList.map( learner =>
-    ({ handle: learner.handle })
-  )
+const extractUniqueHandles = learnersList =>
+  learnersList.map( learner => learner.handle)
+    .filter( (item, index, inputArr) => {
+      return inputArr.indexOf(item) === index
+    })
+
+const findNewLearners = handles => allLearners =>
+  handles.filter( handle => {
+    let unique = true
+    allLearners.forEach( learner => {
+      if( learner.handle === handle){
+        unique = false
+      }
+    })
+    return unique
+  })
+
 
 const extractLearnerAndTeamIds = learners =>
   learners.map( learner =>

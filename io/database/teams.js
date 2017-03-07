@@ -8,7 +8,7 @@ const associateLearnersWithTeams = teams =>
   Promise.all( teams.map( team => createRecord('learner_teams', team) ))
 
 const addLearners = handles =>
-  Promise.all( handles.map( handle => createRecord('learners', handle) ))
+  Promise.all( handles.map( handle => createRecord('learners', {handle}) ))
 
 const deleteLearners = () => knex.raw(`DELETE FROM learners;`)
 
@@ -46,6 +46,10 @@ const getCycleByTeamId = teamId =>
       return cycle.length === 0 ? 0 : cycle[0].cycle
     })
 
+const getAllLearners = () =>
+  knex.select('*')
+    .from('learners')
+
 const getAllLearnersByCycle = cycle =>
   knex.select('*')
     .from('learners')
@@ -71,6 +75,7 @@ module.exports = {
   deleteAllTeams,
   getCycleByTeamId,
   getAllLearnersByCycle,
+  getAllLearners,
   addUploads,
   getUploadTimeByCycle
 }
