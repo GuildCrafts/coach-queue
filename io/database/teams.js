@@ -14,21 +14,23 @@ const deleteLearners = () => knex.raw(`DELETE FROM learners;`)
 
 const deleteAllTeams = () => knex.raw(`DELETE FROM teams;`)
 
-const getTeamMemberHandles = handle =>
-  knex.raw(
-    `SELECT handle
-     FROM learners
-     INNER JOIN (SELECT lt.*
-      FROM learner_teams lt
-      INNER JOIN (SELECT *
-        FROM learners
-		    INNER JOIN learner_teams lt
-		    ON learners.id = lt.learner_id::int
-		    WHERE handle = '${handle}') foo
-      ON lt.team_id = foo.team_id) boo
-    ON boo.learner_id::int = learners.id;`
-  )
+const getTeamMemberHandles = handle => {
+  const currentCycleTeamForHandle =
+    `SELECT * FROM learners
+      INNER JOIN learner_teams lt ON learners.id = lt.learner_id
+      WHERE handle = '${handle}'
+      ORDER BY team_id DESC LIMIT 1`
 
+  const getCurrentCycleTeammateIDs =
+    `SELECT lt.* FROM learner_teams lt
+      INNER JOIN (${currentCycleTeamForHandle}) foo ON lt.team_id = foo.team_id`
+
+  return knex.raw(
+    `SELECT handle FROM learners
+      INNER JOIN (${getCurrentCycleTeammateIDs}) boo
+      ON boo.learner_id = learners.id;`
+  )
+}
 const getTeamIdByHandle = handle =>
   knex.select('team_id')
     .from('learners')
