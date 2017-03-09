@@ -7,12 +7,12 @@ router.post('/', (request, response) => {
   const data = request.files.teams.data.toString()
   const learners = parseLearners(data)
   const teams = extractTeams(learners)
-  const handles = extractUniqueHandles(learners)
+  const cycleHandles = extractUniqueHandles(learners) // array of strings
 
   db.addTeams( teams )
     .then( setTeamIds(learners) )
     .then( _ => db.getAllLearners() )
-    .then( findNewLearners(handles) )
+    .then( findNewLearners(cycleHandles) )
     .then( db.addLearners )
     .then( _ => db.getAllLearners() )
     .then( setLearnerIds(learners) )
@@ -61,27 +61,34 @@ const teamsAreTheSame = currentTeam => uniqueTeam =>
   uniqueTeam.team === currentTeam.team &&
   uniqueTeam.cycle === currentTeam.cycle
 
-const extractTeams = learnersList =>
-  removeDuplicateTeams(learnersList.map( learner =>
+const extractTeams = learners =>
+  removeDuplicateTeams(learners.map( learner =>
     ({ team: learner.team, cycle: learner.cycle })
   ))
 
-const extractUniqueHandles = learnersList =>
-  learnersList.map( learner => learner.handle)
-    .filter( (item, index, inputArr) => {
-      return inputArr.indexOf(item) === index
-    })
+const extractUniqueHandles = learners =>
+  learners.reduce( (uniqueHandles, learner) => {
+    if( !uniqueHandles.includes(learner.handle) ){
+      uniqueHandles.push(learner.handle)
+    }
+    return uniqueHandles
+  }, [] )
 
-const findNewLearners = handles => allLearners =>
-  handles.filter( handle => {
-    let unique = true
-    allLearners.forEach( learner => {
-      if( learner.handle === handle){
-        unique = false
-      }
-    })
-    return unique
-  })
+const findNewLearners = cycleHandles => allLearners => {
+  const existingHandles = allLearners.map( learner => learner.handle )
+  return cycleHandles.filter(
+    cycleHandle => !existingHandles.includes( cycleHandle )
+  )
+}
+  // cycleHandles.filter( cycleHandle => {
+  //   let unique = true
+  //   allLearners.forEach( learner => {
+  //     if( learner.handle === cycleHandle){
+  //       unique = false
+  //     }
+  //   })
+  //   return unique
+  // })
 
 
 const extractLearnerAndTeamIds = learners =>
