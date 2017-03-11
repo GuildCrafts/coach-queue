@@ -8,8 +8,9 @@ export default class Statistics extends Component {
     super(props)
 
     const startOfWeek = moment().startOf( 'week' )
+
     this.state = {
-      startDate: startOfWeek.add({ d: 1, h: 8, m: 30 }),
+      startDate: startOfWeek.clone().add({ d: 1, h: 8, m: 30 }),
       endDate: startOfWeek.clone().add({ d: 5, h: 18 }),
       statistics: null
     }
