@@ -31,8 +31,8 @@ export default class ScheduleButton extends Component {
   };
 
   getUploadTime() {
-    fetchMethod( 'GET', '/api/v1/upload/getUploadTime', null, time => moment(time)
-  )}
+    return fetchMethod( 'GET', '/api/v1/upload/getUploadTime', null, time => moment(time) )
+  }
 
   getLastFriday() {
     return moment().startOf('week').subtract(2, 'days').add(10, 'hours').toISOString()
