@@ -1,117 +1,52 @@
-const express = require('express')
-const path = require('path')
-const favicon = require('serve-favicon')
-const logger = require('morgan')
-const cookieParser = require('cookie-parser')
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const passport = require('passport')
-const enforce = require('express-sslify')
-const fileUpload = require('express-fileupload')
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
-const webpack = require('webpack')
-const webpackMiddleware = require('webpack-dev-middleware')
-const webpackConfig = require('./webpack.config.js')
+var index = require('./routes/index');
+var users = require('./routes/users');
 
-const coach = require('./routes/coach')
-const appointment = require('./routes/appointment')
-const googleRoutes = require('./routes/google')
-const calendarRoutes = require('./routes/calendar')
-const analytics = require('./routes/analytics')
-const upload = require('./routes/upload')
+var app = express();
 
-const calendar = require('./init/googleCalendar')
-const auth = require('./init/auth')
-const refreshGoogleToken = require('./init/refreshGoogleToken')
-
-const app = express()
-
-const config = require('./config/config')
-const _config = config.readConfig()
-const session = require('express-session')
-
-const compiler = webpack(webpackConfig)
-
-refreshGoogleToken.init()
-
-if (!config.isProduction()) {
-  app.use(webpackMiddleware(compiler, {
-      publicPath: webpackConfig.output.publicPath,
-      contentBase: 'src',
-      stats: {
-          colors: true,
-          hash: false,
-          timings: true,
-          chunks: false,
-          chunkModules: false,
-          modules: false
-      }
-  }))
-}
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
-app.use(logger('dev'))
-app.use(bodyParser.json())
-app.use(fileUpload())
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(cookieParser())
-app.use(session({secret: 'learners-guild-coach-que'}))
-app.use(passport.initialize())
-app.use(passport.session())
-app.use(express.static(path.join(__dirname, 'public')))
-app.use(express.static(path.join(__dirname, 'public/dist')))
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(require('node-sass-middleware')({
+  src: path.join(__dirname, 'public'),
+  dest: path.join(__dirname, 'public'),
+  indentedSyntax: true,
+  sourceMap: true
+}));
+app.use(express.static(path.join(__dirname, 'public')));
 
-//we dont have a dev IDM, so
-if (!_config.auth.isDisabled) {
-  auth.init(app, _config)
-  app.use((req, res, next) => {
-    //Note: Since we are also using Passport, req.user is overriden on those
-    //routes
-    req.idmUser = req.user
-    next()
-  })
-}
-
-// if (config.isProduction()) {
-//   console.log('enforcing https');
-//   app.use(enforce.HTTPS())
-// }
-
-app.use(cors())
-
-app.use('/upload', upload)
-app.use('/google', googleRoutes)
-app.use('/api/v1/coaches', coach)
-app.use('/api/v1/appointments', appointment)
-app.use('/api/v1/analytics', analytics)
-
-
-calendar.init(app, _config)
-app.use('/calendar', calendarRoutes)
-
-//we dont have a dev IDM, so
-
-app.get('*', (req, res, next) => {
-  res.sendFile(path.join(__dirname, 'client/index.html'))
-})
+app.use('/', index);
+app.use('/users', users);
 
 // catch 404 and forward to error handler
-app.use((req, res, next) => {
-  const error = new Error('Not Found')
-  error.status = 404
-  next(error)
-})
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
 
 // error handler
-app.use((err, req, res, next) => {
+app.use(function(err, req, res, next) {
   // set locals, only providing error in development
-  res.locals.message = err.message
-  res.locals.error = req.app.get('env') === 'development' ? err : {}
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500)
-  res.json({error:err.stack})
-})
+  res.status(err.status || 500);
+  res.render('error');
+});
 
-module.exports = app
+module.exports = app;
