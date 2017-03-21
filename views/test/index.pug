@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+  h1 Test
+
+  dl.tests
+    dt Socket IO Setup
+    dd
+      button.socket-io( data-endpoint='/test/io', data-method='post' )
+
+  .test-results
+
+block scripts
+  script( src='/javascripts/test/index.js' )

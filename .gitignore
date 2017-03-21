@@ -31,3 +31,5 @@ npm-debug.log
 
 # dotenv
 .env.*
+.vscode/
+public/stylesheets/**/*.css
