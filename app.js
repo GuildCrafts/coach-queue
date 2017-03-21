@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var auth = require('./configuration/authentication')
+var loadEnvironment = require('./configuration/environment')()
 
 var app = express();
 
@@ -27,6 +29,8 @@ app.use(require('node-sass-middleware')({
   sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+auth.init( app )
 
 app.use('/', index);
 app.use('/users', users);
