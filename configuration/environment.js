@@ -1,10 +1,12 @@
 const fs = require('fs')
+const path = require('path')
 
 const load = () => {
-  if ( fs.existsSync( `.env.${process.env.NODE_ENV}` ) ) {
-    require( 'dotenv' ).config()
+  const filePath = path.join(__dirname, `.env.${process.env.NODE_ENV}`)
+  if ( fs.existsSync( filePath ) ) {
+    require( 'dotenv' ).config({ path: filePath })
   } else {
-    console.log( ".env not found, skipping dotenv config..." )
+    console.log( `.env.${process.env.NODE_ENV} not found, skipping dotenv configuration...` )
   }
 }
 
