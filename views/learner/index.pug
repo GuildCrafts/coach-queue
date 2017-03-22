@@ -1,0 +1,13 @@
+extends ../layout
+
+block content
+  h1 Learner Landing
+
+  form.request
+    label( for='question' )
+    input#question( type='text', name='question' )
+
+    button Submit Request
+
+block scripts
+  script( src='/javascripts/learner.js' )

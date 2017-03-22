@@ -1,7 +1,5 @@
 const knex = require('./knex')
 
-module.exports = {}
-
 if (process.env.NODE_ENV === 'test') {
   module.exports.reset = () =>
     knex.migrate.latest().then( () =>
@@ -15,4 +13,9 @@ if (process.env.NODE_ENV === 'test') {
         knex.truncate('project_coaches'),
       ])
   )
+}
+
+module.exports = {
+  Request: require( './requests/' ),
+  Event: require( './events/' )
 }
