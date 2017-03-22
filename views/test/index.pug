@@ -1,14 +1,36 @@
 extends ../layout
 
+block css
+  style.
+    .container { display: flex; }
+    .tests, .test-results { flex: 1; }
+    .test-results { padding-left: 30px; }
+    .tests td { border: 1px solid #ddd; }
+
+    .test-send { color: #009}
+    .test-receive { color: #006400 }
+
 block content
   h1 Test
 
-  dl.tests
-    dt Socket IO Setup
-    dd
-      button.socket-io( data-endpoint='/test/io', data-method='post' )
+  .container
+    table.tests
+      tr
+        td Socket IO Setup
+        td
+          button.fetch( data-endpoint='/test/io', data-method='post' ) Test
+      tr
+        td Socket IO Client Test
+        td
+          button.local( data-action='clientTest' ) Test
+      tr
+        td
+          label(for='event-test') Event Test
+          input#event-test
+        td
+          button.local( data-action='eventTest' ) Test
 
-  .test-results
+    .test-results
 
 block scripts
   script( src='/javascripts/test/index.js' )
