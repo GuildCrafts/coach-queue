@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+const test = require( './routes/test' )
+
 var auth = require('./configuration/authentication')
 var loadEnvironment = require('./configuration/environment')()
 
@@ -34,6 +36,7 @@ auth.init( app )
 
 app.use('/', index);
 app.use('/users', users);
+app.use( '/test', test )
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
