@@ -1,10 +1,20 @@
-exports.up = knex =>
-  knex.schema.createTable('events', table => {
-    table.increments('id').primary()
-    table.integer('request_id').notNullable()
-    table.jsonb('data').notNullable()
-    table.enum('event_name', ['create', 'cancel', 'start', 'resolve', 'escalate']).notNullable()
-    table.timestamps(true, true)
-  })
+exports.up = knex => {
+  return Promise.all([
+    knex.raw( "create type event_name as enum( 'create', 'cancel', 'start', 'resolve', 'escalate' )" ),
+    knex.raw( `
+      create table events (
+        id serial primary key,
+        request_id int not null,
+        data jsonb not null,
+        name event_name,
+        created_at timestamp default now(),
+        updated_at timestamp default now()
+      )
+    `)
+  ])
+}
 
-exports.down = knex => knex.schema.dropTable('events')
+exports.down = knex => {
+  knex.schema.dropTable('events')
+  knex.raw( 'drop type event_name' )
+}
