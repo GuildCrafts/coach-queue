@@ -1,0 +1,10 @@
+include team
+include coach-table
+
+mixin coach-assignments(coach_data, teams)
+  .coach-assignment-modal__coach-assignments
+    form.coach-assignment-modal__coach-assignments__form
+      .coach-assignment-modal__coach-assignments__team-list
+        each team in teams
+          +team(coach_data, team)
+      +coach-table(coach_data)

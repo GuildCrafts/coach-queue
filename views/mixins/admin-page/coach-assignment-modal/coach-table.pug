@@ -1,0 +1,16 @@
+mixin coach-table(active_coach_data)
+  .coach-assignment-modal__coach-assignments__coach-table
+    .coach-assignment-modal__coach-assignments__coach-table__content
+      table.coach-assignment-modal__coach-assignments__coach-table__table
+        tr
+          th Coach
+          th Learner Count
+          th Project Count
+        each row in active_coach_data
+          tr
+            th= row.coach
+            th= row.learners.length
+            th= row.projects.length
+      .coach-assignment-modal__coach-assignments__coach-table__controls
+        button.calculate calculate
+        button.submit submit

@@ -1,0 +1,12 @@
+include active-coaches
+include coach-assignments
+
+mixin coach-assignment-modal(coaches, teams, active_coach_data)
+  .coach-assignment-modal
+    .coach-assignment-modal__shroud
+    .coach-assignment-modal__content
+      .coach-assignment-modal__heading
+        | Coach Assignments
+      +active-coaches(coaches)
+      if active_coach_data
+        +coach-assignments(active_coach_data, teams)
