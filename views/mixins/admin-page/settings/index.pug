@@ -1,0 +1,10 @@
+include boundary-conditions
+include upload-csv-data
+
+mixin settings
+  .admin-page__settings
+    .admin-page__settings__heading
+      | Coach Queue Settings
+    .admin-page__settings__content
+      +boundary-conditions
+      +upload-csv-data

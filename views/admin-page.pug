@@ -1,24 +1,17 @@
 extends layout.pug
+include ./mixins/admin-page/settings/index.pug
 include ./mixins/admin-page/coach-assignment-modal/index.pug
 
 block content
-  -var showing_modal= true
   .admin-page
     .admin-page__heading
+      | Coach-Queue Admin
     .admin-page__buttons
-      button.admin-page__buttons__coach-assignment-modal
+      button(onclick='navigateToRoute("assign-coaches")').admin-page__buttons__assign-coaches
         | Assign Coaches
-      button.admin-page__buttons__upload-csv-modal
-        | Upload Cycle Data (csv)
-      button.admin-page__buttons__boundary-conditions-modal
-        | Set Boundary Conditions
+    +settings
 
-    if showing_modal
-      +coach-assignment-modal(coaches, teams, active_coach_data)
+    if page_data.showing_modal
+      +coach-assignment-modal(page_data.coaches, page_data.projects, page_data.active_coach_data)
 
-    form(action="/import-csv", enctype="multipart/form-data", name="add-csv", method="post")
-      div.input
-        span.label
-        input(type="file", name="csv", placeholder="csv")
-      div.actions
-        input(type="submit", name="upload", value="add")
+    script(src='/javascripts/admin-page/navigateToRoute.js')

@@ -6,11 +6,11 @@ mixin coach-table(active_coach_data)
           th Coach
           th Learner Count
           th Project Count
-        each row in active_coach_data
+        each coach in active_coach_data
           tr
-            th= row.coach
-            th= row.learners.length
-            th= row.projects.length
+            th= coach.name
+            th= coach.assigned_learners.length
+            th= coach.assigned_projects.length
       .coach-assignment-modal__coach-assignments__coach-table__controls
         button.calculate calculate
         button.submit submit

@@ -1,12 +1,12 @@
 include active-coaches
 include coach-assignments
 
-mixin coach-assignment-modal(coaches, teams, active_coach_data)
-  .coach-assignment-modal
-    .coach-assignment-modal__shroud
-    .coach-assignment-modal__content
+mixin coach-assignment-modal(coaches, projects, active_coach_data)
+  .admin-page__modal
+    .admin-page__modal__shroud(onclick='navigateToRoute()')
+    .admin-page__modal__content.coach-assignment-modal
       .coach-assignment-modal__heading
         | Coach Assignments
       +active-coaches(coaches)
       if active_coach_data
-        +coach-assignments(active_coach_data, teams)
+        +coach-assignments(active_coach_data, projects)
