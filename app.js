@@ -5,14 +5,14 @@ const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 
+var loadEnvironment = require('./configuration/environment')()
+var auth = require('./configuration/authentication')
+
 var index = require('./routes/index');
 var users = require('./routes/users');
 const test = require( './routes/test' )
 
-var auth = require('./configuration/authentication')
-var loadEnvironment = require('./configuration/environment')()
-
-const app = express()
+var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))

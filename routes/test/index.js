@@ -7,11 +7,12 @@ router.get( '/', ( request, response ) => {
 })
 
 router.post( '/io', ( request, response ) => {
+  const channel = '/tests'
   const event_name = 'test'
   const message = { hello: 'world' }
 
-  io.emit( event_name, message )
-  response.json({ event_name, message })
+  io.to( channel ).emit( event_name, message )
+  response.json({ channel, event_name, message })
 })
 
 module.exports = router

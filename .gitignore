@@ -33,3 +33,4 @@ npm-debug.log
 .env.*
 .vscode/
 public/stylesheets/**/*.css
+public/stylesheets/**/*.map
