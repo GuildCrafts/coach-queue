@@ -29,7 +29,14 @@ touch configuration/.env.development
 touch configuration/.env.test
 echo DATABASE_URL=postgres://`whoami`@localhost:5432/coach-queue-development >> configuration/.env.development``
 echo DATABASE_URL=postgres://`whoami`@localhost:5432/coach-queue-test >> configuration/.env.test
+```
 
+**Also add the following to your .env.development file for IDM authentication***
+
+```
+BASE_URL="http://coach-queue.learnersguild.dev"
+IDM_BASE_URL="http://idm.learnersguild.dev"
+JWT_PUBLIC_KEY="<same JWT_PUBLIC_KEY that is in your idm/.env.development>"
 ```
 
 ___
