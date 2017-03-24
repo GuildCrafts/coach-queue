@@ -1,7 +1,16 @@
 const socket = io.connect()
 
 const form = document.querySelector( 'form.request' )
-if( form !== undefined ) {
+const button = document.querySelector( 'button.cancel' )
+
+const params = body => ({
+  credentials: 'include',
+  method: 'post',
+  body: JSON.stringify( body ),
+  headers: new Headers({ 'Content-Type': 'application/json' })
+})
+
+if( form !== null ) {
   form.addEventListener( 'submit', event => {
     event.preventDefault()
 
@@ -10,16 +19,22 @@ if( form !== undefined ) {
       question: document.querySelector( 'input#question' ).value
     }
 
-    fetch( '/events', {
-      credentials: 'include',
-      method: 'post',
-      body: JSON.stringify( body ),
-      headers: new Headers({ 'Content-Type': 'application/json' })
-    })
+    fetch( '/events', params( body ))
       .then( result => result.json() )
-      .then( json => console.log( json ))
-      .catch( error => console.log( error, error.message ))
+      .then( json => {
+        window.location.reload( true )
+        console.log( json )
+      })
+      // TODO: async update is desirable; make it work then make it better
+      // .then( result => result.json() )
+      // .then( json => console.log( json ))
+      // .catch( error => console.log( error, error.message ))
   })
 } else {
+  button.addEventListener( 'click', event => {
+    event.preventDefault()
 
+    fetch( '/events', params({ name: 'cancel' }))
+      .then( _ => window.location.reload( true ) )
+  })
 }

@@ -1,4 +1,5 @@
 const db = require( '../db' )
+const Event = require( '../events' )
 
 const SELECT_TEAM_ID = `
   SELECT teams.id FROM projects
@@ -13,9 +14,32 @@ const CREATE = `
     now(), now()
   ) RETURNING requests.id as request_id, team_id
 `
-const FOR_TEAM = `SELECT *, id as request_id FROM requests WHERE team_id=(${SELECT_TEAM_ID})`
+
+const CANCEL = `
+  UPDATE requests SET resolved_at=now()
+  WHERE resolved_at IS NULL AND team_id = (${SELECT_TEAM_ID})
+  RETURNING id
+`
+
+const FOR_TEAM = `
+  SELECT *, id as request_id FROM requests
+  WHERE resolved_at IS NULL AND team_id=(${SELECT_TEAM_ID})
+`
+
+const forTeam = player_id =>
+  db.oneOrNone( FOR_TEAM, player_id )
+    .then( request => request === null ? Promise.reject( null ) : request )
+    .then( request => Promise.all([
+      Event.forRequest( request.id ),
+      request
+    ]))
+    .then( ([ events, request ]) =>
+      Object.assign( {}, request, { events })
+    )
+    .catch( error => null )
 
 module.exports = {
   create: player_id => db.one( CREATE, player_id ),
-  forTeam: player_id => db.oneOrNone( FOR_TEAM, player_id )
+  cancel: player_id => db.one( CANCEL, player_id ),
+  forTeam
 }

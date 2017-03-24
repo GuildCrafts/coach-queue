@@ -2,11 +2,15 @@ extends ../layout
 
 block content
   h1 Learner Landing
-  div= request
+
   if request
     .request
-      span= request.events
-      button Cancel
+      .events
+        for event in request.events
+          span= event.name
+
+      button.cancel Cancel
+
   else
     form.request
       label( for='question' )
