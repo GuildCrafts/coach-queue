@@ -37,13 +37,11 @@ document.querySelector( 'form.coach-assignment' ).addEventListener( 'submit', ev
       if( select.value === '0' ) {
         throw 'You must assign all goals!'
       }
-
       return {
         goal_id: select.dataset.goalId,
         coach_id: select.value
       }
     })
-
     fetch( '/admin/goals', params({ data }))
       .then( _ => window.location = '/admin' )
   } catch( error ) {

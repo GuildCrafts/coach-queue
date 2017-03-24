@@ -17,12 +17,10 @@ const data = () =>
   .then( ([ players, coaches, teams, goal_counts ]) => ({ players, coaches, teams, goal_counts }))
 
 const setCoaches = coaches =>
-  db.any( 'UPDATE players SET is_coach=false')
+  db.any( 'UPDATE players SET is_coach=false' )
     .then( _ => db.any( 'UPDATE players SET is_coach=true WHERE id IN ($1:csv)', [coaches]))
 
-const assignCoach = `
-  update project_coaches SET
-`
+const assignCoach = assignment =>
+  db.any( 'INSERT INTO goal_coaches ( goal_id, coach_id ) VALUES (${goal_id}, ${coach_id})', assignment )
 
-
-module.exports = { data, setCoaches }
+module.exports = { data, setCoaches, assignCoach }

@@ -36,12 +36,9 @@ router.get( '/goals', ( request, response ) => {
 })
 
 router.post( '/goals', ( request, response ) => {
-  const goals = request.body[ 'goals[]' ]
-
-  Admin.assignCoaches( coaches, goals )
-    .then( result => response.redirect( '/admin' ))
-
-  console.log( request.body )
+  const data = request.body.data
+  Promise.all( data.map( assignment => Admin.assignCoach( assignment )))
+    .then( result => response.redirect( '/admin'))
 })
 
 module.exports = router
