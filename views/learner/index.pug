@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+  h1 Learner Landing
+
+  if request
+    .request
+      .events
+        for event in request.events
+          span= event.name
+
+      button.cancel Cancel
+
+  else
+    form.request
+      label( for='question' )
+      input#question( type='text', name='question' )
+
+      button Submit Request
+
+block scripts
+  script( src='/javascripts/learner.js' )

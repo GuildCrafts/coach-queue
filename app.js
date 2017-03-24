@@ -5,14 +5,14 @@ const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 
-var loadEnvironment = require('./configuration/environment')()
-var auth = require('./configuration/authentication')
+const loadEnvironment = require('./configuration/environment')()
+const auth = require('./configuration/authentication')
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+const index = require('./routes/index')
+const events = require( './routes/events' )
 const test = require( './routes/test' )
 
-var app = express();
+const app = express()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -34,8 +34,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 auth.init( app )
 
-app.use('/', index);
-app.use('/users', users);
+app.use('/', index)
+app.use( '/events', events )
 app.use( '/test', test )
 
 // catch 404 and forward to error handler

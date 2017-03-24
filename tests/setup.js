@@ -3,10 +3,12 @@ process.env.NODE_ENV = 'test'
 const environment = require('../configuration/environment')()
 
 const chai = require('chai')
-const pgp = require('pg-promise')()
+const chaiHttp = require('chai-http')
 
 global.expect = chai.expect
-global.db = pgp(process.env.DATABASE_URL)
+global.db = require( '../database/db' )
+global.chai = chai
+chai.use( chaiHttp )
 
 const database = require('../database/index')
 

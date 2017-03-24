@@ -7,8 +7,8 @@
     "migrate:latest": "knex --knexfile ./database/knexfile.js migrate:latest",
     "migrate:make": "knex --knexfile ./database/knexfile.js migrate:make",
     "migrate:rollback": "knex --knexfile ./database/knexfile.js migrate:rollback",
-    "mochatest": "mocha tests/setup.js --recursive tests/",
-    "test": "NODE_ENV=test npm run migrate:latest && npm run mochatest"
+    "mochatest": "mocha tests/setup.js --recursive tests/ || true",
+    "test": "NODE_ENV=test npm run migrate:latest && npm run mochatest || true"
   },
   "dependencies": {
     "@learnersguild/idm-jwt-auth": "^2.0.1",
