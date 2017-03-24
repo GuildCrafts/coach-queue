@@ -6,7 +6,14 @@ const { Request, Event } = db
 const create = ({ learner_id, question }) => {
   debug( 'create', { learner_id, question })
 
-  return Request.create( learner_id )
+  return Request.forTeam( learner_id )
+    .then( request => {
+      if( request === null ) {
+        return Request.create( learner_id )
+      } else {
+        return request
+      }
+    })
     .then( request => Promise.all([
       Event.create( request.request_id, { question }, 'create' ),
       request

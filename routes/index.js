@@ -1,5 +1,7 @@
 const express = require( 'express' )
 const router = express.Router()
+const db = require( '../database/' )
+const { Request, Event } = db
 
 router.get( '/', ( request, response ) => {
   // Determine if current authenticated user is a coach
@@ -9,7 +11,9 @@ router.get( '/', ( request, response ) => {
     response.redirect( '/coach' )
   }
 
-  response.render( 'learner/index', { user_id: request.user.id })
+  Request.forTeam( request.user.id )
+    .then( request => response.render( 'learner/index', { request }))
+    .catch( error => response.json({ error, message: error.message }))
 })
 
 router.get( '/coach', ( request, response ) => {
