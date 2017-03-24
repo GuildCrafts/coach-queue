@@ -18,10 +18,19 @@ const XP = 14
 
 const resetCurrentTeams = db.any( 'UPDATE teams SET is_current=false' )
 
-const insertGoals = goals => _ =>
+const insertGoals = csvGoals => _ =>
   db.any( 'SELECT id FROM goals' )
-    .then( existingGoalIds => {
-      const newGoals = goals.filter( goal => ! existingGoalIds.includes( goal.id ))
+    .then( goalIds => {
+      const existingGoalIds = goalIds.map( g => g.id )
+
+      const uniqueGoals = csvGoals.reduce( (memo, goal) => {
+        if( memo[ goal.id ] === undefined && ! existingGoalIds.includes( parseInt( goal.id ))) {
+          memo[ goal.id ] = goal
+        }
+        return memo
+      }, {})
+
+      const newGoals = Object.keys( uniqueGoals ).map( g => uniqueGoals[ g ])
 
       return Promise.all( newGoals.map( goal => db.none( 'INSERT INTO goals ( id, link, title ) VALUES ( ${id}, ${link}, ${title} )', goal ) ))
     })
@@ -45,8 +54,6 @@ const addNewPlayers = cyclePlayers => ([ currentPlayers, newTeams ]) => {
 }
 
 const addTeamPlayers = records => ([ newPlayers, newTeams ]) => {
-  console.log( 'newPlayers:', newPlayers.length, 'newTeams:', newTeams.length )
-
   const teamLookup = newTeams.reduce( (memo, team) => {
     memo[ team.name ] = team.id
     return memo
