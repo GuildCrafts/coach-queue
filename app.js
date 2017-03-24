@@ -11,7 +11,7 @@ const auth = require('./configuration/authentication')
 const index = require('./routes/index')
 const events = require( './routes/events' )
 const test = require( './routes/test' )
-var admin = require('./routes/admin');
+const admin = require('./routes/admin')
 
 const app = express()
 
