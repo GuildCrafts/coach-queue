@@ -20,4 +20,9 @@ const setCoaches = coaches =>
   db.any( 'UPDATE players SET is_coach=false')
     .then( _ => db.any( 'UPDATE players SET is_coach=true WHERE id IN ($1:csv)', [coaches]))
 
+const assignCoach = `
+  update project_coaches SET
+`
+
+
 module.exports = { data, setCoaches }

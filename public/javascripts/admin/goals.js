@@ -4,8 +4,6 @@ Array.from( document.querySelectorAll( 'select.coach-selector' )).forEach( selec
     const playerCount = parseInt( event.target.dataset.playerCount )
     const teamCount = parseInt( event.target.dataset.teamCount )
 
-    console.log( event.target.dataset )
-
     if( previousId !== '0' ) {
       const previousPlayerCount = document.querySelector( `.player-count-${previousId}` )
       const previousTeamCount = document.querySelector( `.team-count-${previousId}` )
@@ -16,11 +14,39 @@ Array.from( document.querySelectorAll( 'select.coach-selector' )).forEach( selec
 
     event.target.dataset.previousId = event.target.value
 
-    // update the table
     const currentPlayerCount = document.querySelector( `.player-count-${event.target.value}` )
     const currentTeamCount = document.querySelector( `.team-count-${event.target.value}` )
 
     currentPlayerCount.innerText = parseInt( currentPlayerCount.innerText ) + playerCount
     currentTeamCount.innerText = parseInt( currentTeamCount.innerText ) + teamCount
   })
+})
+
+const params = body => ({
+  credentials: 'include',
+  method: 'post',
+  body: JSON.stringify( body ),
+  headers: new Headers({ 'Content-Type': 'application/json' })
+})
+
+document.querySelector( 'form.coach-assignment' ).addEventListener( 'submit', event => {
+  event.preventDefault()
+
+  try {
+    const data = Array.from( document.querySelectorAll( 'select.coach-selector' )).map( select => {
+      if( select.value === '0' ) {
+        throw 'You must assign all goals!'
+      }
+
+      return {
+        goal_id: select.dataset.goalId,
+        coach_id: select.value
+      }
+    })
+
+    fetch( '/admin/goals', params({ data }))
+      .then( _ => window.location = '/admin' )
+  } catch( error ) {
+    alert( error )
+  }
 })

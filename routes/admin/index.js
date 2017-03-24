@@ -32,16 +32,16 @@ router.post( '/coaches', ( request, response ) => {
 
 router.get( '/goals', ( request, response ) => {
   Admin.data()
-    .then( data => {
-      console.log( data )
-      response.render( 'admin/goals', { data })
-    })
+    .then( data => response.render( 'admin/goals', { data }))
 })
 
 router.post( '/goals', ( request, response ) => {
   const goals = request.body[ 'goals[]' ]
 
-  console.log( goals )
+  Admin.assignCoaches( coaches, goals )
+    .then( result => response.redirect( '/admin' ))
+
+  console.log( request.body )
 })
 
 module.exports = router
