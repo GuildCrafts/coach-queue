@@ -1,0 +1,10 @@
+include project
+include coach-table
+
+mixin coach-assignments(coach_data, projects)
+  .coach-assignment-modal__coach-assignments
+    form.coach-assignment-modal__coach-assignments__form
+      .coach-assignment-modal__coach-assignments__project-list
+        each project in projects
+          +project(coach_data, project)
+      +coach-table(coach_data)

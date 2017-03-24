@@ -1,0 +1,9 @@
+mixin upload-csv-data
+  .admin-page__settings__content__upload-csv-data
+    .admin-page__settings__content__upload-csv-data__heading
+      | Upload Cycle Data (csv)
+    form.admin-page__settings__content__upload-csv-data__form( encType='multipart/form-data', method='post', action='/admin/upload' )
+        label
+          | Enter file path or url
+        input( type='file', name='teams' )
+        input( type='submit', value='Upload' )

@@ -1,0 +1,6 @@
+mixin project(coach_data, project_name)
+  .coach-assignment-modal__coach-assignments__project-list__project
+    label.coach-assignment-modal__coach-assignments__project-list__project__label= project_name
+    select.coach-assignment-modal__coach-assignments__project-list__project__coach-assignment
+      each coach in coach_data
+        option= coach.name

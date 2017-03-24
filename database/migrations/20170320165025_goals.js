@@ -1,6 +1,6 @@
 exports.up = knex =>
   knex.schema.createTable('goals', table => {
-    table.increments('id').primary()
+    table.integer('id').notNullable()
     table.string('link').notNullable()
     table.string('title').notNullable()
   })

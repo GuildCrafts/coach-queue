@@ -1,0 +1,10 @@
+include coach
+
+mixin active-coaches(coaches)
+  .coach-assignment-modal__active-coaches
+    form.coach-assignment-modal__active-coaches__form
+      each coach in coaches
+        +coach(coach)
+    .coach-assignment-modal__active-coaches__controls
+      button.set-coaches Set Active
+      button.clear-coaches Clear Active
