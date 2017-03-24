@@ -32,27 +32,16 @@ router.post( '/coaches', ( request, response ) => {
 
 router.get( '/goals', ( request, response ) => {
   Admin.data()
-    .then( data => response.render( 'admin/goals', { data }))
+    .then( data => {
+      console.log( data )
+      response.render( 'admin/goals', { data })
+    })
 })
 
+router.post( '/goals', ( request, response ) => {
+  const goals = request.body[ 'goals[]' ]
 
-
-router.get('/assign-coaches', ( request, response ) => {
-  response.render('admin/index', {
-    title: 'Admin',
-    page_data: {
-      coaches: ['Amelia', 'Diana'],
-      projects: ['core-team-naming', 'advanced-team-naming'],
-      active_coach_data: [{
-        name: 'Amelia',
-        assigned_learners: ['Kim', 'Bob'],
-        assigned_projects: ['core-team-naming']
-      }],
-      showing_modal: true
-    }
-  })
+  console.log( goals )
 })
-
-
 
 module.exports = router

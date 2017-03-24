@@ -79,11 +79,6 @@ const upload = records => {
     .then( getAllPlayers )
     .then( addNewPlayers( players( records )))
     .then( addTeamPlayers( records ))
-    .then( _ => Promise.all([
-      db.any( 'SELECT * FROM players' ),
-      db.any( 'SELECT *, (SELECT COUNT(*) FROM team_players WHERE team_id = teams.id ) as player_count FROM teams WHERE is_current = true' )
-    ]))
-    .then( ([ allPlayers, currentTeams ]) => ({ players: allPlayers, teams: currentTeams }))
 }
 
 const goals = records =>
