@@ -16,5 +16,6 @@ const reset = () =>
 module.exports = {
   Request: require( './requests/' ),
   Event: require( './events/' ),
+  Admin: require( './admin' ),
   reset: process.env.NODE_ENV === 'test' ? reset : (() => {})
 }

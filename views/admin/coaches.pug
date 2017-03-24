@@ -1,0 +1,11 @@
+extends ../layout.pug
+
+block content
+  form( method='post', action='/admin/coaches' )
+    .coach-selection
+      for player in data.players
+        .player
+          input( id=`player-${player.handle}`, type='checkbox', checked=player.is_coach, name='coaches[]', value=player.id )
+          label( for=`player-${player.handle}` )= player.handle
+
+    button.set-coaches( type='submit') Set coaches
