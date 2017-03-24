@@ -8,8 +8,8 @@ const reset = () =>
       knex.truncate('teams'),
       knex.truncate('team_players'),
       knex.truncate('players'),
-      knex.truncate('projects'),
-      knex.truncate('project_coaches'),
+      knex.truncate('goals'),
+      knex.truncate('goal_coaches'),
     ])
   )
 

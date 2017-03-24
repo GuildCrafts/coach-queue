@@ -2,8 +2,8 @@ const db = require( '../db' )
 const Event = require( '../events' )
 
 const SELECT_TEAM_ID = `
-  SELECT teams.id FROM projects
-  JOIN teams ON teams.project_id=projects.id
+  SELECT teams.id FROM goals
+  JOIN teams ON teams.goal_id=goals.id
   JOIN team_players ON teams.id=team_players.team_id
   WHERE teams.is_current = true AND team_players.player_id=$1
 `

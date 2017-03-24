@@ -1,7 +1,7 @@
 exports.up = knex =>
-  knex.schema.createTable('project_coaches', table => {
-    table.integer('project_id').notNullable()
+  knex.schema.createTable('goal_coaches', table => {
+    table.integer('goal_id').notNullable()
     table.string('coach_id').notNullable()
   })
 
-exports.down = knex => knex.schema.dropTable('project_coaches')
+exports.down = knex => knex.schema.dropTable('goal_coaches')
