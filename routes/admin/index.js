@@ -35,24 +35,10 @@ router.get( '/goals', ( request, response ) => {
     .then( data => response.render( 'admin/goals', { data }))
 })
 
-
-
-router.get('/assign-coaches', ( request, response ) => {
-  response.render('admin/index', {
-    title: 'Admin',
-    page_data: {
-      coaches: ['Amelia', 'Diana'],
-      projects: ['core-team-naming', 'advanced-team-naming'],
-      active_coach_data: [{
-        name: 'Amelia',
-        assigned_learners: ['Kim', 'Bob'],
-        assigned_projects: ['core-team-naming']
-      }],
-      showing_modal: true
-    }
-  })
+router.post( '/goals', ( request, response ) => {
+  const data = request.body.data
+  Promise.all( data.map( assignment => Admin.assignCoach( assignment )))
+    .then( result => response.redirect( '/admin'))
 })
-
-
 
 module.exports = router
