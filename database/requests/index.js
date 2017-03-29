@@ -26,6 +26,8 @@ const FOR_TEAM = `
   WHERE resolved_at IS NULL AND team_id=(${SELECT_TEAM_ID})
 `
 
+const UNRESOLVED = `SELECT * FROM requests WHERE resolved_at IS NULL`
+
 const forTeam = player_id =>
   db.oneOrNone( FOR_TEAM, player_id )
     .then( request => request === null ? Promise.reject( null ) : request )
@@ -41,5 +43,6 @@ const forTeam = player_id =>
 module.exports = {
   create: player_id => db.one( CREATE, player_id ),
   cancel: player_id => db.one( CANCEL, player_id ),
-  forTeam
+  forTeam,
+  unresolved: () => db.any( UNRESOLVED )
 }

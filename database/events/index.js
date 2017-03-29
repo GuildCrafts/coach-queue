@@ -5,7 +5,7 @@ const CREATE = `
   VALUES ( $1, $2, $3, now(), now() )
   RETURNING *
 `
-const FOR_REQUEST = `SELECT * FROM events WHERE request_id=$1`
+const FOR_REQUEST = `SELECT * FROM events WHERE request_id=$1 ORDER BY created_at ASC`
 
 module.exports = {
   create: ( request_id, data, event_name ) => db.one( CREATE, [ request_id, data, event_name ]),

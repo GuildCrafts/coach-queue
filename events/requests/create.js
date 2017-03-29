@@ -1,12 +1,13 @@
 const debug = require('debug')('coach-queue:dispatch:create');
 const io = require( '../socketio/' )
 const db = require( '../../database/' )
+const { CREATE } = require( './constants' )
 const { Request, Event } = db
 
 const createEvent = question => request => {
   return Promise.all([
     request,
-    Event.create( request.request_id, { question }, 'create' ),
+    Event.create( request.request_id, { question }, CREATE ),
     []
   ])
 }

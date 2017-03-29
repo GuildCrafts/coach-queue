@@ -1,6 +1,10 @@
-exports.up = knex => {
-  return Promise.all([
-    knex.raw( "create type event_name as enum( 'create', 'cancel', 'start', 'resolve', 'escalate' )" ),
+const { CREATE, CANCEL, CLAIM, RESOLVE, ESCALATE } =
+  require( '../../events/requests/constants')
+
+exports.up = knex =>
+  Promise.all([
+    knex.raw( `create type event_name as
+      enum( '${CREATE}', '${CLAIM}', '${CANCEL}', '${RESOLVE}', '${ESCALATE}' )` ),
     knex.raw( `
       create table events (
         id serial primary key,
@@ -12,7 +16,6 @@ exports.up = knex => {
       )
     `)
   ])
-}
 
 exports.down = knex => {
   knex.schema.dropTable('events')
