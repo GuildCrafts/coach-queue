@@ -20,27 +20,50 @@ const socket = io.connect()
 // TODO: Whenever an event happens, receive request with events through socket and re-render
 // according to prioritization algorithm
 
-const params = body => ({
+// Load all teams I'm responseible for
+// Load all requests
+const params = (method, body) => ({
   credentials: 'include',
-  method: 'post',
+  method,
   body: JSON.stringify( body ),
   headers: new Headers({ 'Content-Type': 'application/json' })
 })
 
-document.querySelector( 'button.claim').addEventListener( 'click', event => {
-  event.preventDefault()
+const load = () =>
+  Promise.all([
+    fetch( '/coach/teams', params( 'get' ) ).then( result => result.json() ),
+    fetch( '/coach/requests', params( 'get' ) ).then( result => result.json() )
+  ])
 
-  const { request_id } = event.target.dataset
+const render = teams => requests => {
+  console.log( teams, requests )
+}
 
-  fetch( '/events', params({ request_id, name: 'claim' }))
-    .then( _ => window.location.reload( true ) )
-})
+load()
+  .then( ([ teams, requests ]) => {
+    // create my render function here
+    const renderTeams = render( teams )
 
-document.querySelector( 'button.escalate').addEventListener( 'click', event => {
-  event.preventDefault()
+    // associate that render function with request receipt
+    // socket.on( 'whatever', invoke render with payload, all requests )
+    renderTeams( requests )
+  })
 
-  const { request_id } = event.target.dataset
 
-  fetch( '/events', params({ request_id, name: 'escalate' }))
-    .then( _ => window.location.reload( true ) )
-})
+// document.querySelector( 'button.claim').addEventListener( 'click', event => {
+//   event.preventDefault()
+
+//   const { request_id } = event.target.dataset
+
+//   fetch( '/events', params({ request_id, name: 'claim' }))
+//     .then( _ => window.location.reload( true ) )
+// })
+
+// document.querySelector( 'button.escalate').addEventListener( 'click', event => {
+//   event.preventDefault()
+
+//   const { request_id } = event.target.dataset
+
+//   fetch( '/events', params({ request_id, name: 'escalate' }))
+//     .then( _ => window.location.reload( true ) )
+// })

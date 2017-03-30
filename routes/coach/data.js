@@ -57,8 +57,17 @@ const mapAgeToRequests = requests =>
     Object.assign( {}, request, { age: moment( request.created_at ).fromNow() })
   )
 
-module.exports = {
-  unresolvedRequests, getEvents, mapEventsToRequests, getTeams,
-  mapTeamsToRequests, getPlayers, mapPlayersToRequests, getGoals,
-  mapGoalsToRequests, mapEscalationTallyToRequests, mapAgeToRequests
-}
+const getRequests = () =>
+  unresolvedRequests()
+    .then( getEvents )
+    .then( mapEventsToRequests )
+    .then( getTeams )
+    .then( mapTeamsToRequests )
+    .then( getPlayers )
+    .then( mapPlayersToRequests )
+    .then( getGoals )
+    .then( mapGoalsToRequests )
+    .then( mapEscalationTallyToRequests )
+    .then( mapAgeToRequests )
+
+module.exports = { getRequests }

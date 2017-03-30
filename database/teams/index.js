@@ -6,6 +6,13 @@ const FOR_REQUEST = `
   WHERE requests.id=$1
 `
 
+const FOR_COACH = `
+  SELECT * FROM goal_coaches
+  JOIN goals ON goal_coaches.goal_id=goals.id
+  WHERE coach_id=$1
+`
+
 module.exports = {
-  forRequest: request_id => db.any( FOR_REQUEST, request_id )
+  forRequest: request_id => db.any( FOR_REQUEST, request_id ),
+  forCoach: coach_id => db.any( FOR_COACH, coach_id )
 }

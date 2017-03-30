@@ -3,12 +3,13 @@ extends ../layout.pug
 block content
   form.coach-assignment
     for goal in data.goal_counts
-      .goal-assignment
-        select.coach-selector( id=`goal-${goal.title}`, name='goal-assignments', data-goal-id=goal.id, data-previous-id='0', data-player-count=goal.player_count, data-team-count=goal.team_count )
-          option( value='0' ) Select a coach
-          for coach in data.coaches
-            option( value=coach.id )= coach.handle
-        label( for=`goal-${goal.title}` )= `${goal.title} (${goal.team_count} teams, ${goal.player_count} players)`
+      if goal.player_count > 0
+        .goal-assignment
+          select.coach-selector( id=`goal-${goal.title}`, name='goal-assignments', data-goal-id=goal.id, data-previous-id='0', data-player-count=goal.player_count, data-team-count=goal.team_count )
+            option( value='0' ) Select a coach
+            for coach in data.coaches
+              option( value=coach.id )= coach.handle
+          label( for=`goal-${goal.title}` )= `${goal.title} (${goal.team_count} teams, ${goal.player_count} players)`
 
     button.set-coaches( type='submit' ) Assign Coaches
 

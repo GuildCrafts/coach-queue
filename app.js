@@ -38,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 auth.init( app )
 
-app.use('/', index)
+app.use( '/', index )
 app.use( '/events', events )
 app.use( '/test', test )
 app.use( '/admin', admin )
