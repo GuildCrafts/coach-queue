@@ -37,6 +37,10 @@ const load = () =>
 
 const render = teams => requests => {
   console.log( teams, requests )
+
+  // get a reference to the container
+  // templatize each request (later: prioritization)
+  // add to ui
 }
 
 load()
