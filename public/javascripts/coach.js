@@ -74,23 +74,24 @@ const render = teams => {
   renderTeams( teams )
 
   return requests => {
-    // get a reference to the container
-    const container = document.querySelector( '.ticket-list.container' )
-
-    // templatize each request (later: prioritization)
-    // add to ui
-    container.innerHTML = requests.map( request => template( request )).join( '\n' )
+    document.querySelector( '.ticket-list.container' )
+      .innerHTML = requests.map( request => template( request )).join( '\n' )
   }
 }
 
 load()
   .then( ([ teams, requests ]) => {
     // create my render function here
-    const renderTeams = render( teams )
+    const renderTeams= render( teams )
 
     // associate that render function with request receipt
     // socket.on( 'whatever', invoke render with payload, all requests )
     renderTeams( requests )
+
+    socket.emit( 'join', '/events' )
+    socket.on( 'event', data => {
+      renderTeams( data.requests )
+    })
   })
 
 

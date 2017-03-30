@@ -2,9 +2,7 @@ const express = require( 'express' )
 const router = express.Router()
 
 const db = require( '../../database/' )
-const { Team } = db
-
-const { getRequests } = require( './data' )
+const { Team, Request } = db
 
 router.get( '/', ( request, response ) => {
   response.render( 'coach/index' )
@@ -16,7 +14,7 @@ router.get( '/teams', (request, response) => {
 })
 
 router.get( '/requests', (request, response) => {
-  getRequests().then( requests => response.json( requests ))
+  Request.all().then( requests => response.json( requests ))
 })
 
 module.exports = router

@@ -2,7 +2,10 @@ const events = require( '../' )
 const io = require( 'socket.io' )()
 
 io.on( 'connection', socket => {
-  socket.on( 'join', room => socket.join( room ))
+  socket.on( 'join', room => {
+    console.log( 'joining ' + room )
+    socket.join( room )
+  })
 
   socket.on( 'client-test', data =>
     io.to( '/tests' ).emit( 'test-pingback', data )

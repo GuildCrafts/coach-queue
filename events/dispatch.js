@@ -25,7 +25,15 @@ const dispatch = data => {
   debug( data )
 
   if( HANDLERS[ data.name ] !== undefined ) {
-    return HANDLERS[ data.name ]( data )
+    return ( HANDLERS[ data.name ]( data ))
+      .then( result => Promise.all([
+        Request.all(), result
+      ]))
+      .then( ([ requests, result ]) => {
+        io.to( '/events' ).emit( 'event', { requests })
+        return result
+      })
+      .catch( error => console.log( error ))
   } else {
     return Promise.reject( new Error( `${data.name} is an invalid event.` ))
   }

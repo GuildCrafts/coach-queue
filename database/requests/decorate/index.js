@@ -1,8 +1,9 @@
-const moment = require( 'moment' )
-const db = require( '../../database/' )
-const { Request, Event, Team, Player, Goal } = db
+const db = require( '../../index' )
 
-const unresolvedRequests = () => Request.unresolved()
+const Event = require( '../../events' )
+const Team = require( '../../teams' )
+const Player = require( '../../players' )
+const Goal = require( '../../goals' )
 
 const getEvents = requests =>
   Promise.all([
@@ -52,14 +53,8 @@ const mapEscalationTallyToRequests = requests =>
     Object.assign( {}, request, { escalations: escalationTally( request ) })
   )
 
-const mapAgeToRequests = requests =>
-  requests.map( request =>
-    Object.assign( {}, request, { age: moment( request.created_at ).fromNow() })
-  )
-
-const getRequests = () =>
-  unresolvedRequests()
-    .then( getEvents )
+const decorate = requests =>
+  getEvents( requests )
     .then( mapEventsToRequests )
     .then( getTeams )
     .then( mapTeamsToRequests )
@@ -68,6 +63,5 @@ const getRequests = () =>
     .then( getGoals )
     .then( mapGoalsToRequests )
     .then( mapEscalationTallyToRequests )
-    .then( mapAgeToRequests )
 
-module.exports = { getRequests }
+module.exports = decorate
