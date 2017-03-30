@@ -7,7 +7,7 @@ const { Team } = db
 const { getRequests } = require( './data' )
 
 router.get( '/', ( request, response ) => {
-  getRequests().then( requests => response.render( 'coach/index', { requests } ))
+  response.render( 'coach/index' )
 })
 
 router.get( '/teams', (request, response) => {

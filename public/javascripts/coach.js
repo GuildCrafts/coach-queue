@@ -35,12 +35,45 @@ const load = () =>
     fetch( '/coach/requests', params( 'get' ) ).then( result => result.json() )
   ])
 
+const dataTemplate = ([ key, value ]) => `${key} = ${value}`
+
+const eventTemplate = event =>
+`
+      <div class="event">
+        <div class="title">${event.name}</div>
+        <div class="data">${Object.entries( event.data ).map( data => dataTemplate( data )).join('')}</div>
+      </div>
+`
+
+const template = request =>
+  `
+    <div class="ticket-body">
+      <h1>Request #${request.id}</h1>
+      <h4>
+        <a href="${request.goal.link}" alt="${request.goal.title}" target="_blank">${request.goal.title}</a>
+        <span> -- Team Member(s):</span>
+        <span>${request.players.map( p => p.handle ).join( ', ' )}</span>
+      </h4>
+      <h3>Events (${request.events.length}), Current: ${request.events[request.events.length-1].name}</h3>
+      <h3>Escalations (${request.escalations})</h3>
+      <h3>Requested ${moment(request.created_at).fromNow()}</h3>
+      ${request.events.map( event => eventTemplate( event )).join('')}
+      <h4 class="ticket-action-buttons">
+        <button data-request_id=${request.id} class="claim">Claim</button>
+        <button data-request_id=${request.id} class="escalate">Escalate</button>
+      </h4>
+    </div>
+  `
+
 const render = teams => requests => {
   console.log( teams, requests )
 
   // get a reference to the container
+  const container = document.querySelector( '.ticket-list.container' )
+  console.log( container )
   // templatize each request (later: prioritization)
   // add to ui
+  container.innerHTML = requests.map( request => template( request )).join( '\n' )
 }
 
 load()
