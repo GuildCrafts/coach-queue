@@ -79,12 +79,6 @@ const prioritize = ( requests, goals ) => {
     .filter( request => ! pastThresholdIds.includes( request.id ))
     .filter( request => goalIds.includes( request.goal.id ))
 
-/*
-If compareFunction(a, b) is less than 0, sort a to a lower index than b, i.e. a comes first.
-If compareFunction(a, b) returns 0, leave a and b unchanged with respect to each other, but sorted with respect to all different elements. Note: the ECMAscript standard does not guarantee this behaviour, and thus not all browsers (e.g. Mozilla versions dating back to at least 2003) respect this.
-If compareFunction(a, b) is greater than 0, sort b to a lower index than a.
-*/
-
   return [ ...pastThreshold, ...assignedToMe ]
     .sort( (a, b) => moment( a.created_at ).valueOf() - moment( b.created_at ).valueOf() )
 }
