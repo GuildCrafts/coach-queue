@@ -65,15 +65,22 @@ const template = request =>
     </div>
   `
 
-const render = teams => requests => {
-  console.log( teams, requests )
+const renderTeams = teams => {
+  // TODO: Add teams and goals to coach ui
+  // teams.forEach( team => console.log( team ))
+}
 
-  // get a reference to the container
-  const container = document.querySelector( '.ticket-list.container' )
-  console.log( container )
-  // templatize each request (later: prioritization)
-  // add to ui
-  container.innerHTML = requests.map( request => template( request )).join( '\n' )
+const render = teams => {
+  renderTeams( teams )
+
+  return requests => {
+    // get a reference to the container
+    const container = document.querySelector( '.ticket-list.container' )
+
+    // templatize each request (later: prioritization)
+    // add to ui
+    container.innerHTML = requests.map( request => template( request )).join( '\n' )
+  }
 }
 
 load()
