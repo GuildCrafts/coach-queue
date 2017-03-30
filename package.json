@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
+    "start:dev": "nodemon ./bin/www",
     "migrate:latest": "knex --knexfile ./database/knexfile.js migrate:latest",
     "migrate:make": "knex --knexfile ./database/knexfile.js migrate:make",
     "migrate:rollback": "knex --knexfile ./database/knexfile.js migrate:rollback",
@@ -20,6 +21,7 @@
     "express": "~4.14.1",
     "express-fileupload": "^0.1.2",
     "knex": "^0.12.8",
+    "moment": "^2.18.1",
     "morgan": "~1.7.0",
     "node-sass-middleware": "0.9.8",
     "pg-promise": "^5.6.4",

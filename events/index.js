@@ -10,7 +10,7 @@ module.exports.cancel = data => {
   console.log( data )
 }
 
-module.exports.start = data => {
+module.exports.claim = data => {
   console.log( data )
 }
 

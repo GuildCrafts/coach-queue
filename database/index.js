@@ -17,5 +17,8 @@ module.exports = {
   Request: require( './requests/' ),
   Event: require( './events/' ),
   Admin: require( './admin' ),
+  Team: require( './teams' ),
+  Player: require( './players' ),
+  Goal: require( './goals' ),
   reset: process.env.NODE_ENV === 'test' ? reset : (() => {})
 }

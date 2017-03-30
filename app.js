@@ -12,7 +12,8 @@ const auth = require('./configuration/authentication')
 const index = require('./routes/index')
 const events = require( './routes/events' )
 const test = require( './routes/test' )
-const admin = require('./routes/admin')
+const admin = require('./routes/admin' )
+const coach = require( './routes/coach' )
 
 const app = express()
 
@@ -40,7 +41,8 @@ auth.init( app )
 app.use('/', index)
 app.use( '/events', events )
 app.use( '/test', test )
-app.use('/admin', admin);
+app.use( '/admin', admin )
+app.use( '/coach', coach )
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

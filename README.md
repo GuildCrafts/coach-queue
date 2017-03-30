@@ -72,3 +72,23 @@ ___
 ### Run Tests
 
 `npm test`
+
+___
+
+### Run Coach Queue in development environment
+
+Install [IDM](https://github.com/LearnersGuild/idm). Can be challenging.
+
+`mehserve run`
+
+Then, in a new shell, inside `/idm`,
+```
+nvm 5.6
+npm start
+```
+
+Log into IDM at `idm.learnersguild.dev`
+
+Then, in a new shell, inside `/coach-queue`,
+
+`npm run start:dev` (uses nodemon)

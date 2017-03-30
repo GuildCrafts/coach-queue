@@ -16,7 +16,7 @@ const PROJECT_NAME = 12
 const SECOND_VOTE = 13
 const XP = 14
 
-const resetCurrentTeams = db.any( 'UPDATE teams SET is_current=false' )
+const resetCurrentTeams = () => db.any( 'UPDATE teams SET is_current=false' )
 
 const resetCoaches = _ => db.any( 'UPDATE players SET is_coach=false' )
 
@@ -72,7 +72,7 @@ const addTeamPlayers = records => ([ newPlayers, newTeams ]) => {
 }
 
 const upload = records => {
-  return resetCurrentTeams
+  return resetCurrentTeams()
     .then( resetCoaches )
     .then( insertGoals( goals( records )))
     .then( insertNewTeams( teams( records )))
