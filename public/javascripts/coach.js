@@ -15,13 +15,6 @@ const socket = io.connect()
 // 2. not assigned to me, escalated
 // 3. not assigned to me, past the threshold age (from creation)
 
-// TODO: On page load, fetch initial batch of requests and render (removing rendering from server)
-// according to prioritization algorithm
-// TODO: Whenever an event happens, receive request with events through socket and re-render
-// according to prioritization algorithm
-
-// Load all teams I'm responseible for
-// Load all requests
 const params = (method, body) => ({
   credentials: 'include',
   method,
@@ -51,8 +44,8 @@ const template = request =>
       <h1>Request #${request.id}</h1>
       <h4>
         <a href="${request.goal.link}" alt="${request.goal.title}" target="_blank">${request.goal.title}</a>
-        <span> -- Team Member(s):</span>
-        <span>${request.players.map( p => p.handle ).join( ', ' )}</span>
+        <div>-- Team Member(s): <span>${request.players.map( p => p.handle ).join( ', ' )}</span></div>
+        <div>-- Assigned Coach: <span>${request.goal.coach}</span></div>
       </h4>
       <h3>Events (${request.events.length}), Current: ${request.events[request.events.length-1].name}</h3>
       <h3>Escalations (${request.escalations})</h3>
@@ -65,32 +58,58 @@ const template = request =>
     </div>
   `
 
-const renderTeams = teams => {
-  // TODO: Add teams and goals to coach ui
+const renderGoals = goals => {
+  // TODO:  Addgoals and goals to coach ui
   // teams.forEach( team => console.log( team ))
 }
 
-const render = teams => {
-  renderTeams( teams )
+const THRESHOLD = 6
+const THRESHOLD_UNIT = 'months'
+
+const isPastThreshold = request =>
+  moment( request.created_at ).isAfter( moment().subtract( THRESHOLD, THRESHOLD_UNIT ))
+
+const prioritize = ( requests, goals ) => {
+  const pastThreshold = requests.filter( isPastThreshold )
+
+  const goalIds = goals.map( goal => goal.id )
+  const pastThresholdIds = pastThreshold.map( request => request.id )
+
+  const assignedToMe = requests
+    .filter( request => ! pastThresholdIds.includes( request.id ))
+    .filter( request => goalIds.includes( request.goal.id ))
+
+/*
+If compareFunction(a, b) is less than 0, sort a to a lower index than b, i.e. a comes first.
+If compareFunction(a, b) returns 0, leave a and b unchanged with respect to each other, but sorted with respect to all different elements. Note: the ECMAscript standard does not guarantee this behaviour, and thus not all browsers (e.g. Mozilla versions dating back to at least 2003) respect this.
+If compareFunction(a, b) is greater than 0, sort b to a lower index than a.
+*/
+
+  return [ ...pastThreshold, ...assignedToMe ]
+    .sort( (a, b) => moment( a.created_at ).valueOf() - moment( b.created_at ).valueOf() )
+}
+
+const render = goals => {
+  renderGoals( goals )
 
   return requests => {
     document.querySelector( '.ticket-list.container' )
-      .innerHTML = requests.map( request => template( request )).join( '\n' )
+      .innerHTML = prioritize( requests, goals ).map( request => template( request )).join( '\n' )
   }
 }
 
 load()
-  .then( ([ teams, requests ]) => {
+  .then( ([ goals, requests ]) => {
     // create my render function here
-    const renderTeams= render( teams )
+    const renderRequests = render( goals )
 
     // associate that render function with request receipt
     // socket.on( 'whatever', invoke render with payload, all requests )
-    renderTeams( requests )
+    renderRequests( requests )
 
     socket.emit( 'join', '/events' )
     socket.on( 'event', data => {
-      renderTeams( data.requests )
+      renderRequests( data.requests )
     })
   })
 
