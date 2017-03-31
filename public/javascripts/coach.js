@@ -34,13 +34,13 @@ const eventTemplate = event =>
 `
       <div class="event">
         <div class="title">${event.name}</div>
-        <div class="data">${Object.entries( event.data ).map( data => dataTemplate( data )).join('')}</div>
+        <div class="data">${Object.entries( event.  data ).map( data => dataTemplate( data )).join('')}</div>
       </div>
 `
 
 const template = request =>
   `
-    <div class="ticket-body">
+    <div class="ticket-body" data-created-at="${request.created_at}">
       <h1>Request #${request.id}</h1>
       <h4>
         <a href="${request.goal.link}" alt="${request.goal.title}" target="_blank">${request.goal.title}</a>
@@ -66,11 +66,11 @@ const renderGoals = goals => {
 const THRESHOLD = 6
 const THRESHOLD_UNIT = 'months'
 
-const isPastThreshold = request =>
-  moment( request.created_at ).isAfter( moment().subtract( THRESHOLD, THRESHOLD_UNIT ))
+const isPastThreshold = created_at =>
+  moment().subtract( THRESHOLD, THRESHOLD_UNIT ).isAfter( moment( created_at ))
 
 const prioritize = ( requests, goals ) => {
-  const pastThreshold = requests.filter( isPastThreshold )
+  const pastThreshold = requests.filter( request => isPastThreshold( request.created_at ))
 
   const goalIds = goals.map( goal => goal.id )
   const pastThresholdIds = pastThreshold.map( request => request.id )
@@ -89,22 +89,30 @@ const render = goals => {
   return requests => {
     document.querySelector( '.ticket-list.container' )
       .innerHTML = prioritize( requests, goals ).map( request => template( request )).join( '\n' )
+    ageRequests()
   }
+}
+
+const ageRequests = () => {
+  const requests = Array.from( document.querySelectorAll( '.ticket-body' ) )
+
+  requests.forEach( request => {
+    if( isPastThreshold( request.dataset.createdAt )) {
+      request.classList.add( 'aged' )
+    }
+  })
 }
 
 load()
   .then( ([ goals, requests ]) => {
-    // create my render function here
     const renderRequests = render( goals )
 
-    // associate that render function with request receipt
-    // socket.on( 'whatever', invoke render with payload, all requests )
     renderRequests( requests )
 
     socket.emit( 'join', '/events' )
-    socket.on( 'event', data => {
-      renderRequests( data.requests )
-    })
+    socket.on( 'event', data => renderRequests( data.requests ))
+
+    const timeoutId = setInterval( ageRequests, 60000 )
   })
 
 
