@@ -71,24 +71,37 @@ const isPastThreshold = created_at =>
 
 const prioritize = ( requests, goals ) => {
   const pastThreshold = requests.filter( request => isPastThreshold( request.created_at ))
+    .sort( (a, b) => moment( a.created_at ).valueOf() - moment( b.created_at ).valueOf() )
 
+  const escalated = requests.filter( request =>
+    ! isPastThreshold( request.created_at ) && request.escalations > 0
+  )
+  .sort( firstBy( (a,b) => b.escalations - a.escalations ).thenBy( 'created_at' ) )
+
+  const removedIds = [
+    ...pastThreshold.map( request => request.id ),
+    ...escalated.map( request => request.id )
+  ]
   const goalIds = goals.map( goal => goal.id )
-  const pastThresholdIds = pastThreshold.map( request => request.id )
 
   const assignedToMe = requests
-    .filter( request => ! pastThresholdIds.includes( request.id ))
+    .filter( request => ! removedIds.includes( request.id ) )
     .filter( request => goalIds.includes( request.goal.id ))
-
-  return [ ...pastThreshold, ...assignedToMe ]
     .sort( (a, b) => moment( a.created_at ).valueOf() - moment( b.created_at ).valueOf() )
+
+  return [ ...pastThreshold, ...escalated, ...assignedToMe ]
 }
 
 const render = goals => {
   renderGoals( goals )
 
   return requests => {
+    console.log( requests )
+
+    removeEvents()
     document.querySelector( '.ticket-list.container' )
       .innerHTML = prioritize( requests, goals ).map( request => template( request )).join( '\n' )
+    addEvents()
     ageRequests()
   }
 }
@@ -115,21 +128,50 @@ load()
     const timeoutId = setInterval( ageRequests, 60000 )
   })
 
+const buttons = className => {
+  const elements = document.querySelectorAll( className )
 
-// document.querySelector( 'button.claim').addEventListener( 'click', event => {
-//   event.preventDefault()
+  if( elements !== null ) {
+    return Array.from( elements )
+  } else {
+    return []
+  }
+}
 
-//   const { request_id } = event.target.dataset
+const removeEvents = () => {
+  buttons( 'button.claim' ).forEach( button =>
+    button.removeEventListener( 'click', claimClick )
+  )
 
-//   fetch( '/events', params({ request_id, name: 'claim' }))
-//     .then( _ => window.location.reload( true ) )
-// })
+  buttons( 'button.escalate' ).forEach( button =>
+    button.removeEventListener( 'click', escalationClick )
+  )
+}
 
-// document.querySelector( 'button.escalate').addEventListener( 'click', event => {
-//   event.preventDefault()
+const escalationClick = event => {
+  event.preventDefault()
 
-//   const { request_id } = event.target.dataset
+  const { request_id } = event.target.dataset
 
-//   fetch( '/events', params({ request_id, name: 'escalate' }))
-//     .then( _ => window.location.reload( true ) )
-// })
+  fetch( '/events', params( 'post', { request_id, name: 'escalate' }))
+    .then( _ => window.location.reload( true ) )
+}
+
+const claimClick = event => {
+  event.preventDefault()
+
+  const { request_id } = event.target.dataset
+
+  fetch( '/events', params( 'post', { request_id, name: 'claim' }))
+    .then( _ => window.location.reload( true ) )
+}
+
+const addEvents = () => {
+  buttons( 'button.claim' ).forEach( button =>
+    button.addEventListener( 'click', claimClick )
+  )
+
+  buttons( 'button.escalate' ).forEach( button =>
+    button.addEventListener( 'click', escalationClick )
+  )
+}
