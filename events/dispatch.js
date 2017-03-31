@@ -1,7 +1,9 @@
 const debug = require('debug')('coach-queue:dispatch')
 const io = require( './socketio/' )
 const db = require( '../database/' )
-const { CREATE, CANCEL, CLAIM, ESCALATE } = require( './requests/constants')
+const { 
+  CREATE, CANCEL, CLAIM, ESCALATE 
+} = require( './requests/constants')
 
 const { Request, Event } = db
 
@@ -17,26 +19,34 @@ const HANDLERS = {
   [ESCALATE]: escalate
 }
 
-const assign = data => {
-  debug( 'assign', { learner_id, question })
+const lookupHandler = name =>
+  new Promise( (resolve, reject) => {
+    if( HANDLERS[ name ] === undefined ) {
+      resolve( HANDLERS[ name ])
+    } else {
+      reject( new Error( 
+        `${data.name} is an invalid event.` 
+      ))
+    }
+  })
+
+const getRequests = result =>
+  Promise.all([ Request.all, result ])
+
+const broadcast = ([ requests, result ]) => {
+  io.to( '/events' ).emit( 'event', { requests })
+
+  return result
 }
 
 const dispatch = data => {
   debug( data )
 
-  if( HANDLERS[ data.name ] !== undefined ) {
-    return ( HANDLERS[ data.name ]( data ))
-      .then( result => Promise.all([
-        Request.all(), result
-      ]))
-      .then( ([ requests, result ]) => {
-        io.to( '/events' ).emit( 'event', { requests })
-        return result
-      })
-      .catch( error => console.log( error ))
-  } else {
-    return Promise.reject( new Error( `${data.name} is an invalid event.` ))
-  }
+  lookupHandler( data.name )
+    .then( handler => handler( data ))
+    .then( getRequests )
+    .then( broadcast )
+    .catch( error => console.log( error ))
 }
 
 module.exports = dispatch
