@@ -1,8 +1,8 @@
 const debug = require('debug')('coach-queue:dispatch')
 const io = require( './socketio/' )
 const db = require( '../database/' )
-const { 
-  CREATE, CANCEL, CLAIM, ESCALATE 
+const {
+  CREATE, CANCEL, CLAIM, ESCALATE
 } = require( './requests/constants')
 
 const { Request, Event } = db
@@ -21,17 +21,17 @@ const HANDLERS = {
 
 const lookupHandler = name =>
   new Promise( (resolve, reject) => {
-    if( HANDLERS[ name ] === undefined ) {
-      resolve( HANDLERS[ name ])
+    if( HANDLERS[ name ] !== undefined ) {
+      return resolve( HANDLERS[ name ] )
     } else {
-      reject( new Error( 
-        `${data.name} is an invalid event.` 
+      return reject( new Error(
+        `${name} is an invalid event.`
       ))
     }
   })
 
 const getRequests = result =>
-  Promise.all([ Request.all, result ])
+  Promise.all([ Request.all(), result ])
 
 const broadcast = ([ requests, result ]) => {
   io.to( '/events' ).emit( 'event', { requests })
@@ -42,11 +42,11 @@ const broadcast = ([ requests, result ]) => {
 const dispatch = data => {
   debug( data )
 
-  lookupHandler( data.name )
+  return lookupHandler( data.name )
     .then( handler => handler( data ))
     .then( getRequests )
     .then( broadcast )
-    .catch( error => console.log( error ))
+    .catch( error => console.log({ error, message: error.message }))
 }
 
 module.exports = dispatch

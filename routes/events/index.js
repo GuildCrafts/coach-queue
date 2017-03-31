@@ -6,8 +6,8 @@ router.post( '/', ( request, response ) => {
   const data = Object.assign( {}, request.body, { learner_id: request.user.id })
 
   dispatch( data )
-  .then( result => response.json( result ))
-  .catch( error => response.json({ error, message: error.message }))
+    .then( result => response.json( result ))
+    .catch( error => response.json({ error, message: error.message }))
 })
 
 // router.post( '/io', ( request, response ) => {

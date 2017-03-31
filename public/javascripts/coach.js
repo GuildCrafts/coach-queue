@@ -19,14 +19,19 @@ const load = () =>
 const isPastThreshold = created_at =>
   moment().subtract( THRESHOLD, THRESHOLD_UNIT ).isAfter( moment( created_at ))
 
+const byCreatedAt = ( a, b ) =>
+  moment( a.created_at ).valueOf() - moment( b.created_at ).valueOf()
+
+const byEscalations = ( a, b ) => b.escalations - a.escalations
+
 const prioritize = ( requests, goals ) => {
   const pastThreshold = requests.filter( request => isPastThreshold( request.created_at ))
-    .sort( (a, b) => moment( a.created_at ).valueOf() - moment( b.created_at ).valueOf() )
+    .sort( byCreatedAt )
 
-  const escalated = requests.filter( request =>
-    ! isPastThreshold( request.created_at ) && request.escalations > 0
+  const escalated = requests.filter( ({ created_at, escalations }) =>
+    ! isPastThreshold( created_at ) && escalations > 0
   )
-  .sort( firstBy( (a,b) => b.escalations - a.escalations ).thenBy( 'created_at' ) )
+  .sort( firstBy( byEscalations ).thenBy( 'created_at' ) )
 
   const removedIds = [
     ...pastThreshold.map( request => request.id ),
@@ -37,13 +42,15 @@ const prioritize = ( requests, goals ) => {
   const assignedToMe = requests
     .filter( request => ! removedIds.includes( request.id ) )
     .filter( request => goalIds.includes( request.goal.id ))
-    .sort( (a, b) => moment( a.created_at ).valueOf() - moment( b.created_at ).valueOf() )
+    .sort( byCreatedAt )
 
   return [ ...pastThreshold, ...escalated, ...assignedToMe ]
 }
 
 const render = goals => {
   return requests => {
+    console.log( requests )
+
     removeEvents()
 
     document.querySelector( '.ticket-list.container' )
