@@ -3,7 +3,7 @@ const dataTemplate = ([ key, value ]) => `${key} = ${value}`
 const eventTemplate = event => `
       <div class="event">
         <div class="title">${event.name}</div>
-        <div class="data">${Object.entries( event.  data ).map( data => dataTemplate( data )).join('')}</div>
+        <div class="data">${Object.entries( event.data ).map( data => dataTemplate( data )).join('')}</div>
       </div> `
 
 const template = request => `
