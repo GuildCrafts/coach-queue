@@ -1,5 +1,6 @@
 const db = require( '../db' )
 const Event = require( '../events' )
+const decorate = require( './decorate' )
 
 const SELECT_TEAM_ID = `
   SELECT teams.id FROM goals
@@ -40,9 +41,12 @@ const forTeam = player_id =>
     )
     .catch( error => null )
 
+const unresolved = () => db.any( UNRESOLVED )
+
 module.exports = {
   create: player_id => db.one( CREATE, player_id ),
   cancel: player_id => db.one( CANCEL, player_id ),
   forTeam,
-  unresolved: () => db.any( UNRESOLVED )
+  unresolved,
+  all: () => unresolved().then( decorate )
 }

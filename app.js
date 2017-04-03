@@ -38,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 auth.init( app )
 
-app.use('/', index)
+app.use( '/', index )
 app.use( '/events', events )
 app.use( '/test', test )
 app.use( '/admin', admin )
@@ -53,6 +53,7 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
+  // console.log( '-------', err )
   // set locals, only providing error in development
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}

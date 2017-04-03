@@ -21,10 +21,7 @@ if( form !== null ) {
 
     fetch( '/events', params( body ))
       .then( result => result.json() )
-      .then( json => {
-        window.location.reload( true )
-        console.log( json )
-      })
+      .then( json => window.location.reload( true ))
       // TODO: async update is desirable; make it work then make it better
       // .then( result => result.json() )
       // .then( json => console.log( json ))

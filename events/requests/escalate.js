@@ -4,8 +4,8 @@ const db = require( '../../database/' )
 const { ESCALATE } = require( './constants' )
 const { Request, Event } = db
 
-const escalate = ({ claimed_by, request_id }) => {
-  const data = { request_id, claimed_by }
+const escalate = ({ learner_id, request_id }) => {
+  const data = { request_id, claimed_by: learner_id }
 
   debug( data )
 

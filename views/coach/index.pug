@@ -14,28 +14,9 @@ block content
   h1 Coach
 
   .ticket-list.container
-    each request in requests
-      .ticket-body
-        h1= `Request # ${request.id}`
-        h4
-          a( href=`${request.goal.link}`, alt=`${request.goal.title}`, target='_blank' )= `${request.goal.title}`
-          span= ` -- Team Member(s):`
-          each player in request.players
-            span= `${player.handle}`
-
-        h3= `Events (${request.events.length}), Current: ${request.events[request.events.length-1].name}`
-        h3= `Escalations (${request.escalations})`
-        h3= `Requested ${request.age}`
-        each event in request.events.reverse()
-          .event
-            .title= event.name
-            .data
-              each value, key in event.data
-                = `${key} -- ${ value }`
-
-        h4.ticket-action-buttons
-          button.claim( data-request_id=request.id ) Claim
-          button.escalate( data-request_id=request.id ) Escalate
 
 block scripts
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js')
+  script( src='/javascripts/thenBy/index.js' )
+  script( src='/javascripts/coach/templates.js' )
   script( src='/javascripts/coach.js' )
