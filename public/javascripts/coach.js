@@ -1,5 +1,8 @@
 const socket = io.connect()
 
+const THRESHOLD = 6
+const THRESHOLD_UNIT = 'months'
+
 const params = (method, body) => ({
   credentials: 'include',
   method,
@@ -13,55 +16,22 @@ const load = () =>
     fetch( '/coach/requests', params( 'get' ) ).then( result => result.json() )
   ])
 
-const dataTemplate = ([ key, value ]) => `${key} = ${value}`
-
-const eventTemplate = event =>
-`
-      <div class="event">
-        <div class="title">${event.name}</div>
-        <div class="data">${Object.entries( event.  data ).map( data => dataTemplate( data )).join('')}</div>
-      </div>
-`
-
-const template = request =>
-  `
-    <div class="ticket-body" data-created-at="${request.created_at}">
-      <h1>Request #${request.id}</h1>
-      <h4>
-        <a href="${request.goal.link}" alt="${request.goal.title}" target="_blank">${request.goal.title}</a>
-        <div>-- Team Member(s): <span>${request.players.map( p => p.handle ).join( ', ' )}</span></div>
-        <div>-- Assigned Coach: <span>${request.goal.coach}</span></div>
-      </h4>
-      <h3>Events (${request.events.length}), Current: ${request.events[request.events.length-1].name}</h3>
-      <h3>Escalations (${request.escalations})</h3>
-      <h3>Requested ${moment(request.created_at).fromNow()}</h3>
-      ${request.events.map( event => eventTemplate( event )).join('')}
-      <h4 class="ticket-action-buttons">
-        <button data-request_id=${request.id} class="claim">Claim</button>
-        <button data-request_id=${request.id} class="escalate">Escalate</button>
-      </h4>
-    </div>
-  `
-
-const renderGoals = goals => {
-  // TODO:  Addgoals and goals to coach ui
-  // teams.forEach( team => console.log( team ))
-}
-
-const THRESHOLD = 6
-const THRESHOLD_UNIT = 'months'
-
 const isPastThreshold = created_at =>
   moment().subtract( THRESHOLD, THRESHOLD_UNIT ).isAfter( moment( created_at ))
 
+const byCreatedAt = ( a, b ) =>
+  moment( a.created_at ).valueOf() - moment( b.created_at ).valueOf()
+
+const byEscalations = ( a, b ) => b.escalations - a.escalations
+
 const prioritize = ( requests, goals ) => {
   const pastThreshold = requests.filter( request => isPastThreshold( request.created_at ))
-    .sort( (a, b) => moment( a.created_at ).valueOf() - moment( b.created_at ).valueOf() )
+    .sort( byCreatedAt )
 
-  const escalated = requests.filter( request =>
-    ! isPastThreshold( request.created_at ) && request.escalations > 0
+  const escalated = requests.filter( ({ created_at, escalations }) =>
+    ! isPastThreshold( created_at ) && escalations > 0
   )
-  .sort( firstBy( (a,b) => b.escalations - a.escalations ).thenBy( 'created_at' ) )
+  .sort( firstBy( byEscalations ).thenBy( 'created_at' ) )
 
   const removedIds = [
     ...pastThreshold.map( request => request.id ),
@@ -72,20 +42,20 @@ const prioritize = ( requests, goals ) => {
   const assignedToMe = requests
     .filter( request => ! removedIds.includes( request.id ) )
     .filter( request => goalIds.includes( request.goal.id ))
-    .sort( (a, b) => moment( a.created_at ).valueOf() - moment( b.created_at ).valueOf() )
+    .sort( byCreatedAt )
 
   return [ ...pastThreshold, ...escalated, ...assignedToMe ]
 }
 
 const render = goals => {
-  renderGoals( goals )
-
   return requests => {
     console.log( requests )
 
     removeEvents()
+
     document.querySelector( '.ticket-list.container' )
       .innerHTML = prioritize( requests, goals ).map( request => template( request )).join( '\n' )
+
     addEvents()
     ageRequests()
   }
@@ -110,7 +80,7 @@ load()
     socket.emit( 'join', '/events' )
     socket.on( 'event', data => renderRequests( data.requests ))
 
-    const timeoutId = setInterval( ageRequests, 60000 )
+    setInterval( ageRequests, 60000 )
   })
 
 const buttons = className => {
