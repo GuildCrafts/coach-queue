@@ -6,6 +6,9 @@ const FOR_TEAM = `
   WHERE team_players.team_id=$1
 `
 
+const IS_COACH = `SELECT is_coach FROM players WHERE handle=$1`
+
 module.exports = {
-  forTeam: team_id => db.any( FOR_TEAM, team_id )
+  forTeam: team_id => db.any( FOR_TEAM, team_id ),
+  isCoach: handle => db.one( IS_COACH, handle )
 }

@@ -8,6 +8,7 @@ const fileUpload = require('express-fileupload')
 
 const loadEnvironment = require('./configuration/environment')()
 const auth = require('./configuration/authentication')
+const { setRole } = require('./configuration/setUserRole')
 
 const index = require('./routes/index')
 const events = require( './routes/events' )
@@ -37,6 +38,7 @@ app.use(require('node-sass-middleware')({
 app.use(express.static(path.join(__dirname, 'public')))
 
 auth.init( app )
+app.use( setRole )
 
 app.use( '/', index )
 app.use( '/events', events )
