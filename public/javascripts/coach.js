@@ -54,7 +54,9 @@ const render = ( goals, userId ) =>
 
     const activeRequests = requests.filter( ({ events }) =>
       events.some( ({ data }) => data.escalated_by === userId || data.claimed_by === userId )
-    )
+    ).map( request => Object.assign( {}, request, { escalatable:
+      !request.events.some( ({ data }) => data.escalated_by === userId )}
+    ))
 
     const claimableRequests = requests.map( (request, index) =>
       Object.assign( {}, request, { claimable: index === 0 && activeRequests.length === 0 })

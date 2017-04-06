@@ -14,6 +14,14 @@ const claimButton = ( ({ claimable, id }) => {
   }
 })
 
+const escalateButton = ( ({ escalatable, id }) => {
+  if ( escalatable ) {
+    return `<button data-request_id=${id} class="escalate">Escalate</button>`
+  } else {
+    return ''
+  }
+})
+
 const queueTemplate = request => `
   <div class="ticket-body" data-created-at="${request.created_at}">
     <h1>Request #${request.id}</h1>
@@ -28,7 +36,7 @@ const queueTemplate = request => `
     ${request.events.map( event => eventTemplate( event )).join('')}
     <h4 class="ticket-action-buttons">
       ${claimButton( request )}
-      <button data-request_id=${request.id} class="escalate">Escalate</button>
+      ${escalateButton( request )}
     </h4>
   </div> `
 
