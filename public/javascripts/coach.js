@@ -13,8 +13,8 @@ const params = (method, body) => ({
 const load = () =>
   Promise.all([
     fetch( '/coach/teams', params( 'get' ) ).then( result => result.json() ),
-    fetch( '/coach/requests', params( 'get' ) ).then( result => result.json() )
-  ])
+    fetch( '/coach/requests', params( 'get' ) ).then( result => result.json() ),
+  ]).then( ([ teams, requests ]) => [ teams, requests, teams[ 0 ].coach_id ] )
 
 const isPastThreshold = created_at =>
   moment().subtract( THRESHOLD, THRESHOLD_UNIT ).isAfter( moment( created_at ))
@@ -47,19 +47,29 @@ const prioritize = ( requests, goals ) => {
   return [ ...pastThreshold, ...escalated, ...assignedToMe ]
 }
 
-const render = goals => {
-  return requests => {
-    console.log( requests )
+const render = ( goals, userId ) =>
+  requests => {
 
     removeEvents()
 
+    const activeRequests = requests.filter( ({ events }) =>
+      events.some( ({ data }) => data.escalated_by === userId || data.claimed_by === userId )
+    )
+
+    const claimableRequests = requests.map( (request, index) =>
+      Object.assign( {}, request, { claimable: index === 0 && activeRequests.length === 0 })
+    )
+
+    document.querySelector( '.active-requests.container' )
+      .innerHTML = activeRequests.map( request => activeRequestTemplate( request )).join( '\n' )
+
     document.querySelector( '.ticket-list.container' )
-      .innerHTML = prioritize( requests, goals ).map( request => template( request )).join( '\n' )
+      .innerHTML = prioritize( claimableRequests, goals )
+      .map( request => queueTemplate( request )).join( '\n' )
 
     addEvents()
     ageRequests()
   }
-}
 
 const ageRequests = () => {
   const requests = Array.from( document.querySelectorAll( '.ticket-body' ) )
@@ -72,8 +82,8 @@ const ageRequests = () => {
 }
 
 load()
-  .then( ([ goals, requests ]) => {
-    const renderRequests = render( goals )
+  .then( ([ goals, requests, userId ]) => {
+    const renderRequests = render( goals, userId )
 
     renderRequests( requests )
 
