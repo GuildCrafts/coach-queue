@@ -2,7 +2,7 @@ const debug = require('debug')('coach-queue:dispatch')
 const io = require( './socketio/' )
 const db = require( '../database/' )
 const {
-  CREATE, CANCEL, CLAIM, ESCALATE
+  CREATE, CANCEL, CLAIM, ESCALATE, RESOLVE
 } = require( './requests/constants')
 
 const { Request, Event } = db
@@ -11,12 +11,14 @@ const create = require( './requests/create' )
 const cancel = require( './requests/cancel' )
 const claim = require( './requests/claim' )
 const escalate = require( './requests/escalate' )
+const resolve = require( './requests/resolve' )
 
 const HANDLERS = {
   [CREATE]: create,
   [CANCEL]: cancel,
   [CLAIM]: claim,
-  [ESCALATE]: escalate
+  [ESCALATE]: escalate,
+  [RESOLVE]: resolve
 }
 
 const lookupHandler = name =>

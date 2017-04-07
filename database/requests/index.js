@@ -22,6 +22,12 @@ const CANCEL = `
   RETURNING id
 `
 
+const RESOLVE = `
+  UPDATE requests SET resolved_at=now()
+  WHERE resolved_at IS NULL AND team_id = (${SELECT_TEAM_ID})
+  RETURNING id
+`
+
 const FOR_TEAM = `
   SELECT *, id as request_id FROM requests
   WHERE resolved_at IS NULL AND team_id=(${SELECT_TEAM_ID})
@@ -46,6 +52,7 @@ const unresolved = () => db.any( UNRESOLVED )
 module.exports = {
   create: player_id => db.one( CREATE, player_id ),
   cancel: player_id => db.one( CANCEL, player_id ),
+  resolve: player_id => db.one( RESOLVE, player_id ),
   forTeam,
   unresolved,
   all: () => unresolved().then( decorate )
