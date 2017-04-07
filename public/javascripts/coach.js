@@ -58,16 +58,16 @@ const render = ( goals, userId ) =>
       !request.events.some( ({ data }) => data.escalated_by === userId )}
     ))
 
-    const claimableRequests = requests.map( (request, index) =>
+    const decorateClaimable = (request, index) =>
       Object.assign( {}, request, { claimable: index === 0 && activeRequests.length === 0 })
-    )
 
     document.querySelector( '.active-requests.container' )
       .innerHTML = activeRequests.map( request => activeRequestTemplate( request )).join( '\n' )
 
-    document.querySelector( '.ticket-list.container' )
-      .innerHTML = prioritize( claimableRequests, goals )
-      .map( request => queueTemplate( request )).join( '\n' )
+    document.querySelector( '.ticket-list.container' ).innerHTML =
+      prioritize( requests, goals )
+        .map( decorateClaimable )
+        .map( request => queueTemplate( request )).join( '\n' )
 
     addEvents()
     ageRequests()
