@@ -18,7 +18,9 @@ const XP = 14
 
 const resetCurrentTeams = () => db.any( 'UPDATE teams SET is_current=false' )
 
-const resetCoaches = _ => db.any( 'UPDATE players SET is_coach=false' )
+const resetCoaches = _ =>
+  db.any( 'UPDATE players SET is_coach=false' )
+    .then( _ => db.any( 'TRUNCATE goal_coaches' ))
 
 const insertGoals = csvGoals => _ =>
   db.any( 'SELECT id FROM goals' )

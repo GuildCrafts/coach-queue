@@ -30,15 +30,34 @@ router.post( '/coaches', ( request, response ) => {
     .then( result => response.redirect( '/admin/goals' ))
 })
 
+const addCountToCoaches = data => {
+  const coaches = data.coaches.map( coach => {
+    const counts = data.goal_counts
+      .filter( goal_coach => goal_coach.coach_id === coach.id )
+      .reduce( (memo, goal_coach) => {
+        memo.player_count += parseInt( goal_coach.player_count )
+        memo.team_count += parseInt( goal_coach.team_count )
+
+        return memo
+      }, { player_count: 0, team_count: 0 })
+
+    return Object.assign( {}, coach, { counts })
+  })
+
+  return Object.assign( {}, data, { coaches })
+}
+
 router.get( '/goals', ( request, response ) => {
   Admin.data()
+    .then( addCountToCoaches )
     .then( data => response.render( 'admin/goals', { data }))
 })
 
 router.post( '/goals', ( request, response ) => {
   const data = request.body.data
+
   Promise.all( data.map( assignment => Admin.assignCoach( assignment )))
-    .then( result => response.redirect( '/admin'))
+    .then( result => response.json( result ))
 })
 
 module.exports = router

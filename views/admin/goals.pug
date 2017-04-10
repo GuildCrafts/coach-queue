@@ -1,32 +1,40 @@
 extends ../layout.pug
 
 block content
+  div.label.label-info Teams
+  div.label.label-primary Players
   form.coach-assignment
-    for goal in data.goal_counts
-      if goal.player_count > 0
-        .goal-assignment
-          select.coach-selector( id=`goal-${goal.title}`, name='goal-assignments', data-goal-id=goal.id, data-previous-id='0', data-player-count=goal.player_count, data-team-count=goal.team_count )
-            option( value='0' ) Select a coach
-            for coach in data.coaches
-              option( value=coach.id )= coach.handle
-          label( for=`goal-${goal.title}` )= `${goal.title} (${goal.team_count} teams, ${goal.player_count} players)`
+    table.table.table-condensed.table-bordered.table-hover
+      thead
+        for coach in data.coaches
+          th= coach.handle
+            div
+              div.label.label-info( class=`team-count-${coach.id}` )
+                span.count= coach.counts.team_count
+              div.label.label-primary( class=`player-count-${coach.id}` )
+                span.count= coach.counts.player_count
+        th Goal
+        th Team Count
+        th Player Count
+      tbody
+        for goal in data.goal_counts
+          if goal.player_count > 0
+            tr.goal-assignment( class=`goal-assignment-${goal.id}`, data-goal-id=goal.id, data-previous-id='0' )
+              for coach in data.coaches
+                td( style='text-align: center;' )
+                  input(
+                    type='radio',
+                    id=`goal-${goal.id}-${coach.id}`, name=`goal-${goal.id}`,
+                    value=coach.id,
+                    data-goal-id=goal.id,
+                    data-player-count=goal.player_count, data-team-count=goal.team_count,
+                    checked=goal.coach_id===coach.id
+                  )
+              td= goal.title
+              td( style='text-align: center;' )= goal.team_count
+              td( style='text-align: center;' )= goal.player_count
 
     button.set-coaches( type='submit' ) Assign Coaches
-
-    table
-      thead
-        tr
-          th Coach
-          th Team Count
-          th Player Count
-      tbody
-        for coach in data.coaches
-          tr
-            td= coach.handle
-            td
-              span( class=`team-count-${coach.id}` ) 0
-            td
-              span( class=`player-count-${coach.id}` ) 0
 
 block scripts
   script( src='/javascripts/admin/goals.js' )

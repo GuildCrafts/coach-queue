@@ -1,26 +1,41 @@
-Array.from( document.querySelectorAll( 'select.coach-selector' )).forEach( select => {
-  select.addEventListener( 'change', event => {
-    const previousId = event.target.dataset.previousId
-    const playerCount = parseInt( event.target.dataset.playerCount )
-    const teamCount = parseInt( event.target.dataset.teamCount )
+const RADIO_SELECTOR = 'form.coach-assignment input[type="radio"]'
+
+const fields = event => {
+  const { playerCount, teamCount, goalId } = event.target.dataset
+  const { previousId } = document.querySelector( `tr.goal-assignment-${goalId}` ).dataset
+
+  return {
+    previousId,
+    goalId,
+    players: parseInt( playerCount ),
+    teams: parseInt( teamCount )
+  }
+}
+
+const changeCount = ( coachId, players, teams ) => {
+  const playerCount = document.querySelector( `.player-count-${coachId}` )
+  const teamCount = document.querySelector( `.team-count-${coachId}` )
+
+  playerCount.innerText = parseInt( playerCount.innerText ) + players
+  teamCount.innerText = parseInt( teamCount.innerText ) + teams
+}
+
+Array.from( document.querySelectorAll( RADIO_SELECTOR )).forEach( radio => {
+  radio.addEventListener( 'click', event => {
+    const coachId = event.target.value
+    const { previousId, goalId, players, teams } = fields( event )
 
     if( previousId !== '0' ) {
-      const previousPlayerCount = document.querySelector( `.player-count-${previousId}` )
-      const previousTeamCount = document.querySelector( `.team-count-${previousId}` )
-
-      previousPlayerCount.innerText = parseInt( previousPlayerCount.innerText ) - playerCount
-      previousTeamCount.innerText = parseInt( previousTeamCount.innerText ) - teamCount
+      changeCount( previousId, -1 * players, -1 * teams )
     }
 
-    event.target.dataset.previousId = event.target.value
+    changeCount( coachId, players, teams )
 
-    const currentPlayerCount = document.querySelector( `.player-count-${event.target.value}` )
-    const currentTeamCount = document.querySelector( `.team-count-${event.target.value}` )
-
-    currentPlayerCount.innerText = parseInt( currentPlayerCount.innerText ) + playerCount
-    currentTeamCount.innerText = parseInt( currentTeamCount.innerText ) + teamCount
+    document.querySelector( `tr.goal-assignment-${goalId}` ).dataset.previousId = coachId
   })
 })
+
+
 
 const params = body => ({
   credentials: 'include',
@@ -32,19 +47,20 @@ const params = body => ({
 document.querySelector( 'form.coach-assignment' ).addEventListener( 'submit', event => {
   event.preventDefault()
 
-  try {
-    const data = Array.from( document.querySelectorAll( 'select.coach-selector' )).map( select => {
-      if( select.value === '0' ) {
-        throw 'You must assign all goals!'
+  const data = Array.from( document.querySelectorAll( 'tr.goal-assignment' )).map( tr => tr.dataset.goalId )
+    .map( goalId => Array.from( document.querySelectorAll( `input[name=goal-${goalId}]` )).filter( radio => radio.checked )[ 0 ] )
+    .reduce( (memo, radio) => {
+      if( radio !== undefined ) {
+        memo.push({
+          goal_id: radio.dataset.goalId,
+          coach_id: radio.value
+        })
       }
-      return {
-        goal_id: select.dataset.goalId,
-        coach_id: select.value
-      }
-    })
-    fetch( '/admin/goals', params({ data }))
-      .then( _ => window.location = '/admin' )
-  } catch( error ) {
-    alert( error )
-  }
+
+      return memo
+    }, [])
+
+  fetch( '/admin/goals', params({ data }))
+    .then( _ => window.location = '/admin/goals' )
+    .catch( error => alert( error ))
 })
