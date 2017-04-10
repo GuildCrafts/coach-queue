@@ -5,6 +5,7 @@ const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
+const https = require('express-sslify').HTTPS
 
 const loadEnvironment = require('./configuration/environment')()
 const auth = require('./configuration/authentication')
@@ -24,7 +25,7 @@ app.set('view engine', 'pug')
 
 // ensure secure connection
 if( process.env.NODE_ENV === 'production' ) {
-  app.use(https({ trustProtoHeader: true }))
+  app.use( https({ trustProtoHeader: true }))
 }
 
 // uncomment after placing your favicon in /public

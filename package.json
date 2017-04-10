@@ -23,6 +23,7 @@
     "dotenv": "^4.0.0",
     "express": "~4.14.1",
     "express-fileupload": "^0.1.2",
+    "express-sslify": "^1.2.0",
     "knex": "^0.12.8",
     "moment": "^2.18.1",
     "morgan": "~1.7.0",
