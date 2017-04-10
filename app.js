@@ -24,7 +24,7 @@ app.set('view engine', 'pug')
 
 // ensure secure connection
 if( process.env.NODE_ENV === 'production' ) {
-  server.use(https({ trustProtoHeader: true }))
+  app.use(https({ trustProtoHeader: true }))
 }
 
 // uncomment after placing your favicon in /public
