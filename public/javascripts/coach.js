@@ -65,6 +65,7 @@ const renderGoals = goals => {
 }
 
 const render = ( goals, userId ) => {
+
   renderGoals( goals )
 
   return requests => {

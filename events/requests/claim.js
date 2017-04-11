@@ -4,8 +4,8 @@ const db = require( '../../database/' )
 const { CLAIM } = require( './constants')
 const { Request, Event } = db
 
-const claim = ({ learner_id, request_id }) => {
-  const data = { request_id, claimed_by: learner_id }
+const claim = ({ learner_id, request_id, learner_name }) => {
+  const data = { request_id, claimed_by: learner_id, by: learner_name }
 
   debug( data )
 
