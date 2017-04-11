@@ -45,6 +45,13 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 auth.init( app )
 app.use( setRole )
+app.use( (request, response, next) => {
+  response.locals = {
+    user: request.user
+  }
+
+  next()
+})
 
 app.use( '/', index )
 app.use( '/events', events )

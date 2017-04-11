@@ -1,55 +1,84 @@
-const dataTemplate = ([ key, value ]) => `${key} = ${value}`
+const dataTemplate = ([ key, value ]) => `<li>${key}: ${value}</li>`
 
 const eventTemplate = event => `
-      <div class="event">
-        <div class="title">${event.name}</div>
-        <div class="data">${Object.entries( event.data ).map( data => dataTemplate( data )).join('')}</div>
-      </div> `
+  <li class="list-group-item">
+    <em>${event.name}</em>:
+    <ul>
+      ${Object.entries( event.data ).map( data => dataTemplate( data )).join('')}
+    </ul>
+  </li>
+`
 
-const claimButton = ( ({ claimable, id }) => {
+const claimButton = ( claimable, id ) => {
   if ( claimable ) {
-    return `<button data-request_id=${id} class="claim">Claim</button>`
+    return `<button data-request_id=${id} class="claim btn btn-default">Claim</button>`
   } else {
     return ''
   }
-})
+}
 
-const escalateButton = ( ({ escalatable, id }) => {
+const escalateButton = ( escalatable, id ) => {
   if ( escalatable ) {
-    return `<button data-request_id=${id} class="escalate">Escalate</button>`
+    return `<button data-request_id=${id} class="escalate btn btn-danger">Escalate</button>`
   } else {
     return ''
   }
-})
+}
 
-const queueTemplate = request => `
-  <div class="ticket-body" data-created-at="${request.created_at}">
-    <h1>Request #${request.id}</h1>
-    <h4>
-      <a href="${request.goal.link}" alt="${request.goal.title}" target="_blank">${request.goal.title}</a>
-      <div>-- Team Member(s): <span>${request.players.map( p => p.handle ).join( ', ' )}</span></div>
-      <div>-- Assigned Coach: <span>${request.goal.coach}</span></div>
-    </h4>
-    <h3>Events (${request.events.length}), Current: ${request.events[request.events.length-1].name}</h3>
-    <h3>Escalations (${request.escalations})</h3>
-    <h3>Requested ${moment(request.created_at).fromNow()}</h3>
-    ${request.events.map( event => eventTemplate( event )).join('')}
-    <h4 class="ticket-action-buttons">
-      ${claimButton( request )}
-      ${escalateButton( request )}
-    </h4>
-  </div> `
+const queueTemplate = ({ id, goal, created_at, events, players, claimable, escalatable, escalations }, type="default" ) => {
+  const currentStatus = {
+    claim: 'claimed',
+    escalate: 'escalated',
+    create: 'created'
+  }[ events[ events.length - 1 ].name ]
+
+  return `
+    <div class="panel panel-${type}" data-created-at="${created_at}">
+      <div class="panel-heading">
+        <em>${currentStatus}</em><br />
+        <a href="${goal.link}" alt="${goal.title}" target="_blank">
+          [#${id}] ${goal.title}
+        </a>
+        <em><b>created ${moment( created_at ).fromNow()}</b></em>,
+        <b>${escalations} escalations</b>
+      </div>
+
+      <div class="panel-body">
+        <p class="lead">${events[ 0 ].data.question}</p>
+
+        <dl>
+          <dt>Team Members</dt>
+          <dd>${players.map( p => p.handle ).join( ', ' )}</dd>
+          <dt>Assigned Coach</dt>
+          <dd>${goal.coach}</dd>
+        </dl>
+      </div>
+
+      <ul class="list-group">
+        ${events.map( event => eventTemplate( event )).join('')}
+      </ul>
+
+      <div class="panel-footer">
+        ${claimButton( claimable, id )}
+        ${escalateButton( escalatable, id )}
+      </div>
+    </div>
+  `
+}
 
 const activeRequestTemplate = request => {
   if ( request !== undefined ) {
-    return `
-      <div class="active-request">
-        <h1>Active Request:</h1>
-        ${queueTemplate( request )}
-      </div>
-      <h1>Other Requests:</h1>
-      `
+    return `${queueTemplate( request, 'success' )}`
   } else {
     return ''
   }
+}
+
+const goalTemplate = ( title, teams ) => {
+  return `
+    <div class="panel panel-default">
+      <div class="panel-heading">${title}</div>
+      <div class="panel-body">${teams.join( ', ' )}</div>
+    </div>
+  `
 }

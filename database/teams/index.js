@@ -9,6 +9,7 @@ const FOR_REQUEST = `
 const FOR_COACH = `
   SELECT * FROM goal_coaches
   JOIN goals ON goal_coaches.goal_id=goals.id
+  JOIN teams ON teams.goal_id=goals.id
   WHERE coach_id=$1
 `
 

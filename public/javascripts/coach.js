@@ -47,9 +47,27 @@ const prioritize = ( requests, goals ) => {
   return [ ...pastThreshold, ...escalated, ...assignedToMe ]
 }
 
-const render = ( goals, userId ) =>
-  requests => {
+const renderGoals = goals => {
+  const groupedGoals = goals.reduce( (memo, goal) => {
+    if( memo[ goal.title ] === undefined ) {
+      memo[ goal.title ] = []
+    }
 
+    if( ! memo[ goal.title ].includes( goal.name )) {
+      memo[ goal.title ].push( goal.name )
+    }
+
+    return memo
+  }, {} )
+
+  document.querySelector( '.team-list' ).innerHTML =
+    Object.keys( groupedGoals ).map( title => goalTemplate( title, groupedGoals[ title ])).join( '\n' )
+}
+
+const render = ( goals, userId ) => {
+  renderGoals( goals )
+
+  return requests => {
     removeEvents()
 
     const activeRequests = requests.filter( ({ events }) =>
@@ -61,10 +79,10 @@ const render = ( goals, userId ) =>
     const decorateClaimable = (request, index) =>
       Object.assign( {}, request, { claimable: index === 0 && activeRequests.length === 0 })
 
-    document.querySelector( '.active-requests.container' )
+    document.querySelector( '.active-requests' )
       .innerHTML = activeRequests.map( request => activeRequestTemplate( request )).join( '\n' )
 
-    document.querySelector( '.ticket-list.container' ).innerHTML =
+    document.querySelector( '.ticket-list' ).innerHTML =
       prioritize( requests, goals )
         .map( decorateClaimable )
         .map( request => queueTemplate( request )).join( '\n' )
@@ -72,13 +90,15 @@ const render = ( goals, userId ) =>
     addEvents()
     ageRequests()
   }
+}
 
 const ageRequests = () => {
-  const requests = Array.from( document.querySelectorAll( '.ticket-body' ) )
+  const requests = Array.from( document.querySelectorAll( '.panel' ) )
 
   requests.forEach( request => {
     if( isPastThreshold( request.dataset.createdAt )) {
-      request.classList.add( 'aged' )
+      request.classList.remove( 'panel-default', 'panel-success' )
+      request.classList.add( 'panel-danger' )
     }
   })
 }
@@ -90,7 +110,10 @@ load()
     renderRequests( requests )
 
     socket.emit( 'join', '/events' )
+    socket.emit( 'join', '/goals' )
+
     socket.on( 'event', data => renderRequests( data.requests ))
+    socket.on( 'goal', data => renderGoals( data.goals ))
 
     setInterval( ageRequests, 60000 )
   })

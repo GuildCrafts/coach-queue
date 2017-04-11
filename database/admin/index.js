@@ -11,7 +11,7 @@ ORDER BY player_count DESC, goals.title ASC
 
 const data = () =>
   Promise.all([
-    db.any( 'SELECT * FROM players ORDER BY handle ASC' ),
+    db.any( 'SELECT * FROM players ORDER BY lower(handle) ASC' ),
     db.any( 'SELECT * FROM players WHERE is_coach=true ORDER BY handle ASC' ),
     db.any( 'SELECT *, (SELECT COUNT(*) FROM team_players WHERE team_id = teams.id ) as player_count FROM teams WHERE is_current = true' ),
     db.any( GOAL_COUNT )

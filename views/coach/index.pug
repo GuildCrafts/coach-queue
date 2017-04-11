@@ -1,19 +1,18 @@
 extends ../layout
 
-block css
-  style.
-    .container { display: flex;  flex-direction: column;}
-    .ticket-body { flex: 1; border: solid 1px ;}
-    .ticket-body { padding-left: 30px; }
-    .tests td { border: 1px solid #ddd; }
-
-    .test-send { color: #009}
-    .test-receive { color: #006400 }
-
 block content
-  h1 Coach
-  .active-requests.container
-  .ticket-list.container
+  .row
+    .col-md-4
+      h3 Active Request
+      .active-requests
+
+    .col-md-4
+      h3 Requests
+      .ticket-list
+
+    .col-md-4
+      h3 Assigned Teams
+      .team-list
 
 block scripts
   script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js')
