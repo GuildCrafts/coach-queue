@@ -37,7 +37,7 @@ const prioritize = ( requests, goals ) => {
     ...pastThreshold.map( request => request.id ),
     ...escalated.map( request => request.id )
   ]
-  const goalIds = goals.map( goal => goal.id )
+  const goalIds = goals.map( goal => goal.goal_id )
 
   const assignedToMe = requests
     .filter( request => ! removedIds.includes( request.id ) )
