@@ -1,7 +1,7 @@
 const socket = io.connect()
 
-const THRESHOLD = 6
-const THRESHOLD_UNIT = 'months'
+const THRESHOLD = 30
+const THRESHOLD_UNIT = 'minutes'
 
 const params = (method, body) => ({
   credentials: 'include',
