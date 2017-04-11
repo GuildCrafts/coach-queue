@@ -76,6 +76,10 @@ const render = ( goals, userId ) => {
       !request.events.some( ({ data }) => data.escalated_by === userId )}
     ))
 
+    const claimableRequests = requests.filter( request =>
+      ! request.events.some( ({ data }) => data.claimed_by === userId )
+    )
+
     const decorateClaimable = (request, index) =>
       Object.assign( {}, request, { claimable: index === 0 && activeRequests.length === 0 })
 
@@ -83,7 +87,7 @@ const render = ( goals, userId ) => {
       .innerHTML = activeRequests.map( request => activeRequestTemplate( request )).join( '\n' )
 
     document.querySelector( '.ticket-list' ).innerHTML =
-      prioritize( requests, goals )
+      prioritize( claimableRequests, goals )
         .map( decorateClaimable )
         .map( request => queueTemplate( request )).join( '\n' )
 
@@ -144,7 +148,6 @@ const escalationClick = event => {
   const { request_id } = event.target.dataset
 
   fetch( '/events', params( 'post', { request_id, name: 'escalate' }))
-    .then( _ => window.location.reload( true ) )
 }
 
 const claimClick = event => {
@@ -153,7 +156,6 @@ const claimClick = event => {
   const { request_id } = event.target.dataset
 
   fetch( '/events', params( 'post', { request_id, name: 'claim' }))
-    .then( _ => window.location.reload( true ) )
 }
 
 const addEvents = () => {

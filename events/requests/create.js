@@ -4,10 +4,10 @@ const db = require( '../../database/' )
 const { CREATE } = require( './constants' )
 const { Request, Event } = db
 
-const createEvent = question => request => {
+const createEvent = ( question, by ) => request => {
   return Promise.all([
     request,
-    Event.create( request.request_id, { question }, CREATE ),
+    Event.create( request.request_id, { question, by }, CREATE ),
     []
   ])
 }
@@ -23,13 +23,13 @@ const normalizeEvents = ([ request, event, events ]) => {
 const normalizeRequest = ([ request, events ]) =>
   Object.assign( {}, request, { events })
 
-const create = ({ learner_id, question }) => {
-  debug({ learner_id, question })
+const create = ({ learner_id, learner_name, question }) => {
+  debug({ learner_id, learner_name, question })
 
   return Request.forTeam( learner_id )
     .then( request => {
       if( request === null ) {
-        return Request.create( learner_id ).then( createEvent( question ) )
+        return Request.create( learner_id ).then( createEvent( question, learner_name ) )
       } else {
         return [ request, request.events ]
       }
