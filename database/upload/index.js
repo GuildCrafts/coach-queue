@@ -41,7 +41,7 @@ const insertGoals = csvGoals => _ =>
 
 // TODO This is shitty, should do with http://stackoverflow.com/questions/37300997/multi-row-insert-with-pg-promise
 const insertNewTeams = teams => _ =>
-  Promise.all( teams.map( team => db.one( 'INSERT INTO teams (name, goal_id, is_current) VALUES ( ${name}, ${goal_id}, true ) RETURNING id, name', team ) ))
+  Promise.all( teams.map( team => db.one( 'INSERT INTO teams (name, goal_id, is_current, cycle) VALUES ( ${name}, ${goal_id}, true, ${cycle} ) RETURNING id, name', team ) ))
 
 const getAllPlayers = newTeams =>
   Promise.all([
@@ -101,7 +101,8 @@ const teams = records => {
     if( memo[ record[ PROJECT_NAME ]] === undefined ) {
       memo[ record[ PROJECT_NAME ] ] = {
         name: record[ PROJECT_NAME ],
-        goal_id: parseInt( record[ GOAL_NUMBER ] )
+        goal_id: parseInt( record[ GOAL_NUMBER ] ),
+        cycle: parseInt(record[ CYCLE_NUMBER ])
       }
     }
 
