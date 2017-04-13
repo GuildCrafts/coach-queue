@@ -38,6 +38,8 @@ html
                     a(href='/admin/coaches') Assign Coaches
                   li
                     a(href='/admin/goals') Assign Goals
+                  li
+                    a(href='/admin/summary') Current Queues
             li
               a(target='_blank', href='https://github.com/GuildCrafts/coach-queue/issues/new' ) Submit Issue
 
@@ -45,6 +47,8 @@ html
       block content
 
     script(src='/socket.io/socket.io.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js')
+
     block scripts
 
     script(src='https://code.jquery.com/jquery-3.2.1.min.js', integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=', crossorigin='anonymous')

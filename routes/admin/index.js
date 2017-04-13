@@ -60,4 +60,14 @@ router.post( '/goals', ( request, response ) => {
     .then( result => response.json( result ))
 })
 
+router.get( '/summary', ( request, response ) => {
+  response.render( 'admin/summary' )
+})
+
+router.get( '/summary/data', ( request, response ) => {
+  Admin.data()
+    .then( addCountToCoaches )
+    .then( data => response.json( data ))
+})
+
 module.exports = router
