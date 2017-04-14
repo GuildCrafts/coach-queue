@@ -3,6 +3,13 @@ const socket = io.connect()
 const THRESHOLD = 30
 const THRESHOLD_UNIT = 'minutes'
 
+//remove after bundling
+const CREATE = 'create'
+const CLAIM = 'claim'
+const ESCALATE = 'escalate'
+const CANCEL = 'cancel'
+const RESOLVE = 'resolve'
+
 const params = (method, body) => ({
   credentials: 'include',
   method,
@@ -15,37 +22,6 @@ const load = () =>
     fetch( '/coach/teams', params( 'get' ) ).then( result => result.json() ),
     fetch( '/coach/requests', params( 'get' ) ).then( result => result.json() ),
   ]).then( ([ teams, requests ]) => [ teams, requests, teams[ 0 ].coach_id ] )
-
-const isPastThreshold = created_at =>
-  moment().subtract( THRESHOLD, THRESHOLD_UNIT ).isAfter( moment( created_at ))
-
-const byCreatedAt = ( a, b ) =>
-  moment( a.created_at ).valueOf() - moment( b.created_at ).valueOf()
-
-const byEscalations = ( a, b ) => b.escalations - a.escalations
-
-const prioritize = ( requests, goals ) => {
-  const pastThreshold = requests.filter( request => isPastThreshold( request.created_at ))
-    .sort( byCreatedAt )
-
-  const escalated = requests.filter( ({ created_at, escalations }) =>
-    ! isPastThreshold( created_at ) && escalations > 0
-  )
-  .sort( firstBy( byEscalations ).thenBy( 'created_at' ) )
-
-  const removedIds = [
-    ...pastThreshold.map( request => request.id ),
-    ...escalated.map( request => request.id )
-  ]
-  const goalIds = goals.map( goal => goal.goal_id )
-
-  const assignedToMe = requests
-    .filter( request => ! removedIds.includes( request.id ) )
-    .filter( request => goalIds.includes( request.goal.id ))
-    .sort( byCreatedAt )
-
-  return [ ...pastThreshold, ...escalated, ...assignedToMe ]
-}
 
 const renderGoals = goals => {
   const groupedGoals = goals.reduce( (memo, goal) => {
@@ -71,15 +47,16 @@ const render = ( goals, userId ) => {
   return requests => {
     removeEvents()
 
-    const activeRequests = requests.filter( ({ events }) =>
-      events.some( ({ data }) => data.escalated_by === userId || data.claimed_by === userId )
-    ).map( request => Object.assign( {}, request, { escalatable:
-      !request.events.some( ({ data }) => data.escalated_by === userId )}
-    ))
+    const decoratedSortedRequests = prioritize( visible( active( requests, userId ), userId ))
 
-    const claimableRequests = requests.filter( request =>
-      ! request.events.some( ({ data }) => data.claimed_by === userId )
-    )
+    const visibleRequests = decoratedSortedRequests.filter( request => request.visible )
+    const activeRequests = decoratedSortedRequests.filter( request => request.active )
+      .map( request =>
+        Object.assign(
+          {},
+          request,
+          { escalatable: !request.events.some( ({ data }) => data.escalated_by === userId )})
+      )
 
     const decorateClaimable = (request, index) =>
       Object.assign( {}, request, { claimable: index === 0 && activeRequests.length === 0 })
@@ -88,7 +65,7 @@ const render = ( goals, userId ) => {
       .innerHTML = activeRequests.map( request => activeRequestTemplate( request )).join( '\n' )
 
     document.querySelector( '.ticket-list' ).innerHTML =
-      prioritize( claimableRequests, goals )
+      visibleRequests
         .map( decorateClaimable )
         .map( request => queueTemplate( request )).join( '\n' )
 
