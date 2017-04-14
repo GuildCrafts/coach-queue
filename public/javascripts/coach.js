@@ -25,19 +25,27 @@ const load = () =>
 
 const renderGoals = goals => {
   const groupedGoals = goals.reduce( (memo, goal) => {
-    if( memo[ goal.title ] === undefined ) {
-      memo[ goal.title ] = []
+    if( memo.goals[ goal.title ] === undefined ) {
+      memo.goals[ goal.title ] = []
     }
 
-    if( ! memo[ goal.title ].includes( goal.name )) {
-      memo[ goal.title ].push( goal.name )
+    if( ! memo.goals[ goal.title ].includes( goal.name )) {
+      memo.goals[ goal.title ].push( goal.name )
     }
+
+    if( memo.teams[ goal.name ] === undefined ) {
+      memo.teams[ goal.name ] = []
+    }
+
+    memo.teams[ goal.name ].push( goal.handle )
 
     return memo
-  }, {} )
+  }, { goals: {}, teams: {} } )
 
   document.querySelector( '.team-list' ).innerHTML =
-    Object.keys( groupedGoals ).map( title => goalTemplate( title, groupedGoals[ title ])).join( '\n' )
+    Object.keys( groupedGoals.goals ).map( title =>
+      goalTemplate( title, groupedGoals.goals[ title ], groupedGoals.teams )
+    ).join( '\n' )
 }
 
 const render = ( goals, userId ) => {
@@ -88,6 +96,7 @@ const ageRequests = () => {
 load()
   .then( ([ goals, requests, userId ]) => {
     const renderRequests = render( goals, userId )
+    console.log( goals )
 
     renderRequests( requests )
 

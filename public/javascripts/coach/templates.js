@@ -36,11 +36,13 @@ const queueTemplate = ({ id, goal, created_at, events, players, claimable, escal
     <div class="panel panel-${type}" data-created-at="${created_at}">
       <div class="panel-heading">
         <em>${currentStatus}</em><br />
+
+        <em><b>created ${moment( created_at ).fromNow()}</b></em>,
+        <b>${escalations} escalations</b><br />
+
         <a href="${goal.link}" alt="${goal.title}" target="_blank">
           [#${id}] ${goal.title}
         </a>
-        <em><b>created ${moment( created_at ).fromNow()}</b></em>,
-        <b>${escalations} escalations</b>
       </div>
 
       <div class="panel-body">
@@ -74,11 +76,17 @@ const activeRequestTemplate = request => {
   }
 }
 
-const goalTemplate = ( title, teams ) => {
+const goalTemplate = ( title, teams, teamMembers ) => {
+  console.log( title, teams, teamMembers )
+
   return `
     <div class="panel panel-default">
       <div class="panel-heading">${title}</div>
-      <div class="panel-body">${teams.join( ', ' )}</div>
+      <div class="panel-body">
+        <dl>
+          ${teams.map( team => `<dt>${team}</dt><dd>${teamMembers[ team ].join( ', ' )}</dd>` ).join( '\n' )}
+        </dl>
+      </div>
     </div>
   `
 }

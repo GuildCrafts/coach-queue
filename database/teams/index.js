@@ -10,7 +10,10 @@ const FOR_COACH = `
   SELECT * FROM goal_coaches
   JOIN goals ON goal_coaches.goal_id=goals.id
   JOIN teams ON teams.goal_id=goals.id
+  JOIN team_players ON teams.id=team_players.team_id
+  JOIN players ON team_players.player_id=players.id
   WHERE coach_id=$1
+  AND is_current=true
 `
 
 module.exports = {
