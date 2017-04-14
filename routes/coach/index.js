@@ -17,4 +17,8 @@ router.get( '/requests', (request, response) => {
   Request.all().then( requests => response.json( requests ))
 })
 
+router.get( '/whoami', (request, response) => {
+  response.json( request.user.id )
+})
+
 module.exports = router

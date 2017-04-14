@@ -21,7 +21,8 @@ const load = () =>
   Promise.all([
     fetch( '/coach/teams', params( 'get' ) ).then( result => result.json() ),
     fetch( '/coach/requests', params( 'get' ) ).then( result => result.json() ),
-  ]).then( ([ teams, requests ]) => [ teams, requests, teams[ 0 ].coach_id ] )
+    fetch( '/coach/whoami', params( 'get' )).then( result => result.json() )
+  ])
 
 const renderGoals = goals => {
   const groupedGoals = goals.reduce( (memo, goal) => {
