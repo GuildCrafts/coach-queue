@@ -23,7 +23,7 @@ const clearEvents = ({ coaches }) => () => {
 }
 
 const pastThreshold = created_at =>
-  moment.duration( moment().diff( moment( created_at )) ).asMinutes() >= 30
+  moment.duration( moment().diff( moment( created_at )) ).asMinutes() >= 15
 
 const eventReceived = clear => ({ requests }) => {
   clear()
