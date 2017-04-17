@@ -1,6 +1,6 @@
 const socket = io.connect()
 
-const THRESHOLD = 30
+const THRESHOLD = 15
 const THRESHOLD_UNIT = 'minutes'
 
 //remove after bundling
