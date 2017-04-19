@@ -30,6 +30,13 @@ const renderGoals = goals => {
       memo.goals[ goal.title ] = []
     }
 
+    if( memo.info[ goal.title ] === undefined ) {
+      memo.info[ goal.title ] = {
+        number: goal.goal_id,
+        link: goal.link
+      }
+    }
+
     if( ! memo.goals[ goal.title ].includes( goal.name )) {
       memo.goals[ goal.title ].push( goal.name )
     }
@@ -41,11 +48,11 @@ const renderGoals = goals => {
     memo.teams[ goal.name ].push( goal.handle )
 
     return memo
-  }, { goals: {}, teams: {} } )
+  }, { goals: {}, teams: {}, info: {} } )
 
   document.querySelector( '.team-list' ).innerHTML =
     Object.keys( groupedGoals.goals ).map( title =>
-      goalTemplate( title, groupedGoals.goals[ title ], groupedGoals.teams )
+      goalTemplate( title, groupedGoals.goals[ title ], groupedGoals.teams, groupedGoals.info[ title ] )
     ).join( '\n' )
 }
 
