@@ -77,8 +77,6 @@ const activeRequestTemplate = request => {
 }
 
 const goalTemplate = ( title, teams, teamMembers ) => {
-  console.log( title, teams, teamMembers )
-
   return `
     <div class="panel panel-default">
       <div class="panel-heading">${title}</div>

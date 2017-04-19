@@ -97,7 +97,6 @@ const ageRequests = () => {
 load()
   .then( ([ goals, requests, userId ]) => {
     const renderRequests = render( goals, userId )
-    console.log( goals )
 
     renderRequests( requests )
 
