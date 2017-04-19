@@ -1,4 +1,41 @@
-const requestTemplate = ({ question, events }) => {
+const dataTemplate = ([ key, value ]) => `<li>${key}: ${value}</li>`
+
+const eventTemplate = event => `
+  <li class="list-group-item">
+    <em>${event.name}</em>:
+    <ul>
+      ${Object.entries( event.data ).map( data => dataTemplate( data )).join('')}
+    </ul>
+  </li>
+`
+
+const statusTemplate = ({ id, goal, created_at, events, players, claimable, escalatable }, type="default" ) => {
+  const currentStatus = {
+    claim: 'claimed',
+    escalate: 'escalated',
+    create: 'created'
+  }[ events[ events.length - 1 ].name ]
+
+  const escalations = events.filter( event => event.name === 'escalate' ).length
+
+  return `
+    <div class="panel panel-${type}" data-created-at="${created_at}">
+      <div class="panel-heading">
+        <em>${currentStatus}</em><br />
+
+        <em><b>created ${moment( created_at ).fromNow()}</b></em>,
+        <b>${escalations} escalations</b><br />
+      </div>
+
+      <ul class="list-group">
+        ${events.map( event => eventTemplate( event )).join('')}
+      </ul>
+    </div>
+  `
+}
+
+const requestTemplate = request => {
+  const { question, events } = request
 
   const currentStatus = {
     'create': 'created',
@@ -32,7 +69,10 @@ const requestTemplate = ({ question, events }) => {
             <button class="cancel btn btn-danger">Cancel</button>
           </div>
         </div>
-      <div>
+      </div>
+      <div class='col-md-6'>
+        ${statusTemplate( request )}
+      </div>
     </div>
     `
 }

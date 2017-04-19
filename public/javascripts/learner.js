@@ -31,14 +31,24 @@ const renderForm = () => {
   addFormEvents()
 }
 
-load()
-  .then( request => {
-    if ( request !== null ) {
-      renderRequest( request )
-    } else {
-      renderForm()
-    }
-  })
+const render = request => {
+  if ( request !== null ) {
+    renderRequest( request )
+
+    socket.emit( 'join', '/events' )
+    socket.on( 'event', ({ requests }) => {
+      const learnerRequest = requests.filter( r => r.id === request.id )[ 0 ]
+
+      if( learnerRequest !== undefined ) {
+        renderRequest( learnerRequest )
+      }
+    })
+  } else {
+    renderForm()
+  }
+}
+
+load().then( render )
 
 const button = className => document.querySelector( className )
 
