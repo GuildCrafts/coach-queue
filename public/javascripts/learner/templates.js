@@ -83,8 +83,12 @@ const formTemplate = () => `
       <form class="request">
         <div class="form-group">
           <label for="question">Question:</label>
-          <input class="form-control" type="text" id="question" name="question">
+          <input class="form-control" type="text" id="question" name="question" />
           </input>
+        </div>
+        <div class="form-group">
+          <label for="location">Where are you?</label>
+          <input class="form-control" type="text" id="location" name="location" />
         </div>
         <button class="btn btn-primary">Submit Request</button>
       </form>

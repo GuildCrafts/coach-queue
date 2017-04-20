@@ -71,7 +71,8 @@ const formClick = event => {
 
   const body = {
     name: 'create',
-    question: document.querySelector( 'input#question' ).value
+    question: document.querySelector( 'input#question' ).value,
+    location: document.querySelector( 'input#location' ).value
   }
 
   fetch( '/events', params( 'post', body ))
