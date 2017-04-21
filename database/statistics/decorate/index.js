@@ -29,7 +29,7 @@ const decorate = ([ statistics, coachStats ]) => {
   )
 
   return {
-    statistics: { longest_wait, average_wait_time },
+    statistics: { longest_wait, average_wait_time, total_claims, total_wait },
     coachStats: coachStats.map( decorateCoach( all_communal_claims ))
   }
 }

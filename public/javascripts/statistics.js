@@ -23,7 +23,7 @@ const render = ({ statistics, coachStats }) => {
   renderCoachStats( coachStats )
 }
 
-const renderStatistics = ({ longest_wait, average_wait }) => {
+const renderStatistics = ({ longest_wait, average_wait_time, total_wait, total_claims }) => {
   const container = document.querySelector( '.statistics' )
 
   container.innerHTML = `
@@ -36,7 +36,10 @@ const renderStatistics = ({ longest_wait, average_wait }) => {
           </tr>
           <tr>
             <td>Average Wait Time:</td>
-            <td>${moment.duration( average_wait, 'seconds' ).humanize()}</td>
+            <td>
+              ${moment.duration( average_wait_time, 'seconds' ).humanize()}
+              (total wait time ${total_wait} seconds / ${total_claims} claims)
+            </td>
           </tr>
         </tbody>
       </table>

@@ -38,7 +38,7 @@ const UNRESOLVED = `SELECT * FROM requests WHERE resolved_at IS NULL`
 const ALL_IN_CYCLE = `
   SELECT requests.*, teams.name, teams.goal_id, teams.is_current, teams.cycle FROM requests
   JOIN teams ON teams.id=requests.team_id
-  WHERE teams.is_current=true
+  WHERE teams.cycle=$1
 `
 
 const forTeam = player_id =>

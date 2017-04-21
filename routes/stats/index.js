@@ -29,7 +29,10 @@ router.post( '/calculate/:cycle', ( request, response ) => {
       )
     ]))
     .then( _ => Statistics.all( request.params.cycle ))
-    .then( statistics => io.to( '/stats' ).emit( 'update', statistics ))
+    .then( statistics => {
+      io.to( '/stats' ).emit( 'update', statistics )
+      response.json( statistics )
+    })
 })
 
 module.exports = router
