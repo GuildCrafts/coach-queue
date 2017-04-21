@@ -144,6 +144,7 @@ const removeEvents = () => {
 }
 
 const escalationClick = event => {
+  event.target.disabled = true
   event.preventDefault()
 
   const { request_id } = event.target.dataset
@@ -152,6 +153,7 @@ const escalationClick = event => {
 }
 
 const claimClick = event => {
+  event.target.disabled = true
   event.preventDefault()
 
   const { request_id } = event.target.dataset

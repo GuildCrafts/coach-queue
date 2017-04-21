@@ -1,5 +1,6 @@
 
 document.querySelector( '.reset' ).addEventListener( 'click', event => {
+  event.target.disabled = true
   event.preventDefault()
 
   fetch( '/stats/calculate/current', { method: 'post', credentials: 'include' })
