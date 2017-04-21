@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+  h3 Stats
+
+  if user.roles.includes( 'moderator' )
+    button.btn.btn-warning.reset Recalculate
+
+  .row.statistics
+
+  .row.coach-statistics
+
+block scripts
+  script( src='/javascripts/statistics.js' )

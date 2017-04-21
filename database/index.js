@@ -10,6 +10,8 @@ const reset = () =>
       knex.truncate('players'),
       knex.truncate('goals'),
       knex.truncate('goal_coaches'),
+      knex.truncate('statistics'),
+      knex.truncate('coach_statistics')
     ])
   )
 
@@ -20,5 +22,6 @@ module.exports = {
   Team: require( './teams' ),
   Player: require( './players' ),
   Goal: require( './goals' ),
+  Statistics: require( './statistics' ),
   reset: process.env.NODE_ENV === 'test' ? reset : (() => {})
 }

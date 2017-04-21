@@ -1,6 +1,12 @@
 extends ../layout
 
 block content
+  if development
+    .row
+      .col-md-12
+        button.btn.btn-warning(id='generate-test') Test
+        p Note that you need to add yourself to a team before using this button or boom.
+
   .row
     .col-md-4
       h3 Active Request

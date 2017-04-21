@@ -1,5 +1,3 @@
-const socket = io.connect()
-
 const addCoachRows = ({ coaches }) =>
   document.querySelector( 'tbody' ).innerHTML = coaches.map( ({ id, handle, counts }) =>
     `
@@ -23,7 +21,7 @@ const clearEvents = ({ coaches }) => () => {
 }
 
 const pastThreshold = created_at =>
-  moment.duration( moment().diff( moment( created_at )) ).asMinutes() >= 15
+  moment.duration( moment().diff( moment( created_at )) ).asMinutes() >= THRESHOLD
 
 const eventReceived = clear => ({ requests }) => {
   clear()

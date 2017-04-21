@@ -1,5 +1,3 @@
-const socket = io.connect()
-
 const form = document.querySelector( 'form.request' )
 
 const params = ( method, body ) => ({

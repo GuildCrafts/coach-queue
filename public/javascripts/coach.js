@@ -1,15 +1,3 @@
-const socket = io.connect()
-
-const THRESHOLD = 15
-const THRESHOLD_UNIT = 'minutes'
-
-//remove after bundling
-const CREATE = 'create'
-const CLAIM = 'claim'
-const ESCALATE = 'escalate'
-const CANCEL = 'cancel'
-const RESOLVE = 'resolve'
-
 const params = (method, body) => ({
   credentials: 'include',
   method,
@@ -101,6 +89,24 @@ const ageRequests = () => {
   })
 }
 
+let testNumber = 1
+const setupDevTools = _ => {
+  const devButton = document.querySelector( '#generate-test' )
+
+  if( devButton !== null ) {
+    devButton.addEventListener( 'click', event => {
+      event.preventDefault()
+
+      const body = {
+        name: 'create',
+        question: `test question ${testNumber++}`
+      }
+
+      fetch( '/events', params( 'post', body ))
+    })
+  }
+}
+
 load()
   .then( ([ goals, requests, userId ]) => {
     const renderRequests = render( goals, userId )
@@ -115,6 +121,7 @@ load()
 
     setInterval( ageRequests, 60000 )
   })
+  .then( setupDevTools )
 
 const buttons = className => {
   const elements = document.querySelectorAll( className )

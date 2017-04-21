@@ -9,13 +9,15 @@ const https = require('express-sslify').HTTPS
 
 const loadEnvironment = require('./configuration/environment')()
 const auth = require('./configuration/authentication')
-const { setRole } = require('./configuration/setUserRole')
+const { setRole } = require('./middleware/setUserRole')
+const setLocals = require( './middleware/setLocals' )
 
 const index = require('./routes/index')
 const events = require( './routes/events' )
 const test = require( './routes/test' )
 const admin = require('./routes/admin' )
 const coach = require( './routes/coach' )
+const stats = require( './routes/stats' )
 
 const app = express()
 
@@ -45,19 +47,14 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 auth.init( app )
 app.use( setRole )
-app.use( (request, response, next) => {
-  response.locals = {
-    user: request.user
-  }
-
-  next()
-})
+app.use( setLocals )
 
 app.use( '/', index )
 app.use( '/events', events )
 app.use( '/test', test )
 app.use( '/admin', admin )
 app.use( '/coach', coach )
+app.use( '/stats', stats )
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

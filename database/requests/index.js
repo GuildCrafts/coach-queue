@@ -35,6 +35,12 @@ const FOR_TEAM = `
 
 const UNRESOLVED = `SELECT * FROM requests WHERE resolved_at IS NULL`
 
+const ALL_IN_CYCLE = `
+  SELECT requests.*, teams.name, teams.goal_id, teams.is_current, teams.cycle FROM requests
+  JOIN teams ON teams.id=requests.team_id
+  WHERE teams.is_current=true
+`
+
 const forTeam = player_id =>
   db.oneOrNone( FOR_TEAM, player_id )
     .then( request => request === null ? Promise.reject( null ) : request )
@@ -55,5 +61,6 @@ module.exports = {
   resolve: player_id => db.one( RESOLVE, player_id ),
   forTeam,
   unresolved,
-  all: () => unresolved().then( decorate )
+  all: () => unresolved().then( decorate ),
+  allInCycle: cycle => db.any( ALL_IN_CYCLE, cycle ).then( decorate )
 }

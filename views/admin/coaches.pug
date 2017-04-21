@@ -15,4 +15,5 @@ block content
 
         .row
           .col-md-12
-            button.set-coaches( type='submit') Set coaches
+            if user.roles.includes( 'moderator' )
+              button.set-coaches( type='submit') Set coaches

@@ -2,7 +2,7 @@ const RADIO_SELECTOR = 'form.coach-assignment input[type="radio"]'
 
 const fields = event => {
   const { playerCount, teamCount, goalId } = event.target.dataset
-  const { previousId } = document.querySelector( `tr.goal-assignment-${goalId}` ).dataset
+  const { previousId } = Array.from( document.querySelectorAll( `tr.goal-assignment-${goalId}` ))[ 0 ].dataset
 
   return {
     previousId,
@@ -13,11 +13,11 @@ const fields = event => {
 }
 
 const changeCount = ( coachId, players, teams ) => {
-  const playerCount = document.querySelector( `.player-count-${coachId}` )
-  const teamCount = document.querySelector( `.team-count-${coachId}` )
+  const playerCount = Array.from( document.querySelectorAll( `.player-count-${coachId}` ))
+  const teamCount = Array.from( document.querySelectorAll( `.team-count-${coachId}` ))
 
-  playerCount.innerText = parseInt( playerCount.innerText ) + players
-  teamCount.innerText = parseInt( teamCount.innerText ) + teams
+  playerCount.forEach( counter => counter.innerText = parseInt( counter.innerText ) + players )
+  teamCount.forEach( counter => counter.innerText = parseInt( counter.innerText ) + teams )
 }
 
 Array.from( document.querySelectorAll( RADIO_SELECTOR )).forEach( radio => {
@@ -34,8 +34,6 @@ Array.from( document.querySelectorAll( RADIO_SELECTOR )).forEach( radio => {
     document.querySelector( `tr.goal-assignment-${goalId}` ).dataset.previousId = coachId
   })
 })
-
-
 
 const params = body => ({
   credentials: 'include',
