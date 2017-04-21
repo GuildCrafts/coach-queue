@@ -27,8 +27,7 @@ const normalizeRequest = ([ request, events ]) =>
 const create = ({ learner_id, learner_name, question, location }) => {
   debug({ learner_id, learner_name, question, location })
 
-  return validate( request_id, CREATE, "This request has already been created." )
-    .then( _ => Request.forTeam( learner_id ))
+  Request.forTeam( learner_id )
     .then( request => {
       if( request === null ) {
         return Request.create( learner_id ).then( createEvent( question, location, learner_name ) )

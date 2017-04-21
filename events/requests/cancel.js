@@ -8,8 +8,7 @@ const validate = require( './validate' )
 const cancel = ({ learner_id }) => {
   debug({ learner_id })
 
-  return validate( request_id, CANCEL, "This request has already been cancelled." )
-    .then( _ => Request.cancel( learner_id ))
+  Request.cancel( learner_id )
     .then( request => Event.create( request.id, {}, CANCEL ))
 }
 
