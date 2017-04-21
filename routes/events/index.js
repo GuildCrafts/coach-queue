@@ -9,7 +9,7 @@ router.post( '/', ( request, response ) => {
 
   dispatch( data )
     .then( result => response.json( result ))
-    .catch( error => response.json({ error, message: error.message }))
+    .catch( error => response.status( 400 ).json({ error, message: error.message }))
 })
 
 module.exports = router

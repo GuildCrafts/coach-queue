@@ -5,6 +5,19 @@ const params = (method, body) => ({
   headers: new Headers({ 'Content-Type': 'application/json' })
 })
 
+const checkForError = response =>
+  Promise.all([ response.ok, response.json() ])
+  .then( ([ ok, json ]) => {
+    if( ! ok ) {
+      throw Error( json.message )
+    }
+  })
+  .catch( error => {
+    console.log( error )
+    alert( error )
+    window.location.reload( true )
+  })
+
 const load = () =>
   Promise.all([
     fetch( '/coach/teams', params( 'get' ) ).then( result => result.json() ),
@@ -103,6 +116,7 @@ const setupDevTools = _ => {
       }
 
       fetch( '/events', params( 'post', body ))
+        .then( checkForError )
     })
   }
 }
@@ -150,6 +164,7 @@ const escalationClick = event => {
   const { request_id } = event.target.dataset
 
   fetch( '/events', params( 'post', { request_id, name: 'escalate' }))
+    .then( checkForError )
 }
 
 const claimClick = event => {
@@ -159,6 +174,7 @@ const claimClick = event => {
   const { request_id } = event.target.dataset
 
   fetch( '/events', params( 'post', { request_id, name: 'claim' }))
+    .then( checkForError )
 }
 
 const addEvents = () => {

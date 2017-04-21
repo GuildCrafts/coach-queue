@@ -48,7 +48,10 @@ const dispatch = data => {
     .then( handler => handler( data ))
     .then( getRequests )
     .then( broadcast )
-    .catch( error => console.log({ error, message: error.message }))
+    .catch( error => {
+      debug({ error, message: error.message })
+      return Promise.reject( error )
+    })
 }
 
 module.exports = dispatch

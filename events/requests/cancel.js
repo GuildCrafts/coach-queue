@@ -3,11 +3,13 @@ const io = require( '../socketio/' )
 const db = require( '../../database/' )
 const { CANCEL } = require( './constants' )
 const { Request, Event } = db
+const validate = require( './validate' )
 
 const cancel = ({ learner_id }) => {
   debug({ learner_id })
 
-  return Request.cancel( learner_id )
+  return validate( request_id, CANCEL, "This request has already been cancelled." )
+    .then( _ => Request.cancel( learner_id ))
     .then( request => Event.create( request.id, {}, CANCEL ))
 }
 

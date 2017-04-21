@@ -54,6 +54,7 @@ const resolveClick = event => {
   event.preventDefault()
 
   fetch( '/events', params( 'post', { name: 'resolve' }))
+    .catch( error => { /* no op, reload will take care of it */ })
     .then( _ => window.location.reload( true ) )
 }
 
@@ -61,6 +62,7 @@ const cancelClick = event => {
   event.preventDefault()
 
   fetch( '/events', params( 'post', { name: 'cancel' }))
+    .catch( error => { /* no op, reload will take care of it */ })
     .then( _ => window.location.reload( true ) )
 }
 
@@ -75,7 +77,8 @@ const formClick = event => {
 
   fetch( '/events', params( 'post', body ))
     .then( result => result.json() )
-    .then( json => window.location.reload( true ))
+    .catch( error => { /* no op, reload will take care of it */ })
+    .then( _ => window.location.reload( true ))
 }
 
 const addFormEvents = () => button( 'form.request' ).addEventListener( 'submit', formClick )

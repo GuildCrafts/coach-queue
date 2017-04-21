@@ -55,12 +55,16 @@ const forTeam = player_id =>
 
 const unresolved = () => db.any( UNRESOLVED )
 
+const find = id => db.any( 'SELECT * FROM requests WHERE id=$1', id )
+  .then( decorate )
+
 module.exports = {
   create: player_id => db.one( CREATE, player_id ),
   cancel: player_id => db.one( CANCEL, player_id ),
   resolve: player_id => db.one( RESOLVE, player_id ),
   forTeam,
   unresolved,
+  find,
   all: () => unresolved().then( decorate ),
   allInCycle: cycle => db.any( ALL_IN_CYCLE, cycle ).then( decorate )
 }

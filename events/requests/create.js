@@ -3,6 +3,7 @@ const io = require( '../socketio/' )
 const db = require( '../../database/' )
 const { CREATE } = require( './constants' )
 const { Request, Event } = db
+const validate = require( './validate' )
 
 const createEvent = ( question, location, by ) => request => {
   return Promise.all([
@@ -26,7 +27,8 @@ const normalizeRequest = ([ request, events ]) =>
 const create = ({ learner_id, learner_name, question, location }) => {
   debug({ learner_id, learner_name, question, location })
 
-  return Request.forTeam( learner_id )
+  return validate( request_id, CREATE, "This request has already been created." )
+    .then( _ => Request.forTeam( learner_id ))
     .then( request => {
       if( request === null ) {
         return Request.create( learner_id ).then( createEvent( question, location, learner_name ) )

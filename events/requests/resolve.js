@@ -3,11 +3,13 @@ const io = require( '../socketio/' )
 const db = require( '../../database/' )
 const { RESOLVE } = require( './constants' )
 const { Request, Event } = db
+const validate = require( './validate' )
 
 const resolve = ({ learner_id }) => {
   debug({ learner_id })
 
-  return Request.resolve( learner_id )
+  return validate( request_id, RESOLVE, "This request has already been resolved." )
+    .then( _ => Request.resolve( learner_id ))
     .then( request => Event.create( request.id, {}, RESOLVE ))
 }
 
