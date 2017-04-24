@@ -20,8 +20,8 @@ app.set('port', port)
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
-io.attach( server )
+var server = app.listen( port ) // http.createServer(app);
+io.listen( server ) //io.attach( server )
 
 /**
  * Listen on provided port, on all network interfaces.
