@@ -2,8 +2,8 @@ const db = require( '../database/' )
 const { Statistics } = db
 
 const setLocals = (request, response, next) => {
-  // Statistics.forCoach( request.user.handle )
-  //   .then( statistics => {
+  Statistics.forCoach( request.user.handle )
+    .then( statistics => {
       response.locals = {
         user: request.user,
         development: process.env.NODE_ENV === 'development',
@@ -12,7 +12,7 @@ const setLocals = (request, response, next) => {
 
       next()
 
-    // })
+    })
 }
 
 module.exports = setLocals
