@@ -9,6 +9,21 @@ const eventTemplate = event => `
   </li>
 `
 
+const coachColumn = info =>
+  `
+  <div class='col-md-3'>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        Team ${info.name}
+      </div>
+      <table class='table'>
+        <tr><th>Coach</th><td>${info.coach}</td></tr>
+        <tr><th>Goal</th><td><a href='${info.link}' target='_blank'>#${info.id} ${info.title}</a></td></tr>
+      </table>
+    </div>
+  </div>
+  `
+
 const statusTemplate = ({ id, goal, created_at, events, players, claimable, escalatable }, type="default" ) => {
   const currentStatus = {
     claim: 'claimed',
@@ -34,7 +49,7 @@ const statusTemplate = ({ id, goal, created_at, events, players, claimable, esca
   `
 }
 
-const requestTemplate = request => {
+const requestTemplate = ( request, info ) => {
   const { question, events } = request
 
   const currentStatus = {
@@ -54,7 +69,7 @@ const requestTemplate = request => {
   return `
     <h3>Current Request</h3>
     <div class='row'>
-      <div class='col-md-6'>
+      <div class='col-md-5'>
         <div class='panel panel-default'>
           <div class='panel-heading'>
             <div>Request status: ${by( events )} ${currentStatus}
@@ -70,15 +85,16 @@ const requestTemplate = request => {
           </div>
         </div>
       </div>
-      <div class='col-md-6'>
+      ${coachColumn( info )}
+      <div class='col-md-4'>
         ${statusTemplate( request )}
       </div>
     </div>
     `
 }
 
-const formTemplate = () => `
-  <div class='panel panel-default col-md-6'>
+const formTemplate = info => `
+  <div class='panel panel-default col-md-5'>
     <div class='panel-body'>
       <form class="request">
         <div class="form-group">
@@ -94,4 +110,5 @@ const formTemplate = () => `
       </form>
     </div>
   </div>
+  ${coachColumn( info )}
 `

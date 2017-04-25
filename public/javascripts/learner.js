@@ -8,9 +8,12 @@ const params = ( method, body ) => ({
 })
 
 const load = () =>
-  fetch( '/request', params( 'get' ) ).then( result => result.json() )
+  Promise.all([
+    fetch( '/request', params( 'get' ) ).then( result => result.json() ),
+    fetch( '/learner/coach', params( 'get' ) ).then( result => result.json() )
+  ]).then( ([ request, info ]) => ({ request, info: info[ 0 ] }) )
 
-const renderRequest = request => {
+const renderRequest = ( request, info ) => {
   const question = request.events[0].data.question
 
   const status = request.events[ request.events.length - 1 ].name
@@ -18,35 +21,36 @@ const renderRequest = request => {
   const decoratedRequest = request =>
     Object.assign( {}, request, { question, status })
 
-  document.querySelector( '.request.anchor' ).innerHTML = requestTemplate( decoratedRequest(request) )
+  document.querySelector( '.request.anchor' ).innerHTML = requestTemplate( decoratedRequest(request), info )
 
   addButtonEvents()
 }
 
-const renderForm = () => {
-  document.querySelector( '.form.anchor' ).innerHTML = formTemplate()
+const renderForm = info => {
+  document.querySelector( '.form.anchor' ).innerHTML = formTemplate( info )
 
   addFormEvents()
 }
 
-const render = request => {
+const render = ({ request, info }) => {
   if ( request !== null ) {
-    renderRequest( request )
+    renderRequest( request, info )
 
     socket.emit( 'join', '/events' )
     socket.on( 'event', ({ requests }) => {
       const learnerRequest = requests.filter( r => r.id === request.id )[ 0 ]
 
       if( learnerRequest !== undefined ) {
-        renderRequest( learnerRequest )
+        renderRequest( learnerRequest, info )
       }
     })
   } else {
-    renderForm()
+    renderForm( info )
   }
 }
 
-load().then( render )
+load()
+  .then( render )
 
 const button = className => document.querySelector( className )
 
