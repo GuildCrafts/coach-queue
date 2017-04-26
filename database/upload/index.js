@@ -1,4 +1,5 @@
 const db = require( '../db' )
+const Statistics = require( '../statistics' )
 
 const CYCLE_NUMBER = 0
 const ELO = 1
@@ -43,6 +44,11 @@ const insertGoals = csvGoals => _ =>
 const insertNewTeams = teams => _ =>
   Promise.all( teams.map( team => db.one( 'INSERT INTO teams (name, goal_id, is_current, cycle) VALUES ( ${name}, ${goal_id}, true, ${cycle} ) RETURNING id, name', team ) ))
 
+const addInitialCycleStatistics = teams =>
+  Statistics.currentCycle()
+    .then( cycle => Statistics.resetCycle( cycle, []))
+    .then( _ => teams )
+
 const getAllPlayers = newTeams =>
   Promise.all([
     db.any( 'SELECT * FROM players' ),
@@ -78,6 +84,7 @@ const upload = records => {
     .then( resetCoaches )
     .then( insertGoals( goals( records )))
     .then( insertNewTeams( teams( records )))
+    .then( addInitialCycleStatistics )
     .then( getAllPlayers )
     .then( addNewPlayers( players( records )))
     .then( addTeamPlayers( records ))

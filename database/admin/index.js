@@ -1,4 +1,5 @@
 const db = require( '../db' )
+const Statistics = require( '../statistics' )
 
 const GOAL_COUNT = `
 SELECT *,
@@ -21,6 +22,8 @@ const data = () =>
 const setCoaches = coaches =>
   db.any( 'UPDATE players SET is_coach=false' )
     .then( _ => db.any( 'UPDATE players SET is_coach=true WHERE id IN ($1:csv)', [coaches]))
+    .then( Statistics.currentCycle )
+    .then( Statistics.reset )
 
 const assignCoach = assignment =>
   db.any( 'DELETE FROM goal_coaches WHERE goal_id=${goal_id}', assignment )
