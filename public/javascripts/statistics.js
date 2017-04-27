@@ -1,12 +1,15 @@
+const resetButton = document.querySelector( '.reset' )
 
-document.querySelector( '.reset' ).addEventListener( 'click', event => {
-  event.target.disabled = true
-  event.preventDefault()
+if( resetButton !== null ) {
+  resetButton.addEventListener( 'click', event => {
+    event.target.disabled = true
+    event.preventDefault()
 
-  fetch( '/stats/calculate/current', { method: 'post', credentials: 'include' })
-    .then( result => result.json() )
-    .then( _ => window.location.reload( true ))
-})
+    fetch( '/stats/calculate/current', { method: 'post', credentials: 'include' })
+      .then( result => result.json() )
+      .then( _ => window.location.reload( true ))
+  })
+}
 
 const load = () =>
   fetch( '/stats/current', { method: 'get', credentials: 'include' })
