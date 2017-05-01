@@ -1,0 +1,39 @@
+extends ../layout
+
+block content
+  h3 Stats
+
+  if user.roles.includes( 'moderator' )
+    button.btn.btn-warning.reset(data-cycle=cycle) Recalculate
+
+  .row.statistics
+    .col-md-6
+      table.table.table-striped
+        tbody
+          tr
+            td Longest Wait Time:
+            td= `${moment.duration( statistics.longest_wait, 'seconds' ).humanize()}`
+          tr
+            td Average Wait Time:
+            td= `${moment.duration( statistics.average_wait_time, 'seconds' ).humanize()}\n(total wait time ${statistics.total_wait} seconds / ${statistics.total_claims} claims)`
+      .col-md-6
+
+  .row.coach-statistics
+    .col-md-6
+      table.table.table-striped
+        thead
+          tr
+            th Coach
+            th Primary
+            th Communal
+        tbody
+          each coach in coachStats
+            tr
+              td= coach.handle
+              td= coach.primary
+              td= coach.communal
+
+    .col-md-6
+
+    block scripts
+      script( src='/javascripts/statistics/historical.js' )

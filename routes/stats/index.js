@@ -11,6 +11,15 @@ router.get( '/', ( request, response ) => {
   response.render( 'stats/index' )
 })
 
+router.get( '/historical/:cycle', (request, response) => {
+  const { cycle } = request.params
+
+  Statistics.all( cycle )
+    .then( ({ statistics, coachStats }) =>
+      response.render( 'stats/historical', { cycle, statistics, coachStats, moment: require('moment') })
+    )
+})
+
 router.get( '/:cycle', ( request, response ) => {
   const { cycle } = request.params
 

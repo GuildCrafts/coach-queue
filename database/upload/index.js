@@ -1,21 +1,22 @@
 const db = require( '../db' )
 const Statistics = require( '../statistics' )
 
-const CYCLE_NUMBER = 0
-const ELO = 1
-const EMAIL = 2
-const FIRST_VOTE = 3
-const GOAL_NUMBER = 4
-const RECOMMENDED_TEAM_SIZE = 5
-const GOAL_TITLE = 6
-const GOT_VOTE = 7
-const HANDLE = 8
-const NAME = 9
-const PLAYER_ID = 10
-const POOL_NAME = 11
-const PROJECT_NAME = 12
-const SECOND_VOTE = 13
-const XP = 14
+const CYCLE_UUID = 0
+const CYCLE_NUMBER = 1
+const ELO = 2
+const EMAIL = 3
+const FIRST_VOTE = 4
+const GOAL_NUMBER = 5
+const RECOMMENDED_TEAM_SIZE = 6
+const GOAL_TITLE = 7
+const GOT_VOTE = 8
+const HANDLE = 9
+const NAME = 10
+const PLAYER_ID = 11
+const POOL_NAME = 12
+const PROJECT_NAME = 13
+const SECOND_VOTE = 14
+const XP = 15
 
 const resetCurrentTeams = () => db.any( 'UPDATE teams SET is_current=false' )
 
