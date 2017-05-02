@@ -22,7 +22,6 @@ const resetCurrentTeams = () => db.any( 'UPDATE teams SET is_current=false' )
 
 const resetCoaches = _ =>
   db.any( 'UPDATE players SET is_coach=false' )
-    .then( _ => db.any( 'TRUNCATE goal_coaches' ))
 
 const insertGoals = csvGoals => _ =>
   db.any( 'SELECT id FROM goals' )
@@ -43,12 +42,33 @@ const insertGoals = csvGoals => _ =>
 
 // TODO This is shitty, should do with http://stackoverflow.com/questions/37300997/multi-row-insert-with-pg-promise
 const insertNewTeams = teams => _ =>
-  Promise.all( teams.map( team => db.one( 'INSERT INTO teams (name, goal_id, is_current, cycle) VALUES ( ${name}, ${goal_id}, true, ${cycle} ) RETURNING id, name', team ) ))
+  Promise.all( teams.map( team => db.one( 'INSERT INTO teams (name, goal_id, is_current, cycle) VALUES ( ${name}, ${goal_id}, true, ${cycle} ) RETURNING *', team ) ))
 
 const addInitialCycleStatistics = teams =>
   Statistics.currentCycle()
-    .then( cycle => Statistics.resetCycle( cycle, []))
-    .then( _ => teams )
+    .then( cycle => Promise.all([
+      Statistics.resetCycle( cycle, []),
+      teams
+    ]))
+
+const initializeGoalCoaches = ([ _, teams ]) => {
+  const cycle = teams[ 0 ].cycle
+  const cycleGoals = teams.reduce( (memo, { goal_id }) => {
+    if( ! memo.includes( goal_id ) ) {
+      memo.push( goal_id )
+    }
+
+    return memo
+  }, [] )
+
+  return Promise.all(
+    cycleGoals.map( goal_id => db.any(
+        `INSERT INTO goal_coaches ( goal_id, coach_id, cycle) VALUES ( $1, '', $2 )`,
+        [ goal_id, cycle ]
+      )
+    )
+  ).then( _ => teams )
+}
 
 const getAllPlayers = newTeams =>
   Promise.all([
@@ -86,6 +106,7 @@ const upload = records => {
     .then( insertGoals( goals( records )))
     .then( insertNewTeams( teams( records )))
     .then( addInitialCycleStatistics )
+    .then( initializeGoalCoaches )
     .then( getAllPlayers )
     .then( addNewPlayers( players( records )))
     .then( addTeamPlayers( records ))

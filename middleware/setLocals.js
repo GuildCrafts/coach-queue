@@ -7,7 +7,7 @@ const setLocals = (request, response, next) => {
       response.locals = {
         user: request.user,
         development: process.env.NODE_ENV === 'development',
-        statistics
+        statistics: statistics || { primary: 'N/A', communal: 'N/A' }
       }
 
       next()

@@ -4,7 +4,7 @@ const parse = require( 'csv-parse/lib/sync' )
 const upload = require( '../../database/upload' )
 
 const db = require( '../../database/' )
-const { Admin } = db
+const { Admin, Statistics } = db
 
 router.get( '/', (request, response) => {
   response.render( 'admin/index' )
@@ -56,7 +56,12 @@ router.get( '/goals', ( request, response ) => {
 router.post( '/goals', ( request, response ) => {
   const data = request.body.data
 
-  Promise.all( data.map( assignment => Admin.assignCoach( assignment )))
+  Statistics.currentCycle()
+    .then( cycle =>
+      Promise.all( data.map( assignment =>
+        Admin.assignCoach( Object.assign( {}, assignment, { cycle })))
+      )
+    )
     .then( result => response.json( result ))
 })
 

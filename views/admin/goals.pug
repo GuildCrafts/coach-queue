@@ -49,7 +49,7 @@ block content
                 td( style='text-align: center;' )= goal.player_count
 
     if user.roles.includes( 'moderator' )
-      button.set-coaches( type='submit' ) Assign Coaches
+      button.btn.btn-default.set-coaches( type='submit' ) Assign Coaches
 
 block scripts
   script( src='/javascripts/admin/goals.js' )

@@ -56,18 +56,19 @@ const getCycle = cycle => {
 }
 
 const reset = cycleId => {
-  return Promise.all([
-    getCycle( cycleId ),
-    Player.getCoaches()
-  ])
-  .then( ([ cycle, coaches ]) =>
-    Promise.all([
+  return getCycle( cycleId )
+    .then( cycle => Promise.all([
       cycle,
-      coaches,
-      Request.allInCycle( cycle ),
-      resetCycle( cycle, coaches )
-    ])
-  )
+      Player.getCoaches( cycle )
+    ]))
+    .then( ([ cycle, coaches ]) =>
+      Promise.all([
+        cycle,
+        coaches,
+        Request.allInCycle( cycle ),
+        resetCycle( cycle, coaches )
+      ])
+    )
 }
 
 const all = cycleId =>
