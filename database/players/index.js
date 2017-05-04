@@ -7,7 +7,7 @@ const FOR_TEAM = `
 `
 const IS_COACH = `SELECT is_coach FROM players WHERE handle=$1`
 
-const GET_COACHES = `SELECT DISTINCT( coach_id ) AS id FROM goal_coaches WHERE cycle=$1`
+const GET_COACHES = `SELECT id FROM players WHERE is_coach=true`
 
 module.exports = {
   forTeam: team_id => db.any( FOR_TEAM, team_id ),

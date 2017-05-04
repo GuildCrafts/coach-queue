@@ -31,22 +31,21 @@ block content
               th Goal
               th Team Count
               th Player Count
-          else
-            if goal.player_count > 0
-              tr.goal-assignment( class=`goal-assignment-${goal.id}`, data-goal-id=goal.id, data-previous-id=( goal.coach_id || 0 ) )
-                for coach in data.coaches
-                  td( title=coach.handle, style='text-align: center;' )
-                    input(
-                      type='radio',
-                      id=`goal-${goal.id}-${coach.id}`, name=`goal-${goal.id}`,
-                      value=coach.id,
-                      data-goal-id=goal.id,
-                      data-player-count=goal.player_count, data-team-count=goal.team_count,
-                      checked=goal.coach_id===coach.id
-                    )
-                td= goal.title
-                td( style='text-align: center;' )= goal.team_count
-                td( style='text-align: center;' )= goal.player_count
+
+          tr.goal-assignment( class=`goal-assignment-${goal.id}`, data-goal-id=goal.id, data-previous-id=( goal.coach_id || 0 ) )
+            for coach in data.coaches
+              td( title=coach.handle, style='text-align: center;' )
+                input(
+                  type='radio',
+                  id=`goal-${goal.id}-${coach.id}`, name=`goal-${goal.id}`,
+                  value=coach.id,
+                  data-goal-id=goal.id,
+                  data-player-count=goal.player_count, data-team-count=goal.team_count,
+                  checked=goal.coach_id===coach.id
+                )
+            td= goal.title
+            td( style='text-align: center;' )= goal.team_count
+            td( style='text-align: center;' )= goal.player_count
 
     if user.roles.includes( 'moderator' )
       button.btn.btn-default.set-coaches( type='submit' ) Assign Coaches
