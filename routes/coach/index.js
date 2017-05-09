@@ -2,14 +2,15 @@ const express = require( 'express' )
 const router = express.Router()
 
 const db = require( '../../database/' )
-const { Team, Request } = db
+const { Team, Request, Statistics } = db
 
 router.get( '/', ( request, response ) => {
   response.render( 'coach/index' )
 })
 
 router.get( '/teams', (request, response) => {
-  Team.forCoach( request.user.id )
+  Statistics.currentCycle()
+    .then( cycle => Team.forCoach( request.user.id, cycle ))
     .then( result => response.json( result ))
 })
 
