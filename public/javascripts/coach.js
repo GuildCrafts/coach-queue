@@ -25,29 +25,35 @@ const load = () =>
     fetch( '/coach/whoami', params( 'get' )).then( result => result.json() )
   ])
 
-const renderGoals = ([ players, goals ]) => {
-  const g = goals.reduce( (memo, goal) => {
-    const teams = players.filter( p => p.goal_id === goal.goal_id )
-      .reduce( (pMemo, player) => {
-        if( pMemo[ player.name ] === undefined ) {
-          pMemo[ player.name ] = []
-        }
-        pMemo[ player.name ].push( player.handle )
+const renderGoals = goals => {
+  const groupedGoals = goals.reduce( (memo, goal) => {
+    if( memo.goals[ goal.title ] === undefined ) {
+      memo.goals[ goal.title ] = []
+    }
 
-        return pMemo
-      }, {} )
+    if( memo.info[ goal.title ] === undefined ) {
+      memo.info[ goal.title ] = {
+        number: goal.goal_id,
+        link: goal.link
+      }
+    }
 
+    if( ! memo.goals[ goal.title ].includes( goal.name )) {
+      memo.goals[ goal.title ].push( goal.name )
+    }
 
-    memo[ goal.goal_id ] = Object.assign(
-      {}, goal, { teams }
-    )
+    if( memo.teams[ goal.name ] === undefined ) {
+      memo.teams[ goal.name ] = []
+    }
+
+    memo.teams[ goal.name ].push( goal.handle )
 
     return memo
-  }, {} )
+  }, { goals: {}, teams: {}, info: {} } )
 
   document.querySelector( '.team-list' ).innerHTML =
-    Object.keys( g ).map( goal_id =>
-      goalTemplate( g[ goal_id ] )
+    Object.keys( groupedGoals.goals ).map( title =>
+      goalTemplate( title, groupedGoals.goals[ title ], groupedGoals.teams, groupedGoals.info[ title ] )
     ).join( '\n' )
 }
 

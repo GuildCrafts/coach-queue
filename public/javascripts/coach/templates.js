@@ -76,16 +76,16 @@ const activeRequestTemplate = request => {
   }
 }
 
-const goalTemplate = ({ goal_id, title, link, teams }) => {
+const goalTemplate = ( title, teams, teamMembers, info ) => {
   return `
     <div class="panel panel-default">
       <div class="panel-heading">
-        <a href="https://learnersguild.slack.com/messages/${goal_id}/" target="_blank" class="pull-right">#${goal_id}</a>
-        <a href="${link}" target="_blank">${title}</a>
+        <a href="https://learnersguild.slack.com/messages/${info.number}/" target="_blank" class="pull-right">#${info.number}</a>
+        <a href="${info.link}" target="_blank">${title}</a>
       </div>
       <div class="panel-body">
         <dl>
-          ${Object.keys( teams ).map( team_name => `<dt>${team_name}</dt><dd>${teams[ team_name ].join( ', ' )}</dd>` ).join( '\n' )}
+          ${teams.map( team => `<dt>${team}</dt><dd>${teamMembers[ team ].join( ', ' )}</dd>` ).join( '\n' )}
         </dl>
       </div>
     </div>
