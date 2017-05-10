@@ -14,7 +14,8 @@ block content
                   span.count= coach.counts.team_count
                 div.label.label-primary( class=`player-count-${coach.id}` )
                   span.count= coach.counts.player_count
-          th Goal
+          th Goal Number
+          th Goal Title
           th Team Count
           th Player Count
       tbody
@@ -43,6 +44,7 @@ block content
                   data-player-count=goal.player_count, data-team-count=goal.team_count,
                   checked=goal.coach_id===coach.id
                 )
+            td= goal.number
             td= goal.title
             td( style='text-align: center;' )= goal.team_count
             td( style='text-align: center;' )= goal.player_count

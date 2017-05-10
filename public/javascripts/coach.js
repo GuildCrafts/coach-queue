@@ -45,10 +45,19 @@ const renderGoals = ([ players, goals ]) => {
     return memo
   }, {} )
 
-  document.querySelector( '.team-list' ).innerHTML =
-    Object.keys( g ).map( goal_id =>
-      goalTemplate( g[ goal_id ] )
-    ).join( '\n' )
+  const goalIds = Object.keys( g )
+
+  let html = `
+    <div class="panel panel-default">
+      ${goalIds.map(gid => `<span>${gid}</span>&nbsp;`).join('')}
+    </div>
+  `
+
+  goalIds.forEach( goal_id => {
+    html += goalTemplate( g[ goal_id ] )
+  })
+
+  document.querySelector( '.team-list' ).innerHTML = html
 }
 
 const render = ( goals, userId ) => {
