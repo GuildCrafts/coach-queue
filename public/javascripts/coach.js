@@ -49,7 +49,12 @@ const renderGoals = ([ players, goals ]) => {
 
   let html = `
     <div class="panel panel-default">
-      ${goalIds.map(gid => `<span>${gid}</span>&nbsp;`).join('')}
+      <div class="panel-heading">
+        Goal Numbers
+      </div>
+      <div class="panel-body">
+        ${goalIds.map(gid => `<a href="https://jsdev.learnersguild.org/goals/${gid}">${gid}</a>&nbsp;`).join('')}
+      </div>
     </div>
   `
 
