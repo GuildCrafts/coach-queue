@@ -27,7 +27,7 @@ html
 
         #navbar.collapse.navbar-collapse
           ul.nav.navbar-nav
-            if user.roles.includes( 'moderator' ) || user.roles.includes( 'sep' )
+            if user.is_admin
               li.dropdown
                 a(href='#', class='dropdown-toggle', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
                   | Admin

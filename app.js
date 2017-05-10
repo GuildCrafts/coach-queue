@@ -9,7 +9,7 @@ const https = require('express-sslify').HTTPS
 
 const loadEnvironment = require('./configuration/environment')()
 const auth = require('./configuration/authentication')
-const { setRole } = require('./middleware/setUserRole')
+const setUserRole = require('./middleware/setUserRole')
 const setLocals = require( './middleware/setLocals' )
 
 const index = require('./routes/index')
@@ -46,7 +46,7 @@ app.use(require('node-sass-middleware')({
 app.use(express.static(path.join(__dirname, 'public')))
 
 auth.init( app )
-app.use( setRole )
+app.use( setUserRole )
 app.use( setLocals )
 
 app.use( '/', index )

@@ -15,5 +15,5 @@ block content
 
         .row
           .col-md-12
-            if user.roles.includes( 'moderator' ) || user.roles.includes( 'sep' )
+            if user.is_admin
               button.set-coaches( type='submit') Set coaches

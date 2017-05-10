@@ -6,6 +6,14 @@ const upload = require( '../../database/upload' )
 const db = require( '../../database/' )
 const { Admin, Statistics } = db
 
+const requireUserToBeAnAdmin = (request, response, next) => {
+  if (request.user.is_admin) {
+    next()
+  }else{
+    response.sendStatus(401)
+  }
+}
+
 router.get( '/', (request, response) => {
   response.render( 'admin/index' )
 })
@@ -23,7 +31,7 @@ router.get( '/coaches', ( request, response ) => {
     .then( data => response.render( 'admin/coaches', { data }))
 })
 
-router.post( '/coaches', ( request, response ) => {
+router.post( '/coaches', requireUserToBeAnAdmin, ( request, response ) => {
   const coaches = request.body[ 'coaches[]' ]
 
   Admin.setCoaches( coaches )
@@ -53,7 +61,7 @@ router.get( '/goals', ( request, response ) => {
     .then( data => response.render( 'admin/goals', { data }))
 })
 
-router.post( '/goals', ( request, response ) => {
+router.post( '/goals', requireUserToBeAnAdmin, ( request, response ) => {
   const data = request.body.data
 
   Statistics.currentCycle()
