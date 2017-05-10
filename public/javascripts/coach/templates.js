@@ -52,7 +52,7 @@ const queueTemplate = ({ id, goal, created_at, events, players, claimable, escal
           <dt>Team Members</dt>
           <dd>${players.map( p => p.handle ).join( ', ' )}</dd>
           <dt>Assigned Coach</dt>
-          <dd>${goal.coach}</dd>
+          <dd>${goal.handle}</dd>
         </dl>
       </div>
 
