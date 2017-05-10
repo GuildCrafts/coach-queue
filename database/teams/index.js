@@ -14,7 +14,7 @@ const INFO = `
   JOIN goals ON goals.id=teams.goal_id
   JOIN goal_coaches ON goals.id=goal_coaches.goal_id
   JOIN players ON goal_coaches.coach_id=players.id
-  WHERE first_players.id=$1 AND teams.is_current=true
+  WHERE first_players.id=$1 AND teams.is_current=true AND goal_coaches.cycle=teams.cycle
 `
 
 const GOALS = `
