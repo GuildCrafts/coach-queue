@@ -3,7 +3,7 @@ extends ../layout
 block content
   h3 Stats
 
-  if user.roles.includes( 'moderator' )
+  if user.roles.includes( 'moderator' ) || user.roles.includes( 'sep' )
     button.btn.btn-warning.reset Recalculate
 
   .row.statistics

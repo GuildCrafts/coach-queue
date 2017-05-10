@@ -47,7 +47,7 @@ block content
             td( style='text-align: center;' )= goal.team_count
             td( style='text-align: center;' )= goal.player_count
 
-    if user.roles.includes( 'moderator' )
+    if user.roles.includes( 'moderator' ) || user.roles.includes( 'sep' )
       button.btn.btn-default.set-coaches( type='submit' ) Assign Coaches
 
 block scripts
