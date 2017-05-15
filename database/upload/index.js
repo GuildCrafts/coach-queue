@@ -6,17 +6,20 @@ const CYCLE_NUMBER = 1
 const ELO = 2
 const EMAIL = 3
 const FIRST_VOTE = 4
-const GOAL_NUMBER = 5
-const RECOMMENDED_TEAM_SIZE = 6
-const GOAL_TITLE = 7
-const GOT_VOTE = 8
-const HANDLE = 9
-const NAME = 10
-const PLAYER_ID = 11
-const POOL_NAME = 12
-const PROJECT_NAME = 13
-const SECOND_VOTE = 14
-const XP = 15
+const GOAL_LEVEL = 5
+const GOAL_NUMBER = 6
+const RECOMMENDED_TEAM_SIZE = 7
+const GOAL_TITLE = 8
+const GOT_VOTE = 9
+const HANDLE = 10
+const LEVEL = 11
+const LEVEL_V2 = 12
+const NAME = 13
+const PLAYER_ID = 14
+const POOL_NAME = 15
+const PROJECT_NAME = 16
+const SECOND_VOTE = 17
+const XP = 18
 
 const resetCurrentTeams = () => db.any( 'UPDATE teams SET is_current=false' )
 
@@ -116,13 +119,16 @@ const goals = records =>
   records.map( record => ({
     id: parseInt( record[ GOAL_NUMBER ] ),
     link: `//jsdev.learnersguild.org/goals/${record[ GOAL_NUMBER ]}`,
-    title: record[ GOAL_TITLE ]
+    title: record[ GOAL_TITLE ],
+    level: record[ GOAL_LEVEL ]
   }))
 
 const players = records =>
   records.map( record => ({
     id: record[ PLAYER_ID ],
-    handle: record[ HANDLE ]
+    handle: record[ HANDLE ],
+    level: record[ LEVEL ],
+    level_v2: record[ LEVEL_V2 ]
   }))
 
 const teams = records => {
